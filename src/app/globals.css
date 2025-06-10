@@ -5,17 +5,20 @@
   --foreground: #171717;
 }
 
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter-Regular.ttf') format('ttf');
-  font-weight: 400;
-  font-style: normal;
+html, body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  font-family: 'Inter', sans-serif !important;
 }
 
-body {
-  @apply font-sans;
+button {
+  cursor: pointer;
 }
 
+/* Preserve Font Awesome icons */
+.fa, .fas, .far, .fal, .fab {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+}
 
 .highlighted-section {
   outline: 2px solid #3F20FB;
@@ -25,10 +28,6 @@ body {
 .edit-button {
   position: absolute;
   z-index: 1000;
-}
-
-button {
-  cursor: pointer;
 }
 
 ::-webkit-scrollbar {
