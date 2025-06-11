@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faBullseye,
   faHeart,
   faCoins,
   faBrain,
@@ -22,8 +21,9 @@ import {
   faQuoteLeft,
   faLightbulb,
   faCheck,
-  faBell as faBellRegular,
 } from '@fortawesome/free-solid-svg-icons';
+import { Header } from '@/components/layout/Header';
+import { ImagePreviewer } from '@/components/ImagePreviewer';
 
 interface Subgoal {
   id: string;
@@ -31,11 +31,11 @@ interface Subgoal {
 }
 
 interface GoalFormData {
-  name: string;
+  goalName: string;
   description: string;
   category: string;
   customCategory: string;
-  subgoals: Subgoal[];
+  steps: Subgoal[];
   startDate: string;
   endDate: string;
   noDeadline: boolean;
@@ -53,31 +53,29 @@ const categories = [
   { id: 'work', name: 'Работа', icon: faBriefcase, color: 'text-blue-500' },
   { id: 'education', name: 'Образование', icon: faGraduationCap, color: 'text-green-500' },
   { id: 'relationships', name: 'Отношения', icon: faUsers, color: 'text-pink-500' },
-  { id: 'custom', name: 'Своя категория', icon: faPlus, color: 'text-gray-500' },
   { id: 'sport', name: 'Спорт', icon: faTrophy, color: 'text-orange-500' },
+  { id: 'custom', name: 'Своя категория', icon: faPlus, color: 'text-gray-500' },
 ];
 
 const GoalCreationPage: React.FC = () => {
   const [formData, setFormData] = useState<GoalFormData>({
-    name: '',
+    goalName: '',
     description: '',
     category: '',
-    customCategory: '',
-    subgoals: [
+    customCategory: '', // TODO: fix to category
+    steps: [
       { id: '1', text: 'Купить беговые кроссовки' },
       { id: '2', text: 'Составить план тренировок' },
-    ],
+    ], // TODO: выделить в отдельный стейт
     startDate: '',
     endDate: '',
-    noDeadline: false,
-    privacy: 'public',
+    noDeadline: false, // TODO: выделить в отдельный стейт
+    privacy: 'public', // TODO: make enum
     reward: '',
     consequence: '',
     value: 100,
-    image: null,
+    image: null, // TODO: сделать предпросмотр изображения
   });
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (field: keyof GoalFormData, value: any) => {
     setFormData((prev) => ({
@@ -89,7 +87,7 @@ const GoalCreationPage: React.FC = () => {
   const handleSubgoalChange = (id: string, text: string) => {
     setFormData((prev) => ({
       ...prev,
-      subgoals: prev.subgoals.map((subgoal) => (subgoal.id === id ? { ...subgoal, text } : subgoal)),
+      steps: prev.steps.map((subgoal) => (subgoal.id === id ? { ...subgoal, text } : subgoal)),
     }));
   };
 
@@ -97,22 +95,15 @@ const GoalCreationPage: React.FC = () => {
     const newId = Date.now().toString();
     setFormData((prev) => ({
       ...prev,
-      subgoals: [...prev.subgoals, { id: newId, text: '' }],
+      steps: [...prev.steps, { id: newId, text: '' }],
     }));
   };
 
   const removeSubgoal = (id: string) => {
     setFormData((prev) => ({
       ...prev,
-      subgoals: prev.subgoals.filter((subgoal) => subgoal.id !== id),
+      steps: prev.steps.filter((subgoal) => subgoal.id !== id),
     }));
-  };
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      handleInputChange('image', file);
-    }
   };
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -123,54 +114,7 @@ const GoalCreationPage: React.FC = () => {
 
   return (
     <div className="bg-gray-50 font-sans min-h-screen">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 flex items-center">
-                <FontAwesomeIcon icon={faBullseye} className="text-blue-600 text-2xl mr-2" />
-                <span className="text-xl font-semibold text-gray-900">Goal Accomplishment</span>
-              </div>
-              <nav className="hidden md:ml-8 md:flex md:space-x-6">
-                <span className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium cursor-pointer">
-                  Goal Placement
-                </span>
-                <span className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium cursor-pointer">
-                  Progress Blog
-                </span>
-                <span className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium cursor-pointer">
-                  Word Value
-                </span>
-                <span className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium cursor-pointer">
-                  Challenges
-                </span>
-                <span className="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium cursor-pointer">
-                  Group Goals
-                </span>
-              </nav>
-            </div>
-            <div className="flex items-center">
-              <button className="p-2 rounded-full text-gray-400 hover:text-gray-500">
-                <FontAwesomeIcon icon={faBellRegular} className="text-lg" />
-              </button>
-              <div className="ml-3 relative">
-                <div className="flex items-center">
-                  {/* <Image
-                    className="h-8 w-8 rounded-full"
-                    src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg"
-                    alt="User avatar"
-                    width={32}
-                    height={32}
-                  /> */}
-                  <span className="ml-2 text-sm font-medium text-gray-700 hidden md:block">Анна К.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
+      <Header />
       {/* Main Content */}
       <main className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -193,13 +137,13 @@ const GoalCreationPage: React.FC = () => {
                     placeholder="Например, Пробежать полумарафон"
                     type="text"
                     maxLength={80}
-                    value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    value={formData.goalName}
+                    onChange={(e) => handleInputChange('goalName', e.target.value)}
                     required
                   />
                   <div className="mt-2 flex justify-between text-sm text-gray-500">
                     <span>Сформулируйте конкретную и измеримую цель</span>
-                    <span>{formData.name.length}/80</span>
+                    <span>{formData.goalName.length}/80</span>
                   </div>
                 </div>
 
@@ -251,11 +195,14 @@ const GoalCreationPage: React.FC = () => {
                   )}
                 </div>
 
-                {/* Subgoals */}
+                {/* Image Upload */}
+                <ImagePreviewer handleInputChange={handleInputChange} />
+
+                {/* steps */}
                 <div>
                   <label className="block text-lg font-semibold text-gray-900 mb-3">Подцели и шаги</label>
                   <div className="space-y-3">
-                    {formData.subgoals.map((subgoal) => (
+                    {formData.steps.map((subgoal) => (
                       <div key={subgoal.id} className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg">
                         <FontAwesomeIcon icon={faGripVertical} className="text-gray-400 cursor-move" />
                         <input
@@ -428,34 +375,6 @@ const GoalCreationPage: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                </div>
-
-                {/* Goal Image */}
-                <div>
-                  <label className="block text-lg font-semibold text-gray-900 mb-3">Фото цели</label>
-                  <div
-                    className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-blue-400 transition-colors cursor-pointer"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <div className="space-y-1 text-center">
-                      <FontAwesomeIcon icon={faCloudArrowUp} className="mx-auto text-gray-400 text-4xl" />
-                      <div className="flex text-sm text-gray-600">
-                        <span className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500">
-                          Загрузить фото
-                        </span>
-                        <p className="pl-1">или перетащите сюда</p>
-                      </div>
-                      <p className="text-xs text-gray-500">PNG, JPG, GIF до 10MB</p>
-                      {formData.image && <p className="text-sm text-green-600 font-medium">{formData.image.name}</p>}
-                    </div>
-                  </div>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    className="hidden"
-                    accept="image/*"
-                    onChange={handleFileUpload}
-                  />
                 </div>
 
                 {/* Submit Button */}
