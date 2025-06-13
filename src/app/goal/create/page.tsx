@@ -22,10 +22,17 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Header } from '@/components/layout/Header';
 import { ImagePreviewer } from '@/components/ImagePreviewer';
+import { Steps } from '@/components/Steps';
 
-interface Subgoal {
+interface Step {
   id: string;
   text: string;
+}
+
+enum PrivaciyStatus {
+  Private = 'private',
+  Friends = 'friends',
+  Public = 'public',
 }
 
 export interface GoalFormData {
@@ -33,11 +40,10 @@ export interface GoalFormData {
   description: string;
   category: string;
   customCategory: string;
-  steps: Subgoal[];
   startDate: string;
   endDate: string;
   noDeadline: boolean;
-  privacy: 'private' | 'friends' | 'public';
+  privacy: PrivaciyStatus;
   reward: string;
   consequence: string;
   value: number;
@@ -60,20 +66,21 @@ const GoalCreationPage: React.FC = () => {
     goalName: '',
     description: '',
     category: '',
-    customCategory: '', // TODO: fix to category
-    steps: [
-      { id: '1', text: 'Купить беговые кроссовки' },
-      { id: '2', text: 'Составить план тренировок' },
-    ], // TODO: выделить в отдельный стейт
+    customCategory: '',
     startDate: '',
     endDate: '',
-    noDeadline: false, // TODO: выделить в отдельный стейт
-    privacy: 'public', // TODO: make enum
+    noDeadline: false,
+    privacy: PrivaciyStatus.Public,
     reward: '',
     consequence: '',
     value: 100,
-    image: null, // TODO: сделать предпросмотр изображения
+    image: null,
   });
+
+  const [stepsState, setStepsState] = useState<Step[]>([
+    { id: '1', text: 'Купить беговые кроссовки' },
+    { id: '2', text: 'Составить план тренировок' },
+  ]);
 
   const handleInputChange = (field: keyof GoalFormData, value: any) => {
     setFormData((prev) => ({
@@ -82,32 +89,55 @@ const GoalCreationPage: React.FC = () => {
     }));
   };
 
-  const handleSubgoalChange = (id: string, text: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      steps: prev.steps.map((subgoal) => (subgoal.id === id ? { ...subgoal, text } : subgoal)),
-    }));
+  const handleStepChange = (id: string, text: string) => {
+    setStepsState((prev) => prev.map((step) => (step.id === id ? { ...step, text } : step)));
   };
 
-  const addSubgoal = () => {
+  const addStep = () => {
     const newId = Date.now().toString();
-    setFormData((prev) => ({
-      ...prev,
-      steps: [...prev.steps, { id: newId, text: '' }],
-    }));
+    setStepsState((prev) => [...prev, { id: newId, text: '' }]);
   };
 
-  const removeSubgoal = (id: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      steps: prev.steps.filter((subgoal) => subgoal.id !== id),
-    }));
+  const removeStep = (id: string) => {
+    setStepsState((prev) => prev.filter((step) => step.id !== id));
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log('Form submitted:', formData);
-    // Здесь будет логика отправки данных
+
+    const formDataToSend = new FormData();
+    console.log(formData);
+    Object.entries(formData).forEach(([key, value]) => {
+      if (key !== 'image' && key !== 'steps') {
+        formDataToSend.append(key, String(value));
+      }
+    });
+
+    // Add steps from separate state
+    formDataToSend.append('steps', JSON.stringify(stepsState));
+
+    if (formData.image) {
+      formDataToSend.append('image', formData.image);
+    }
+
+    try {
+      const response = await fetch('/api/goals', {
+        method: 'POST',
+        body: formDataToSend,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create goal');
+      }
+
+      const result = await response.json();
+      console.log('Goal created:', result);
+
+      // TODO: Handle successful submission (e.g., redirect to goal page)
+    } catch (error) {
+      console.error('Error creating goal:', error);
+      // TODO: Handle error (e.g., show error message to user)
+    }
   };
 
   return (
@@ -199,34 +229,12 @@ const GoalCreationPage: React.FC = () => {
                 {/* steps */}
                 <div>
                   <label className="block text-lg font-semibold text-gray-900 mb-3">Подцели и шаги</label>
-                  <div className="space-y-3">
-                    {formData.steps.map((subgoal) => (
-                      <div key={subgoal.id} className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg">
-                        <FontAwesomeIcon icon={faGripVertical} className="text-gray-400 cursor-move" />
-                        <input
-                          className="flex-1 border-none outline-none"
-                          placeholder="Введите шаг..."
-                          value={subgoal.text}
-                          onChange={(e) => handleSubgoalChange(subgoal.id, e.target.value)}
-                        />
-                        <button
-                          type="button"
-                          className="text-red-500 hover:text-red-700"
-                          onClick={() => removeSubgoal(subgoal.id)}
-                        >
-                          <FontAwesomeIcon icon={faTrash} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                  <button
-                    type="button"
-                    className="mt-3 flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
-                    onClick={addSubgoal}
-                  >
-                    <FontAwesomeIcon icon={faPlus} />
-                    Добавить шаг
-                  </button>
+                  <Steps
+                    steps={stepsState}
+                    onStepChange={handleStepChange}
+                    onAddStep={addStep}
+                    onRemoveStep={removeStep}
+                  />
                 </div>
 
                 {/* Timeframe */}
@@ -240,19 +248,19 @@ const GoalCreationPage: React.FC = () => {
                         className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value={formData.startDate}
                         onChange={(e) => handleInputChange('startDate', e.target.value)}
-                        disabled={formData.noDeadline}
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Дата завершения</label>
-                      <input
-                        type="date"
-                        className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={formData.endDate}
-                        onChange={(e) => handleInputChange('endDate', e.target.value)}
-                        disabled={formData.noDeadline}
-                      />
-                    </div>
+                    {formData.noDeadline && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Дата завершения</label>
+                        <input
+                          type="date"
+                          className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          value={formData.endDate}
+                          onChange={(e) => handleInputChange('endDate', e.target.value)}
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="mt-3">
                     <label className="inline-flex items-center">
