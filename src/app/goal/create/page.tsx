@@ -352,7 +352,7 @@ const GoalCreationPage: React.FC = () => {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">Ценность цели (в баллах)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-3">Ценность цели</label>
                       <div className="px-3">
                         <input
                           type="range"
@@ -363,13 +363,16 @@ const GoalCreationPage: React.FC = () => {
                           onChange={(e) => handleInputChange('value', parseInt(e.target.value))}
                         />
                         <div className="flex justify-between text-sm text-gray-500 mt-2">
-                          <span>0</span>
-                          <span className="font-medium text-blue-600">{formData.value}</span>
-                          <span>500</span>
+                          <span>Низкая</span>
+                          <div className="text-center mt-2">
+                            <span className="text-2xl font-medium text-blue-600">{formData.value}</span>
+                            <span className="text-gray-500"> баллов</span>
+                          </div>
+                          <span>Высокая</span>
                         </div>
                       </div>
                       <p className="text-sm text-gray-500 mt-2">
-                        Чем выше ценность, тем больше мотивации для достижения цели
+                        Чем сложнее цель, тем больше баллов вы получите за её достижение
                       </p>
                     </div>
                   </div>
