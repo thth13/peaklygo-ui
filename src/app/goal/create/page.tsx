@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faHeart,
@@ -17,7 +16,6 @@ import {
   faGlobe,
   faGripVertical,
   faTrash,
-  faCloudArrowUp,
   faQuoteLeft,
   faLightbulb,
   faCheck,
@@ -30,7 +28,7 @@ interface Subgoal {
   text: string;
 }
 
-interface GoalFormData {
+export interface GoalFormData {
   goalName: string;
   description: string;
   category: string;
@@ -196,7 +194,7 @@ const GoalCreationPage: React.FC = () => {
                 </div>
 
                 {/* Image Upload */}
-                <ImagePreviewer handleInputChange={handleInputChange} />
+                <ImagePreviewer handleInputChange={handleInputChange} image={formData.image} />
 
                 {/* steps */}
                 <div>

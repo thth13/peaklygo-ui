@@ -4,12 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { GoalFormData } from '@/app/goal/create/page';
 
 interface ImagePreviewerProps {
-  handleInputChange: any;
+  handleInputChange: (field: keyof GoalFormData, value: any) => void;
+  image: File | null;
 }
 
-export const ImagePreviewer = ({ handleInputChange }: ImagePreviewerProps) => {
+export const ImagePreviewer = ({ handleInputChange, image }: ImagePreviewerProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -76,7 +78,7 @@ export const ImagePreviewer = ({ handleInputChange }: ImagePreviewerProps) => {
               <p className="pl-1">или перетащите сюда</p>
             </div>
             <p className="text-xs text-gray-500">PNG, JPG, GIF до 10MB</p>
-            {formData.image && <p className="text-sm text-green-600 font-medium">{formData.image.name}</p>}
+            {image && <p className="text-sm text-green-600 font-medium">{image.name}</p>}
           </div>
         )}
       </div>
