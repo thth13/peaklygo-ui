@@ -23,6 +23,9 @@ import {
 import { Header } from '@/components/layout/Header';
 import { ImagePreviewer } from '@/components/ImagePreviewer';
 import { Steps } from '@/components/Steps';
+import { createGoal } from '@/lib/api/goal';
+import { useUserProfile } from '@/context/UserProfileContext';
+import { useRouter } from 'next/navigation';
 
 interface Step {
   id: string;
@@ -62,13 +65,16 @@ const categories = [
 ];
 
 const GoalCreationPage: React.FC = () => {
+  const router = useRouter();
+  const { profile } = useUserProfile();
+
   const [formData, setFormData] = useState<GoalFormData>({
     goalName: '',
     description: '',
     category: '',
     customCategory: '',
-    startDate: '',
-    endDate: '',
+    startDate: new Date().toISOString(),
+    endDate: new Date().toISOString(),
     noDeadline: false,
     privacy: PrivaciyStatus.Public,
     reward: '',
@@ -105,38 +111,25 @@ const GoalCreationPage: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const formDataToSend = new FormData();
-    console.log(formData);
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key !== 'image' && key !== 'steps') {
-        formDataToSend.append(key, String(value));
-      }
-    });
+    if (profile) {
+      const formDataToSend = new FormData();
 
-    // Add steps from separate state
-    formDataToSend.append('steps', JSON.stringify(stepsState));
-
-    if (formData.image) {
-      formDataToSend.append('image', formData.image);
-    }
-
-    try {
-      const response = await fetch('/api/goals', {
-        method: 'POST',
-        body: formDataToSend,
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key !== 'image' && key !== 'steps') {
+          formDataToSend.append(key, String(value));
+        }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to create goal');
+      // Add steps from separate state
+      formDataToSend.append('steps', JSON.stringify(stepsState));
+
+      if (formData.image) {
+        formDataToSend.append('image', formData.image);
       }
 
-      const result = await response.json();
-      console.log('Goal created:', result);
+      await createGoal(profile?.user, formDataToSend);
 
-      // TODO: Handle successful submission (e.g., redirect to goal page)
-    } catch (error) {
-      console.error('Error creating goal:', error);
-      // TODO: Handle error (e.g., show error message to user)
+      router.push('/');
     }
   };
 
@@ -250,7 +243,7 @@ const GoalCreationPage: React.FC = () => {
                         onChange={(e) => handleInputChange('startDate', e.target.value)}
                       />
                     </div>
-                    {formData.noDeadline && (
+                    {!formData.noDeadline && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Дата завершения</label>
                         <input

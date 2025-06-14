@@ -7,26 +7,6 @@ export interface ImageLinks {
   extraLarge?: string;
 }
 
-export interface Book {
-  _id: string;
-  googleId: string;
-  title: string;
-  description: string;
-  authors: string[];
-  imageLinks: ImageLinks;
-  categories: string[];
-  publisher: string;
-  publishedDate: Date;
-  pageCount: number;
-  language: string;
-}
-
-export interface BookNotes {
-  _id: string;
-  content: string;
-  createdAt: Date;
-}
-
 export interface UserProfile {
   _id: string;
   name: string;

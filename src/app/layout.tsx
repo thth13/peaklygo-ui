@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { AuthProvider } from '../context/AuthContext';
 import ProgressBar from './ProgressBar';
 import './globals.css';
+import { UserProfileProvider } from '@/context/UserProfileContext';
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'] });
 
@@ -20,8 +21,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <ProgressBar />
-          {children}
+          <UserProfileProvider>
+            <ProgressBar />
+            {children}
+          </UserProfileProvider>
         </AuthProvider>
       </body>
     </html>
