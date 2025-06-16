@@ -120,7 +120,6 @@ const GoalCreationPage: React.FC = () => {
         }
       });
 
-      // Add steps from separate state
       formDataToSend.append('steps', JSON.stringify(stepsState));
 
       if (formData.image) {

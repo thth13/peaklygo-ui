@@ -23,7 +23,7 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   useEffect(() => {
     const userId = Cookies.get('userId');
-    console.log(userId);
+
     if (userId) {
       fetchProfile(userId);
     }
