@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faHeart,
@@ -67,6 +67,12 @@ const categories = [
 const GoalCreationPage: React.FC = () => {
   const router = useRouter();
   const { profile } = useUserProfile();
+
+  useEffect(() => {
+    if (!profile) {
+      router.push('/');
+    }
+  }, [profile]);
 
   const [formData, setFormData] = useState<GoalFormData>({
     goalName: '',
