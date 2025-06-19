@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faHeart,
@@ -68,12 +68,6 @@ const GoalCreationPage: React.FC = () => {
   const router = useRouter();
   const { profile } = useUserProfile();
 
-  useEffect(() => {
-    if (!profile) {
-      router.push('/');
-    }
-  }, [profile]);
-
   const [formData, setFormData] = useState<GoalFormData>({
     goalName: '',
     description: '',
@@ -122,7 +116,7 @@ const GoalCreationPage: React.FC = () => {
 
       Object.entries(formData).forEach(([key, value]) => {
         if (key !== 'image' && key !== 'steps') {
-          formDataToSend.append(key, String(value));
+          formDataToSend.append(key, value);
         }
       });
 
@@ -132,7 +126,9 @@ const GoalCreationPage: React.FC = () => {
         formDataToSend.append('image', formData.image);
       }
 
-      await createGoal(profile?.user, formDataToSend);
+      formDataToSend.append('userId', profile.user);
+
+      await createGoal(formDataToSend);
 
       router.push('/');
     }
