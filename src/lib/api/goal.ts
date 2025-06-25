@@ -1,6 +1,7 @@
 import { API_URL } from '@/constants';
 import api from '../clientAxios';
 import nProgress from 'nprogress';
+import { Goal } from '@/types';
 
 export const createGoal = async (goal: FormData) => {
   try {
@@ -13,7 +14,7 @@ export const createGoal = async (goal: FormData) => {
   }
 };
 
-export const getGoals = async (userId: string) => {
+export const getGoals = async (userId: string): Promise<Goal[]> => {
   try {
     const res = await api.get(`${API_URL}/goals/userGoals/${userId}`);
 

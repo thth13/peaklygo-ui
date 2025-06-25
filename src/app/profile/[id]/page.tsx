@@ -3,9 +3,13 @@ import { cookies } from 'next/headers';
 import LinkWithProgress from '@/components/Link';
 import { getProfile } from '@/lib/api';
 import { getGoals } from '@/lib/api/goal';
-import { GoalsList } from '@/components/GoalsList';
 import { RightSidebar } from '@/components/layout/RightSidebar';
 import { LeftSidebar } from '@/components/layout/LeftSidebar';
+import { GoalCard } from '@/components/profile/GoalCard';
+import { UserProfile } from '@/types';
+import { Goal } from '@/types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 type ProfilePageProps = {
   params: Promise<{ id: string }>;
@@ -21,6 +25,9 @@ export default async function Profile({ params }: ProfilePageProps) {
   const isMyProfile = myUserId === id;
 
   const data = await fetchUserProfile(id);
+  if (!data) return null;
+
+  const { profile, goals }: { profile: UserProfile; goals: Goal[] } = data;
 
   return (
     <>
@@ -32,10 +39,13 @@ export default async function Profile({ params }: ProfilePageProps) {
               <h2 className="text-2xl font-bold text-gray-800">Мои цели</h2>
               <p className="text-gray-500">Управляйте своими целями и отслеживайте прогресс</p>
             </div>
-            <button className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-              <i className="fa-solid fa-plus mr-2"></i>
+            <LinkWithProgress
+              href="/goal/create"
+              className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center"
+            >
+              <FontAwesomeIcon icon={faPlus} className="w-4 mr-2 text-base" />
               Новая цель
-            </button>
+            </LinkWithProgress>
           </div>
           <div className="flex space-x-3">
             <select className="px-3 py-2 border border-gray-300 rounded-lg text-sm">
@@ -51,79 +61,11 @@ export default async function Profile({ params }: ProfilePageProps) {
             </select>
           </div>
         </div>
+        {goals.map((goal) => (
+          <GoalCard key={goal.goalName} goal={goal} />
+        ))}
 
-        <div id="goal-card-1" className="bg-white rounded-lg shadow-sm p-6 mb-4 border-l-4 border-primary-500">
-          <div className="flex items-start space-x-4 mb-4">
-            <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-              <img
-                className="w-full h-full object-cover"
-                src="https://storage.googleapis.com/uxpilot-auth.appspot.com/334649fc59-19e88c2a015c56c8ab61.png"
-                alt="person running marathon training athletic shoes road"
-              />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800">Пробежать полумарафон</h3>
-                  <p className="text-gray-500 text-sm">Создано 15 октября 2023</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">
-                    В процессе
-                  </span>
-                  <button className="text-gray-400 hover:text-gray-600">
-                    <i className="fa-solid fa-ellipsis-vertical"></i>
-                  </button>
-                </div>
-              </div>
-
-              <p className="text-gray-600 mb-4">
-                Подготовиться и пробежать полумарафон за 2 часа. Тренировки 4 раза в неделю, постепенное увеличение
-                дистанции.
-              </p>
-
-              <div className="mb-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium text-gray-700">Прогресс</span>
-                  <span className="text-sm text-gray-500">65%</span>
-                </div>
-                <div className="w-full bg-gray-200 h-2 rounded-full">
-                  <div className="bg-primary-500 h-2 rounded-full" style={{ width: '65%' }}></div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                <div className="flex items-center">
-                  <i className="fa-regular fa-calendar mr-2"></i>
-                  <span>Дедлайн: 15 декабря 2023</span>
-                </div>
-                <div className="flex items-center">
-                  <i className="fa-solid fa-coins mr-2"></i>
-                  <span>Ценность: 150 баллов</span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                <div className="flex space-x-4">
-                  <button className="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                    <i className="fa-solid fa-pencil mr-1"></i>
-                    Редактировать
-                  </button>
-                  <button className="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                    <i className="fa-solid fa-chart-line mr-1"></i>
-                    Прогресс
-                  </button>
-                </div>
-                <button className="text-primary-600 hover:text-primary-700 text-sm font-medium">
-                  <i className="fa-solid fa-share mr-1"></i>
-                  Поделиться
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="goal-card-2" className="bg-white rounded-lg shadow-sm p-6 mb-4 border-l-4 border-green-500">
+        {/* <div id="goal-card-2" className="bg-white rounded-lg shadow-sm p-6 mb-4 border-l-4 border-green-500">
           <div className="flex items-start space-x-4 mb-4">
             <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
               <img
@@ -261,14 +203,14 @@ export default async function Profile({ params }: ProfilePageProps) {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       <RightSidebar />
     </>
   );
 }
 
-async function fetchUserProfile(id: string): Promise<any> {
+async function fetchUserProfile(id: string): Promise<{ profile: UserProfile; goals: Goal[] } | null> {
   try {
     const profile = await getProfile(id);
     const goals = await getGoals(id);

@@ -8,6 +8,7 @@ import {
   faChartLine,
   faPeopleGroup,
 } from '@fortawesome/free-solid-svg-icons';
+import LinkWithProgress from '../Link';
 
 export const LeftSidebar = () => {
   return (
@@ -56,13 +57,13 @@ export const LeftSidebar = () => {
           </div>
         </div>
 
-        <button
-          id="add-goal-btn"
+        <LinkWithProgress
+          href="/goal/create"
           className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-all text-sm"
         >
           <FontAwesomeIcon icon={faPlus} className="w-4 mr-2 text-base" />
           <span>Добавить цель</span>
-        </button>
+        </LinkWithProgress>
       </div>
 
       <div id="navigation-menu" className="bg-white rounded-lg shadow-sm p-4">

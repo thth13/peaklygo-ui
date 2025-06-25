@@ -136,7 +136,6 @@ const GoalCreationPage: React.FC = () => {
 
   return (
     <div className="bg-gray-50 font-sans min-h-screen">
-      <Header />
       {/* Main Content */}
       <main className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
