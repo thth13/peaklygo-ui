@@ -1,3 +1,5 @@
+'use client';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCalendar as faCalendarRegular,
@@ -10,6 +12,7 @@ import {
 import { Goal } from '@/types';
 import { formatDate } from '@/lib/utils';
 import { IMAGE_URL } from '@/constants';
+import Link from '@/components/Link';
 
 interface GoalCardProps {
   goal: Goal;
@@ -17,7 +20,10 @@ interface GoalCardProps {
 
 export const GoalCard = ({ goal }: GoalCardProps) => {
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 mb-4 border-l-4 border-primary-500">
+    <Link
+      href={`/goal/${goal._id}`}
+      className="block bg-white rounded-lg shadow-sm p-6 mb-4 border-l-4 border-primary-500 hover:shadow-md transition-shadow cursor-pointer"
+    >
       <div className="flex items-start space-x-4 mb-4">
         {goal.image && (
           <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
@@ -93,6 +99,6 @@ export const GoalCard = ({ goal }: GoalCardProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

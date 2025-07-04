@@ -34,6 +34,7 @@ export interface Step {
 }
 
 export interface Goal {
+  _id: string;
   goalName: string;
   category: string;
   description?: string;

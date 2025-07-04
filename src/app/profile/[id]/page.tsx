@@ -62,7 +62,7 @@ export default async function Profile({ params }: ProfilePageProps) {
           </div>
         </div>
         {goals.map((goal) => (
-          <GoalCard key={goal.goalName} goal={goal} />
+          <GoalCard key={goal._id} goal={goal} />
         ))}
 
         {/* <div id="goal-card-2" className="bg-white rounded-lg shadow-sm p-6 mb-4 border-l-4 border-green-500">
