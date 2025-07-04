@@ -19,14 +19,12 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-gray-50 font-sans">
         <Header />
-        <main className="max-w-7xl mx-auto mt-6 px-4 flex">
-          <AuthProvider>
-            <UserProfileProvider>
-              <ProgressBar />
-              {children}
-            </UserProfileProvider>
-          </AuthProvider>
-        </main>
+        <AuthProvider>
+          <UserProfileProvider>
+            <ProgressBar />
+            {children}
+          </UserProfileProvider>
+        </AuthProvider>
       </body>
     </html>
   );

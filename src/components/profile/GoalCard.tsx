@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Goal } from '@/types';
 import { formatDate } from '@/lib/utils';
+import { IMAGE_URL } from '@/constants';
 
 interface GoalCardProps {
   goal: Goal;
@@ -20,7 +21,7 @@ export const GoalCard = ({ goal }: GoalCardProps) => {
       <div className="flex items-start space-x-4 mb-4">
         {goal.image && (
           <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-            <img className="w-full h-full object-cover" src={goal.image} alt="goal image" />
+            <img className="w-full h-full object-cover" src={`${IMAGE_URL}/${goal.image}`} alt="goal image" />
           </div>
         )}
         <div className="flex-1">

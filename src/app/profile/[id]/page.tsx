@@ -30,7 +30,7 @@ export default async function Profile({ params }: ProfilePageProps) {
   const { profile, goals }: { profile: UserProfile; goals: Goal[] } = data;
 
   return (
-    <>
+    <main className="max-w-7xl mx-auto mt-6 px-4 flex">
       <LeftSidebar />
       <div id="main-content" className="w-3/5 px-6">
         <div id="goals-header" className="mb-6">
@@ -206,7 +206,7 @@ export default async function Profile({ params }: ProfilePageProps) {
         </div> */}
       </div>
       <RightSidebar />
-    </>
+    </main>
   );
 }
 
