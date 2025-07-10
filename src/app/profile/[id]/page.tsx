@@ -36,25 +36,25 @@ export default async function Profile({ params }: ProfilePageProps) {
         <div id="goals-header" className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-2xl font-bold text-gray-800">Мои цели</h2>
-              <p className="text-gray-500">Управляйте своими целями и отслеживайте прогресс</p>
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Мои цели</h2>
+              <p className="text-gray-500 dark:text-gray-400">Управляйте своими целями и отслеживайте прогресс</p>
             </div>
             <LinkWithProgress
               href="/goal/create"
-              className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center"
+              className="bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors"
             >
               <FontAwesomeIcon icon={faPlus} className="w-4 mr-2 text-base" />
               Новая цель
             </LinkWithProgress>
           </div>
           <div className="flex space-x-3">
-            <select className="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+            <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg text-sm transition-colors">
               <option>Все статусы</option>
               <option>В процессе</option>
               <option>Достигнуто</option>
               <option>Провалено</option>
             </select>
-            <select className="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+            <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg text-sm transition-colors">
               <option>По дате</option>
               <option>По приоритету</option>
               <option>По прогрессу</option>

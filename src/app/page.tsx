@@ -14,13 +14,13 @@ export default function Home() {
         <div className="flex gap-4 justify-center">
           <LinkWithProgress
             href="/auth/login"
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
           >
             Вход
           </LinkWithProgress>
           <LinkWithProgress
             href="/auth/register"
-            className="px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+            className="px-6 py-3 bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 border-2 border-blue-600 dark:border-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors"
           >
             Регистрация
           </LinkWithProgress>

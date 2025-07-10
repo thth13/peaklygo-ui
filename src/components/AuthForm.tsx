@@ -86,16 +86,19 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-16 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-16 flex items-center justify-center transition-colors">
       <div className="container mx-auto px-4">
         <div className="max-w-md mx-auto">
-          <div id="auth-card" className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div
+            id="auth-card"
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition-colors"
+          >
             <div id="auth-tabs" className="flex">
               <button
                 className={`flex-1 py-4 text-center font-medium border-b-2 transition-colors ${
                   isLogin
-                    ? 'text-gray-600 hover:text-blue-600 border-blue-600'
-                    : 'text-gray-400 hover:text-blue-600 border-transparent'
+                    ? 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 border-blue-600 dark:border-blue-400'
+                    : 'text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 border-transparent'
                 }`}
                 onClick={() => setIsLogin(true)}
               >
@@ -104,8 +107,8 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
               <button
                 className={`flex-1 py-4 text-center font-medium border-b-2 transition-colors ${
                   !isLogin
-                    ? 'text-gray-600 hover:text-blue-600 border-blue-600'
-                    : 'text-gray-400 hover:text-blue-600 border-transparent'
+                    ? 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 border-blue-600 dark:border-blue-400'
+                    : 'text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 border-transparent'
                 }`}
                 onClick={() => setIsLogin(false)}
               >
@@ -116,39 +119,43 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
             <div className="p-8">
               <form onSubmit={handleSubmit}>
                 <div className="mb-8 text-center">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                  <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2 transition-colors">
                     {isLogin ? 'Welcome Back!' : 'Create Account'}
                   </h2>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 dark:text-gray-300 transition-colors">
                     {isLogin ? 'Continue your reading journey' : 'Start your reading journey today'}
                   </p>
                 </div>
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">
+                      Email
+                    </label>
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
                       className={`w-full px-4 py-3 rounded-lg border ${
-                        errors.email ? 'border-red-500' : 'border-gray-300'
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                        errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                      } bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors`}
                       placeholder="your@email.com"
                       required
                     />
                     {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">
+                      Password
+                    </label>
                     <input
                       type="password"
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
                       className={`w-full px-4 py-3 rounded-lg border ${
-                        errors.password ? 'border-red-500' : 'border-gray-300'
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                        errors.password ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                      } bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors`}
                       placeholder="••••••••"
                       required
                     />
@@ -156,15 +163,17 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                   </div>
                   {!isLogin && (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">
+                        Confirm Password
+                      </label>
                       <input
                         type="password"
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleChange}
                         className={`w-full px-4 py-3 rounded-lg border ${
-                          errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
-                        } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                          errors.confirmPassword ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                        } bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors`}
                         placeholder="••••••••"
                         required
                       />
@@ -186,7 +195,7 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                   )} */}
                   <button
                     type="submit"
-                    className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    className="w-full bg-blue-600 dark:bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium"
                     disabled={loading}
                   >
                     {loading ? 'Loading...' : isLogin ? 'Sign In' : 'Create Account'}
@@ -195,10 +204,12 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                 <div className="mt-8">
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-gray-200"></div>
+                      <div className="w-full border-t border-gray-200 dark:border-gray-600 transition-colors"></div>
                     </div>
                     <div className="relative flex justify-center text-sm">
-                      <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                      <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors">
+                        Or continue with
+                      </span>
                     </div>
                   </div>
                   <div className="mt-6 grid grid-cols-1 ">

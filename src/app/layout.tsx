@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-gray-50 font-sans">
+      <body className="bg-gray-50 dark:bg-gray-900 font-sans transition-colors">
         <Header />
         <AuthProvider>
           <UserProfileProvider>

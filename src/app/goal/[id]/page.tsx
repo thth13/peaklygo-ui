@@ -17,11 +17,16 @@ export default async function GoalPage({ params }: GoalPageProps) {
   const goal = await fetchGoal(id);
   if (!goal) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Цель не найдена</h1>
-          <p className="text-gray-600 mb-4">Возможно, цель была удалена или вы не имеете к ней доступа</p>
-          <Link href="/profile" className="text-blue-600 hover:text-blue-700">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Цель не найдена</h1>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">
+            Возможно, цель была удалена или вы не имеете к ней доступа
+          </p>
+          <Link
+            href="/profile"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+          >
             Вернуться к целям
           </Link>
         </div>
@@ -66,13 +71,13 @@ export default async function GoalPage({ params }: GoalPageProps) {
   const getPrivacyColor = () => {
     switch (goal.privacy) {
       case 'private':
-        return 'bg-red-100 text-red-700';
+        return 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300';
       case 'friends':
-        return 'bg-yellow-100 text-yellow-700';
+        return 'bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300';
       case 'public':
-        return 'bg-green-100 text-green-700';
+        return 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300';
       default:
-        return 'bg-green-100 text-green-700';
+        return 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300';
     }
   };
 
@@ -82,7 +87,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
   const currentStepIndex = goal.steps.findIndex((step) => !step.isCompleted);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="flex gap-6">
           {/* Левая боковая панель */}
@@ -90,22 +95,25 @@ export default async function GoalPage({ params }: GoalPageProps) {
 
           {/* Основная область */}
           <div className="flex-1 px-6">
-            <div className="bg-white rounded-lg shadow-sm">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-colors">
               {/* Заголовок */}
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-3">
-                    <Link href="/" className="text-gray-500 hover:text-gray-700 flex items-center space-x-2">
+                    <Link
+                      href="/"
+                      className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center space-x-2 transition-colors"
+                    >
                       <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
                       <span className="text-sm">Назад к целям</span>
                     </Link>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <button className="flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50">
+                    <button className="flex items-center space-x-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                       <FontAwesomeIcon icon={faEdit} className="w-4 h-4" />
                       <span>Редактировать</span>
                     </button>
-                    <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm">
+                    <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm transition-colors">
                       <FontAwesomeIcon icon={faPlus} className="w-4 h-4" />
                       <span>Обновить прогресс</span>
                     </button>
@@ -113,15 +121,17 @@ export default async function GoalPage({ params }: GoalPageProps) {
                 </div>
 
                 <div className="mb-4">
-                  <h1 className="text-3xl font-bold text-gray-900 mb-3">{goal.goalName}</h1>
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">{goal.goalName}</h1>
                   <div className="flex items-center space-x-3">
-                    <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                    <span className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-sm font-medium">
                       {goal.category}
                     </span>
-                    <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                    <span className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-medium">
                       {goal.isCompleted ? 'Завершено' : 'В процессе'}
                     </span>
-                    <span className="text-gray-500 text-sm">Создано {formatDate(goal.startDate)}</span>
+                    <span className="text-gray-500 dark:text-gray-400 text-sm">
+                      Создано {formatDate(goal.startDate)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -144,9 +154,11 @@ export default async function GoalPage({ params }: GoalPageProps) {
                   {/* Текст в левом нижнем углу */}
                   <div className="absolute left-0 bottom-0 z-10 text-white p-6">
                     <div className="text-3xl font-bold mb-1">{goal.progress}% завершено</div>
-                    {daysLeft && (
+                    {goal.endDate && (
                       <div className="text-md mt-1 text-black-200">
-                        {daysLeft > 0 ? `${daysLeft} дней до дедлайна` : 'Дедлайн прошел'}
+                        {daysLeft && daysLeft > 0
+                          ? `${daysLeft} дней до дедлайна`
+                          : `Дедлайн прошел ${daysLeft} дней назад`}
                       </div>
                     )}
                   </div>
@@ -155,41 +167,46 @@ export default async function GoalPage({ params }: GoalPageProps) {
 
               {/* Описание цели */}
               <div className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Описание цели</h3>
-                <p className="text-gray-700 mb-6">{goal.description || 'Описание не указано'}</p>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Описание цели</h3>
+                <p className="text-gray-700 dark:text-gray-300 mb-6">{goal.description || 'Описание не указано'}</p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div>
-                    <h4 className="font-medium text-gray-700 mb-2">Дата начала</h4>
-                    <p className="text-gray-900">{formatDate(goal.startDate)}</p>
+                    <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Дата начала</h4>
+                    <p className="text-gray-900 dark:text-gray-100">{formatDate(goal.startDate)}</p>
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-700 mb-2">Дедлайн</h4>
-                    <p className="text-gray-900">{goal.endDate ? formatDate(goal.endDate) : 'Не указан'}</p>
+                    <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Дедлайн</h4>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {goal.endDate ? formatDate(goal.endDate) : 'Не указан'}
+                    </p>
                   </div>
                 </div>
 
                 <div className="mb-6">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-gray-700">Общий прогресс</span>
-                    <span className="text-gray-900 font-medium">{goal.progress}%</span>
+                    <span className="font-medium text-gray-700 dark:text-gray-300">Общий прогресс</span>
+                    <span className="text-gray-900 dark:text-gray-100 font-medium">{goal.progress}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 h-3 rounded-full">
-                    <div className="bg-green-500 h-3 rounded-full" style={{ width: `${goal.progress}%` }}></div>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 h-3 rounded-full">
+                    <div
+                      className="bg-green-500 dark:bg-green-400 h-3 rounded-full"
+                      style={{ width: `${goal.progress}%` }}
+                    ></div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   {goal.reward && (
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <h4 className="font-medium text-green-800 mb-2">Награда за выполнение</h4>
-                      <p className="text-green-700">{goal.reward}</p>
+                    <div className="bg-green-50 dark:bg-green-900 p-4 rounded-lg">
+                      <h4 className="font-medium text-green-800 dark:text-green-200 mb-2">Награда за выполнение</h4>
+                      <p className="text-green-700 dark:text-green-300">{goal.reward}</p>
                     </div>
                   )}
                   {goal.consequence && (
-                    <div className="bg-red-50 p-4 rounded-lg">
-                      <h4 className="font-medium text-red-800 mb-2">Последствие провала</h4>
-                      <p className="text-red-700">{goal.consequence}</p>
+                    <div className="bg-red-50 dark:bg-red-900 p-4 rounded-lg">
+                      <h4 className="font-medium text-red-800 dark:text-red-200 mb-2">Последствие провала</h4>
+                      <p className="text-red-700 dark:text-red-300">{goal.consequence}</p>
                     </div>
                   )}
                 </div>
@@ -198,8 +215,8 @@ export default async function GoalPage({ params }: GoalPageProps) {
                 {goal.steps.length > 0 && (
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">Этапы выполнения</h3>
-                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Этапы выполнения</h3>
+                      <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">
                         <FontAwesomeIcon icon={faPlus} className="w-4 mr-1" />
                         Добавить этап
                       </button>
@@ -211,19 +228,19 @@ export default async function GoalPage({ params }: GoalPageProps) {
                           key={step.id}
                           className={`flex items-center space-x-3 p-3 rounded-lg ${
                             step.isCompleted
-                              ? 'bg-green-50 border border-green-200'
+                              ? 'bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700'
                               : index === currentStepIndex
-                              ? 'bg-blue-50 border border-blue-200'
-                              : 'bg-gray-50 border border-gray-200'
+                              ? 'bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700'
+                              : 'bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600'
                           }`}
                         >
                           <div
                             className={`w-6 h-6 rounded-full flex items-center justify-center ${
                               step.isCompleted
-                                ? 'bg-green-500 text-white'
+                                ? 'bg-green-500 dark:bg-green-400 text-white'
                                 : index === currentStepIndex
-                                ? 'bg-blue-500 text-white'
-                                : 'border-2 border-gray-300 bg-white'
+                                ? 'bg-blue-500 dark:bg-blue-400 text-white'
+                                : 'border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'
                             }`}
                           >
                             {step.isCompleted && <FontAwesomeIcon icon={faCheck} className="w-3 h-3" />}
@@ -231,20 +248,26 @@ export default async function GoalPage({ params }: GoalPageProps) {
                               <FontAwesomeIcon icon={faCircle} className="w-3 h-3" />
                             )}
                             {index !== currentStepIndex && !step.isCompleted && (
-                              <span className="text-gray-400">{index + 1}</span>
+                              <span className="text-gray-400 dark:text-gray-300">{index + 1}</span>
                             )}
                           </div>
                           <div className="flex-1">
-                            <h4 className={`font-medium ${step.isCompleted ? 'text-green-800' : 'text-gray-900'}`}>
+                            <h4
+                              className={`font-medium ${
+                                step.isCompleted
+                                  ? 'text-green-800 dark:text-green-200'
+                                  : 'text-gray-900 dark:text-gray-100'
+                              }`}
+                            >
                               {step.text}
                             </h4>
                             <p
                               className={`text-sm ${
                                 step.isCompleted
-                                  ? 'text-green-600'
+                                  ? 'text-green-600 dark:text-green-300'
                                   : index === currentStepIndex
-                                  ? 'text-blue-600'
-                                  : 'text-gray-500'
+                                  ? 'text-blue-600 dark:text-blue-300'
+                                  : 'text-gray-500 dark:text-gray-400'
                               }`}
                             >
                               {step.isCompleted ? 'Завершено' : 'В процессе'}
@@ -261,69 +284,69 @@ export default async function GoalPage({ params }: GoalPageProps) {
 
           {/* Правая боковая панель */}
           <div className="w-1/4 pl-6">
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Статистика</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Статистика</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Ценность цели</span>
-                  <span className="font-medium text-blue-600">{goal.value} баллов</span>
+                  <span className="text-gray-600 dark:text-gray-300">Ценность цели</span>
+                  <span className="font-medium text-blue-600 dark:text-blue-400">{goal.value} баллов</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Дней прошло</span>
-                  <span className="font-medium">{daysPassed}</span>
+                  <span className="text-gray-600 dark:text-gray-300">Дней прошло</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{daysPassed}</span>
                 </div>
-                {daysLeft && (
+                {goal.endDate && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Дней осталось</span>
-                    <span className="font-medium">{daysLeft}</span>
+                    <span className="text-gray-600 dark:text-gray-300">Дней осталось</span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100">{daysLeft}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Этапов завершено</span>
-                  <span className="font-medium">
+                  <span className="text-gray-600 dark:text-gray-300">Этапов завершено</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">
                     {completedSteps} из {goal.steps.length}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Приватность</span>
+                  <span className="text-gray-600 dark:text-gray-300">Приватность</span>
                   <span className={`px-2 py-1 rounded text-sm ${getPrivacyColor()}`}>{getPrivacyLabel()}</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Последняя активность</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Последняя активность</h3>
               <div className="space-y-3">
                 <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                  <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full mt-2"></div>
                   <div>
-                    <p className="text-sm text-gray-900">Цель создана</p>
-                    <p className="text-xs text-gray-500">{formatDate(goal.createdAt)}</p>
+                    <p className="text-sm text-gray-900 dark:text-gray-100">Цель создана</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{formatDate(goal.createdAt)}</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                  <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full mt-2"></div>
                   <div>
-                    <p className="text-sm text-gray-900">Последнее обновление</p>
-                    <p className="text-xs text-gray-500">{formatDate(goal.updatedAt)}</p>
+                    <p className="text-sm text-gray-900 dark:text-gray-100">Последнее обновление</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{formatDate(goal.updatedAt)}</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Действия</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 transition-colors">
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Действия</h3>
               <div className="space-y-3">
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm">
+                <button className="w-full bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-sm transition-colors">
                   Записать в блог
                 </button>
-                <button className="w-full text-blue-600 hover:text-blue-700 border border-blue-200 py-2 px-4 rounded-lg text-sm">
+                <button className="w-full text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 border border-blue-200 dark:border-blue-500 py-2 px-4 rounded-lg text-sm transition-colors">
                   Поделиться целью
                 </button>
-                <button className="w-full text-gray-600 hover:text-gray-700 border border-gray-200 py-2 px-4 rounded-lg text-sm">
+                <button className="w-full text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 border border-gray-200 dark:border-gray-600 py-2 px-4 rounded-lg text-sm transition-colors">
                   Настройки приватности
                 </button>
-                <button className="w-full text-red-600 hover:text-red-700 border border-red-200 py-2 px-4 rounded-lg text-sm">
+                <button className="w-full text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 border border-red-200 dark:border-red-500 py-2 px-4 rounded-lg text-sm transition-colors">
                   Архивировать цель
                 </button>
               </div>

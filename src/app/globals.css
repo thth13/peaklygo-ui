@@ -15,16 +15,25 @@
   --font-family-sans: Inter, sans-serif;
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
 html, body {
   -ms-overflow-style: none;
   scrollbar-width: none;
   font-family: 'Inter', sans-serif !important;
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 button {
