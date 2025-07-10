@@ -14,13 +14,10 @@ import {
   faLock,
   faUserGroup,
   faGlobe,
-  faGripVertical,
-  faTrash,
   faQuoteLeft,
   faLightbulb,
   faCheck,
 } from '@fortawesome/free-solid-svg-icons';
-import { Header } from '@/components/layout/Header';
 import { ImagePreviewer } from '@/components/ImagePreviewer';
 import { Steps } from '@/components/Steps';
 import { createGoal } from '@/lib/api/goal';
@@ -44,7 +41,7 @@ export interface GoalFormData {
   category: string;
   customCategory: string;
   startDate: string;
-  endDate: string;
+  endDate: string | null;
   noDeadline: boolean;
   privacy: PrivaciyStatus;
   reward: string;
@@ -73,8 +70,8 @@ const GoalCreationPage: React.FC = () => {
     description: '',
     category: '',
     customCategory: '',
-    startDate: new Date().toISOString(),
-    endDate: new Date().toISOString(),
+    startDate: new Date().toISOString().slice(0, 10),
+    endDate: null,
     noDeadline: false,
     privacy: PrivaciyStatus.Public,
     reward: '',
@@ -115,10 +112,14 @@ const GoalCreationPage: React.FC = () => {
       const formDataToSend = new FormData();
 
       Object.entries(formData).forEach(([key, value]) => {
-        if (key !== 'image' && key !== 'steps') {
+        if (key !== 'image' && key !== 'steps' && key !== 'endDate') {
           formDataToSend.append(key, value);
         }
       });
+
+      if (formData.endDate) {
+        formDataToSend.append('endDate', formData.endDate);
+      }
 
       formDataToSend.append('steps', JSON.stringify(stepsState));
 
@@ -251,7 +252,7 @@ const GoalCreationPage: React.FC = () => {
                           <input
                             type="date"
                             className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value={formData.endDate}
+                            value={formData.endDate || ''}
                             onChange={(e) => handleInputChange('endDate', e.target.value)}
                           />
                         </div>

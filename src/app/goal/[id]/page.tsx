@@ -95,7 +95,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-3">
-                    <Link href="/profile" className="text-gray-500 hover:text-gray-700 flex items-center space-x-2">
+                    <Link href="/" className="text-gray-500 hover:text-gray-700 flex items-center space-x-2">
                       <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
                       <span className="text-sm">Назад к целям</span>
                     </Link>
@@ -145,7 +145,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
                   <div className="absolute left-0 bottom-0 z-10 text-white p-6">
                     <div className="text-3xl font-bold mb-1">{goal.progress}% завершено</div>
                     {daysLeft && (
-                      <div className="text-md mt-1 text-red-200">
+                      <div className="text-md mt-1 text-black-200">
                         {daysLeft > 0 ? `${daysLeft} дней до дедлайна` : 'Дедлайн прошел'}
                       </div>
                     )}
