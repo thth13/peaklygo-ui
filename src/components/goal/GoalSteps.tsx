@@ -11,10 +11,11 @@ interface StepsProps {
   steps: Step[];
   goalId: string;
   onStepsUpdate?: (updatedSteps: Step[]) => void;
+  onProgressUpdate?: (progress: number) => void;
 }
 
 export const GoalSteps = (props: StepsProps) => {
-  const { steps: initialSteps, goalId, onStepsUpdate } = props;
+  const { steps: initialSteps, goalId, onStepsUpdate, onProgressUpdate } = props;
 
   // Локальное состояние для шагов
   const [steps, setSteps] = useState<Step[]>(initialSteps);
@@ -24,6 +25,13 @@ export const GoalSteps = (props: StepsProps) => {
   useEffect(() => {
     setSteps(initialSteps);
   }, [initialSteps]);
+
+  // Функция для вычисления прогресса
+  const calculateProgress = (stepsList: Step[]): number => {
+    if (stepsList.length === 0) return 0;
+    const completedSteps = stepsList.filter((step) => step.isCompleted).length;
+    return Math.round((completedSteps / stepsList.length) * 100);
+  };
 
   const currentStepIndex = steps.findIndex((step) => !step.isCompleted);
 
@@ -44,6 +52,10 @@ export const GoalSteps = (props: StepsProps) => {
 
       // Уведомляем родительский компонент об изменениях
       onStepsUpdate?.(updatedSteps);
+
+      // Обновляем прогресс в родительском компоненте
+      const newProgress = calculateProgress(updatedSteps);
+      onProgressUpdate?.(newProgress);
 
       // Показываем уведомление
       toast.success(newStatus ? 'Этап выполнен!' : 'Этап отмечен как невыполненный', { duration: 2000 });
@@ -147,23 +159,6 @@ export const GoalSteps = (props: StepsProps) => {
             </div>
           );
         })}
-      </div>
-
-      <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Прогресс выполнения</span>
-          <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
-            {Math.round((steps.filter((s) => s.isCompleted).length / steps.length) * 100)}%
-          </span>
-        </div>
-        <div className="w-full bg-gray-200 dark:bg-gray-600 h-2 rounded-full overflow-hidden">
-          <div
-            className="bg-blue-500 dark:bg-blue-400 h-full rounded-full transition-all duration-500 ease-out"
-            style={{
-              width: `${(steps.filter((s) => s.isCompleted).length / steps.length) * 100}%`,
-            }}
-          />
-        </div>
       </div>
     </div>
   );
