@@ -31,34 +31,58 @@ export const GoalProgress = ({ goal, goalId }: GoalProgressProps) => {
 
   return (
     <>
-      {/* Изображение с прогрессом */}
-      <div className="relative">
-        <div
-          className="h-64 bg-cover bg-center relative rounded-lg"
-          style={{
-            backgroundImage: goal.image
-              ? `url(${IMAGE_URL}/${goal.image})`
-              : 'linear-gradient(to right, #020303, #111827)',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-          }}
-        >
-          {/* Полупрозрачный overlay для читаемости текста */}
-          <div className="absolute inset-0  bg-black/20"></div>
+      {/* Изображение с прогрессом или компактный заголовок */}
+      {goal.image ? (
+        <div className="relative">
+          <div
+            className="h-64 bg-cover bg-center relative rounded-lg"
+            style={{
+              backgroundImage: `url(${IMAGE_URL}/${goal.image})`,
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          >
+            {/* Полупрозрачный overlay для читаемости текста */}
+            <div className="absolute inset-0 bg-black/20"></div>
 
-          {/* Текст в левом нижнем углу */}
-          <div className="absolute left-0 bottom-0 z-10 text-white p-6">
-            <div className="text-3xl font-bold mb-1">{progress}% завершено</div>
-            {goal.endDate && (
-              <div className="text-md mt-1 text-black-200">
-                {daysLeft && daysLeft > 0
-                  ? `${daysLeft} дней до дедлайна`
-                  : `Дедлайн прошел ${Math.abs(daysLeft || 0)} дней назад`}
-              </div>
-            )}
+            {/* Текст в левом нижнем углу */}
+            <div className="absolute left-0 bottom-0 z-10 text-white p-6">
+              <div className="text-3xl font-bold mb-1">{progress}% завершено</div>
+              {goal.endDate && (
+                <div className="text-md mt-1 text-white/80">
+                  {daysLeft && daysLeft > 0
+                    ? `${daysLeft} дней до дедлайна`
+                    : `Дедлайн прошел ${Math.abs(daysLeft || 0)} дней назад`}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 p-6 rounded-lg">
+          <div className="flex items-center justify-between text-white">
+            <div>
+              <div className="text-3xl font-bold mb-1">{progress}% завершено</div>
+              {goal.endDate && (
+                <div className="text-white/80">
+                  {daysLeft && daysLeft > 0
+                    ? `${daysLeft} дней до дедлайна`
+                    : `Дедлайн прошел ${Math.abs(daysLeft || 0)} дней назад`}
+                </div>
+              )}
+            </div>
+            <div className="text-right">
+              <div className="text-white/80 text-sm mb-2">Общий прогресс</div>
+              <div className="w-24 bg-white/20 h-2 rounded-full">
+                <div
+                  className="bg-white h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Описание цели */}
       <div className="p-6">
@@ -76,18 +100,20 @@ export const GoalProgress = ({ goal, goalId }: GoalProgressProps) => {
           </div>
         </div>
 
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="font-medium text-gray-700 dark:text-gray-300">Общий прогресс</span>
-            <span className="text-gray-900 dark:text-gray-100 font-medium">{progress}%</span>
+        {goal.image && (
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-medium text-gray-700 dark:text-gray-300">Общий прогресс</span>
+              <span className="text-gray-900 dark:text-gray-100 font-medium">{progress}%</span>
+            </div>
+            <div className="w-full bg-gray-200 dark:bg-gray-700 h-3 rounded-full">
+              <div
+                className="bg-green-500 dark:bg-green-400 h-3 rounded-full transition-all duration-500"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 h-3 rounded-full">
-            <div
-              className="bg-green-500 dark:bg-green-400 h-3 rounded-full transition-all duration-500"
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
-        </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           {goal.reward && (
