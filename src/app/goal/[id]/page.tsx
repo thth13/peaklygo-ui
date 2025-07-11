@@ -6,6 +6,7 @@ import { Goal } from '@/types';
 import { getGoal } from '@/lib/api/goal';
 import { formatDate } from '@/lib/utils';
 import { IMAGE_URL } from '@/constants';
+import { GoalSteps } from '@/components/goal/GoalSteps';
 
 interface GoalPageProps {
   params: Promise<{ id: string }>;
@@ -84,7 +85,6 @@ export default async function GoalPage({ params }: GoalPageProps) {
   const daysLeft = getDaysLeft();
   const daysPassed = getDaysPassed();
   const completedSteps = getCompletedSteps();
-  const currentStepIndex = goal.steps.findIndex((step) => !step.isCompleted);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
@@ -212,72 +212,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
                 </div>
 
                 {/* Этапы выполнения */}
-                {goal.steps.length > 0 && (
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Этапы выполнения</h3>
-                      <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">
-                        <FontAwesomeIcon icon={faPlus} className="w-4 mr-1" />
-                        Добавить этап
-                      </button>
-                    </div>
-
-                    <div className="space-y-3">
-                      {goal.steps.map((step, index) => (
-                        <div
-                          key={step.id}
-                          className={`flex items-center space-x-3 p-3 rounded-lg ${
-                            step.isCompleted
-                              ? 'bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700'
-                              : index === currentStepIndex
-                              ? 'bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700'
-                              : 'bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600'
-                          }`}
-                        >
-                          <div
-                            className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                              step.isCompleted
-                                ? 'bg-green-500 dark:bg-green-400 text-white'
-                                : index === currentStepIndex
-                                ? 'bg-blue-500 dark:bg-blue-400 text-white'
-                                : 'border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'
-                            }`}
-                          >
-                            {step.isCompleted && <FontAwesomeIcon icon={faCheck} className="w-3 h-3" />}
-                            {index === currentStepIndex && !step.isCompleted && (
-                              <FontAwesomeIcon icon={faCircle} className="w-3 h-3" />
-                            )}
-                            {index !== currentStepIndex && !step.isCompleted && (
-                              <span className="text-gray-400 dark:text-gray-300">{index + 1}</span>
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <h4
-                              className={`font-medium ${
-                                step.isCompleted
-                                  ? 'text-green-800 dark:text-green-200'
-                                  : 'text-gray-900 dark:text-gray-100'
-                              }`}
-                            >
-                              {step.text}
-                            </h4>
-                            <p
-                              className={`text-sm ${
-                                step.isCompleted
-                                  ? 'text-green-600 dark:text-green-300'
-                                  : index === currentStepIndex
-                                  ? 'text-blue-600 dark:text-blue-300'
-                                  : 'text-gray-500 dark:text-gray-400'
-                              }`}
-                            >
-                              {step.isCompleted ? 'Завершено' : 'В процессе'}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                {goal.steps.length > 0 && <GoalSteps steps={goal.steps} goalId={id} />}
               </div>
             </div>
           </div>

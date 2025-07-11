@@ -33,3 +33,13 @@ export const getGoal = async (id: string): Promise<Goal> => {
     throw err;
   }
 };
+
+export const updateStepStatus = async (goalId: string, stepId: string, isCompleted: boolean): Promise<void> => {
+  try {
+    await api.put(`${API_URL}/goals/${goalId}/steps/${stepId}/complete`, {
+      isCompleted,
+    });
+  } catch (err: any) {
+    throw err;
+  }
+};
