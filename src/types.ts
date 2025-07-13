@@ -60,3 +60,22 @@ export enum ReadCategory {
   WANTS_READ = 'wantsToRead',
   DELETE = 'delete',
 }
+
+export interface ProgressEntry {
+  _id: string;
+  goalId: string;
+  userId: string;
+  content: string;
+  day: number;
+  likes: { _id: string }[];
+  comments: number;
+  isEdited: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateProgressEntryDto {
+  goalId: string;
+  content: string;
+  day: number;
+}

@@ -5,6 +5,7 @@ import { Goal } from '@/types';
 import { GoalSteps } from './GoalSteps';
 import { IMAGE_URL } from '@/constants';
 import { formatDate } from '@/lib/utils';
+import { ProgressBlog } from './ProgressBlog';
 
 interface GoalProgressProps {
   goal: Goal;
@@ -134,6 +135,9 @@ export const GoalProgress = ({ goal, goalId }: GoalProgressProps) => {
         {goal.steps.length > 0 && (
           <GoalSteps steps={goal.steps} goalId={goalId} onProgressUpdate={handleProgressUpdate} />
         )}
+
+        {/* Блог прогресса */}
+        <ProgressBlog goalId={goalId} />
       </div>
     </>
   );
