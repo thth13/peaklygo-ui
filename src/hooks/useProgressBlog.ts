@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import toast from 'react-hot-toast';
-import { ProgressEntry, CreateProgressEntryDto } from '@/types';
-import { getProgressEntries, createProgressEntry, toggleLike } from '@/lib/api';
+import { ProgressEntry, CreateProgressEntryDto, Comment, CreateCommentDto } from '@/types';
+import { getProgressEntries, createProgressEntry, toggleLike, getComments, createComment } from '@/lib/api';
 import { AuthContext } from '@/context/AuthContext';
 
 interface UseProgressBlogOptions {
@@ -15,6 +15,12 @@ export const useProgressBlog = ({ goalId }: UseProgressBlogOptions) => {
   const [blogEntries, setBlogEntries] = useState<ProgressEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [likeAnimations, setLikeAnimations] = useState<{ [key: string]: boolean }>({});
+
+  // Comment-related state
+  const [expandedComments, setExpandedComments] = useState<{ [key: string]: boolean }>({});
+  const [comments, setComments] = useState<{ [key: string]: Comment[] }>({});
+  const [commentTexts, setCommentTexts] = useState<{ [key: string]: string }>({});
+  const [loadingComments, setLoadingComments] = useState<{ [key: string]: boolean }>({});
 
   const loadEntries = async () => {
     try {
@@ -78,6 +84,53 @@ export const useProgressBlog = ({ goalId }: UseProgressBlogOptions) => {
     return userId ? entry.likes.some((like) => like._id === userId) : false;
   };
 
+  const toggleComments = async (entryId: string) => {
+    const isExpanding = !expandedComments[entryId];
+
+    setExpandedComments((prev) => ({ ...prev, [entryId]: isExpanding }));
+
+    if (isExpanding && !comments[entryId]) {
+      try {
+        setLoadingComments((prev) => ({ ...prev, [entryId]: true }));
+        const entryComments = await getComments(entryId);
+        setComments((prev) => ({ ...prev, [entryId]: entryComments }));
+      } catch (error) {
+        toast.error('Ошибка загрузки комментариев');
+        console.error('Error loading comments:', error);
+      } finally {
+        setLoadingComments((prev) => ({ ...prev, [entryId]: false }));
+      }
+    }
+  };
+
+  const handleCommentSubmit = async (entryId: string) => {
+    const commentText = commentTexts[entryId]?.trim();
+    if (!commentText) {
+      toast.error('Напишите комментарий');
+      return;
+    }
+
+    try {
+      const createDto: CreateCommentDto = { content: commentText };
+      const newComment = await createComment(entryId, createDto);
+
+      setComments((prev) => ({
+        ...prev,
+        [entryId]: [...(prev[entryId] || []), newComment],
+      }));
+
+      setBlogEntries((prev) =>
+        prev.map((entry) => (entry._id === entryId ? { ...entry, commentCount: entry.commentCount + 1 } : entry)),
+      );
+
+      setCommentTexts((prev) => ({ ...prev, [entryId]: '' }));
+      toast.success('Комментарий добавлен!');
+    } catch (error) {
+      toast.error('Ошибка добавления комментария');
+      console.error('Error creating comment:', error);
+    }
+  };
+
   return {
     // State
     showNewEntryForm,
@@ -88,9 +141,20 @@ export const useProgressBlog = ({ goalId }: UseProgressBlogOptions) => {
     isLoading,
     likeAnimations,
 
+    // Comment state
+    expandedComments,
+    comments,
+    commentTexts,
+    setCommentTexts,
+    loadingComments,
+
     // Handlers
     handleSubmitEntry,
     handleToggleLike,
     isLikedByCurrentUser,
+
+    // Comment handlers
+    toggleComments,
+    handleCommentSubmit,
   };
 };

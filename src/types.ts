@@ -72,9 +72,30 @@ export interface ProgressEntry {
   isEdited: boolean;
   createdAt: Date;
   updatedAt: Date;
+  commentCount: number;
 }
 
 export interface CreateProgressEntryDto {
   goalId: string;
+  content: string;
+}
+
+export interface Comment {
+  _id: string;
+  progressEntryId: string;
+  userId: string;
+  content: string;
+  likes: { _id: string }[];
+  isEdited: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  user?: {
+    _id: string;
+    name: string;
+    avatar?: string;
+  };
+}
+
+export interface CreateCommentDto {
   content: string;
 }
