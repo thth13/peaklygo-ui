@@ -6,10 +6,9 @@ import { AuthContext } from '@/context/AuthContext';
 
 interface UseProgressBlogOptions {
   goalId: string;
-  currentDay?: number;
 }
 
-export const useProgressBlog = ({ goalId, currentDay = 67 }: UseProgressBlogOptions) => {
+export const useProgressBlog = ({ goalId }: UseProgressBlogOptions) => {
   const { userId } = useContext(AuthContext);
   const [showNewEntryForm, setShowNewEntryForm] = useState(false);
   const [newEntry, setNewEntry] = useState({ content: '' });
@@ -45,7 +44,6 @@ export const useProgressBlog = ({ goalId, currentDay = 67 }: UseProgressBlogOpti
       const createDto: CreateProgressEntryDto = {
         goalId,
         content: newEntry.content.trim(),
-        day: currentDay,
       };
 
       const newProgressEntry = await createProgressEntry(createDto);
@@ -94,8 +92,5 @@ export const useProgressBlog = ({ goalId, currentDay = 67 }: UseProgressBlogOpti
     handleSubmitEntry,
     handleToggleLike,
     isLikedByCurrentUser,
-
-    // Data
-    currentDay,
   };
 };

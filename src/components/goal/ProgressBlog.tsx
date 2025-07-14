@@ -7,10 +7,9 @@ import { formatTimeAgo, getDayColor } from '@/lib/utils';
 
 interface ProgressBlogProps {
   goalId: string;
-  currentDay?: number;
 }
 
-export const ProgressBlog = ({ goalId, currentDay = 67 }: ProgressBlogProps) => {
+export const ProgressBlog = ({ goalId }: ProgressBlogProps) => {
   const {
     showNewEntryForm,
     setShowNewEntryForm,
@@ -22,7 +21,7 @@ export const ProgressBlog = ({ goalId, currentDay = 67 }: ProgressBlogProps) => 
     handleSubmitEntry,
     handleToggleLike,
     isLikedByCurrentUser,
-  } = useProgressBlog({ goalId, currentDay });
+  } = useProgressBlog({ goalId });
 
   if (isLoading) {
     return (
@@ -51,16 +50,6 @@ export const ProgressBlog = ({ goalId, currentDay = 67 }: ProgressBlogProps) => 
       {/* Форма новой записи */}
       {showNewEntryForm && (
         <div className="mb-6 p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700">
-          <div className="flex items-center justify-between mb-4">
-            <h4 className="text-lg font-medium text-gray-900 dark:text-gray-100">Новая запись (день {currentDay})</h4>
-            <button
-              onClick={() => setShowNewEntryForm(false)}
-              className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-            >
-              <FontAwesomeIcon icon={faTimes} className="w-5 h-5" />
-            </button>
-          </div>
-
           <form onSubmit={handleSubmitEntry} className="space-y-4">
             <div>
               <textarea
@@ -98,11 +87,7 @@ export const ProgressBlog = ({ goalId, currentDay = 67 }: ProgressBlogProps) => 
           return (
             <div key={entry._id} className="flex space-x-4">
               <div className="flex-shrink-0">
-                <div
-                  className={`${getDayColor(
-                    entry.day,
-                  )} rounded-lg w-14 h-14 flex flex-col items-center justify-center text-center`}
-                >
+                <div className="bg-blue-500 text-white rounded-lg w-14 h-14 flex flex-col items-center justify-center text-center">
                   <div className="text-lg font-bold leading-none">{entry.day}</div>
                   <div className="text-xs font-medium uppercase tracking-wide leading-none">ДЕНЬ</div>
                 </div>

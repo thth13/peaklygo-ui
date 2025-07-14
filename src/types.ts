@@ -77,5 +77,4 @@ export interface ProgressEntry {
 export interface CreateProgressEntryDto {
   goalId: string;
   content: string;
-  day: number;
 }
