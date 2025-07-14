@@ -200,9 +200,6 @@ export default async function GoalPage({ params }: GoalPageProps) {
                 <button className="w-full text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 border border-blue-200 dark:border-blue-500 py-2 px-4 rounded-lg text-sm transition-colors">
                   Поделиться целью
                 </button>
-                <button className="w-full text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 border border-gray-200 dark:border-gray-600 py-2 px-4 rounded-lg text-sm transition-colors">
-                  Настройки приватности
-                </button>
                 <button className="w-full text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 border border-red-200 dark:border-red-500 py-2 px-4 rounded-lg text-sm transition-colors">
                   Архивировать цель
                 </button>
