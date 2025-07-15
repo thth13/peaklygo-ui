@@ -64,11 +64,19 @@ export const useProgressBlog = ({ goalId }: UseProgressBlogOptions) => {
   };
 
   const handleToggleLike = async (entryId: string) => {
+    if (!userId) {
+      toast.error('Для оценки записей необходимо войти в аккаунт');
+      return;
+    }
+
     try {
       setLikeAnimations((prev) => ({ ...prev, [entryId]: true }));
 
       const updatedEntry = await toggleLike(entryId);
-      setBlogEntries((prevEntries) => prevEntries.map((entry) => (entry._id === entryId ? updatedEntry : entry)));
+
+      setBlogEntries((prevEntries) =>
+        prevEntries.map((entry) => (entry._id === entryId ? { ...entry, likes: updatedEntry.likes } : entry)),
+      );
 
       setTimeout(() => {
         setLikeAnimations((prev) => ({ ...prev, [entryId]: false }));

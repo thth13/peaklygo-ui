@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '../context/AuthContext';
 import ProgressBar from './ProgressBar';
 import './globals.css';
@@ -23,6 +24,7 @@ export default function RootLayout({
           <UserProfileProvider>
             <ProgressBar />
             {children}
+            <Toaster position="top-right" />
           </UserProfileProvider>
         </AuthProvider>
       </body>

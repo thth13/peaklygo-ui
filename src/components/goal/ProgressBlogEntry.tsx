@@ -1,10 +1,13 @@
 'use client';
 
+import { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faComment, faChevronDown, faChevronUp, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { formatTimeAgo } from '@/lib/utils';
 import { ProgressEntry, Comment } from '@/types';
 import { useProgressBlogEntry } from '@/hooks/useProgressBlogEntry';
+import { AuthContext } from '@/context/AuthContext';
+import Link from 'next/link';
 
 interface ProgressBlogActions {
   onToggleLike: (entryId: string) => void;
@@ -40,6 +43,8 @@ export const ProgressBlogEntry = ({
     commentTexts,
     loadingComments,
   });
+
+  const { userId } = useContext(AuthContext);
 
   return (
     <div className="flex space-x-4">
@@ -129,21 +134,44 @@ export const ProgressBlogEntry = ({
               </div>
             )}
             <div className="mt-3">
-              <div className="flex space-x-2">
-                <textarea
-                  placeholder="Написать комментарий..."
-                  value={commentText}
-                  onChange={(e) => actions.onCommentTextChange(entry._id, e.target.value)}
-                  rows={1}
-                  className="flex-1 max-w-md px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
-                />
-                <button
-                  onClick={() => actions.onCommentSubmit(entry._id)}
-                  className="px-4 py-1.5 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm transition-colors flex items-center"
-                >
-                  <FontAwesomeIcon icon={faPaperPlane} className="w-4 h-4" />
-                </button>
-              </div>
+              {userId ? (
+                <div className="flex space-x-2">
+                  <textarea
+                    placeholder="Написать комментарий..."
+                    value={commentText}
+                    onChange={(e) => actions.onCommentTextChange(entry._id, e.target.value)}
+                    rows={1}
+                    className="flex-1 max-w-md px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
+                  />
+                  <button
+                    onClick={() => actions.onCommentSubmit(entry._id)}
+                    className="px-4 py-1.5 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm transition-colors flex items-center"
+                  >
+                    <FontAwesomeIcon icon={faPaperPlane} className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center py-3 px-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
+                    Для написания комментариев необходимо войти в аккаунт
+                  </p>
+                  <div className="flex justify-center space-x-3 text-sm">
+                    <Link
+                      href="/auth/login"
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                    >
+                      Войти
+                    </Link>
+                    <span className="text-gray-400">или</span>
+                    <Link
+                      href="/auth/register"
+                      className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                    >
+                      Зарегистрироваться
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
