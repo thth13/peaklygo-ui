@@ -10,9 +10,10 @@ import { ProgressBlog } from './ProgressBlog';
 interface GoalProgressProps {
   goal: Goal;
   goalId: string;
+  currentUserId?: string;
 }
 
-export const GoalProgress = ({ goal, goalId }: GoalProgressProps) => {
+export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps) => {
   const [progress, setProgress] = useState(goal.progress);
 
   const handleProgressUpdate = (newProgress: number) => {
@@ -129,7 +130,13 @@ export const GoalProgress = ({ goal, goalId }: GoalProgressProps) => {
         </div>
 
         {goal.steps.length > 0 && (
-          <GoalSteps steps={goal.steps} goalId={goalId} onProgressUpdate={handleProgressUpdate} />
+          <GoalSteps
+            steps={goal.steps}
+            goalId={goalId}
+            currentUserId={currentUserId}
+            goalUserId={goal.userId}
+            onProgressUpdate={handleProgressUpdate}
+          />
         )}
 
         <ProgressBlog goalId={goalId} />

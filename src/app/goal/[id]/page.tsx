@@ -6,6 +6,7 @@ import { Goal } from '@/types';
 import { getGoal } from '@/lib/api/goal';
 import { formatDate } from '@/lib/utils';
 import { GoalProgress } from '@/components/goal/GoalProgress';
+import { cookies } from 'next/headers';
 
 interface GoalPageProps {
   params: Promise<{ id: string }>;
@@ -13,6 +14,10 @@ interface GoalPageProps {
 
 export default async function GoalPage({ params }: GoalPageProps) {
   const { id } = await params;
+
+  // Get userId from cookies on the server
+  const cookieStore = await cookies();
+  const currentUserId = cookieStore.get('userId')?.value;
 
   const goal = await fetchGoal(id);
   if (!goal) {
@@ -135,7 +140,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
                 </div>
               </div>
 
-              <GoalProgress goal={goal} goalId={id} />
+              <GoalProgress goal={goal} goalId={id} currentUserId={currentUserId} />
             </div>
           </div>
 

@@ -10,16 +10,21 @@ import toast from 'react-hot-toast';
 interface StepsProps {
   steps: Step[];
   goalId: string;
+  currentUserId?: string;
+  goalUserId: string;
   onStepsUpdate?: (updatedSteps: Step[]) => void;
   onProgressUpdate?: (progress: number) => void;
 }
 
 export const GoalSteps = (props: StepsProps) => {
-  const { steps: initialSteps, goalId, onStepsUpdate, onProgressUpdate } = props;
+  const { steps: initialSteps, goalId, currentUserId, goalUserId, onStepsUpdate, onProgressUpdate } = props;
 
   // Локальное состояние для шагов
   const [steps, setSteps] = useState<Step[]>(initialSteps);
   const [loadingSteps, setLoadingSteps] = useState<Set<string>>(new Set());
+
+  // Проверяем является ли пользователь владельцем цели
+  const isOwner = currentUserId === goalUserId;
 
   // Синхронизируем с пропсами при их изменении
   useEffect(() => {
@@ -112,10 +117,12 @@ export const GoalSteps = (props: StepsProps) => {
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
           Этапы выполнения ({steps.filter((s) => s.isCompleted).length}/{steps.length})
         </h3>
-        <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium transition-colors">
-          <FontAwesomeIcon icon={faPlus} className="w-4 mr-1" />
-          Добавить этап
-        </button>
+        {isOwner && (
+          <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium transition-colors">
+            <FontAwesomeIcon icon={faPlus} className="w-4 mr-1" />
+            Добавить этап
+          </button>
+        )}
       </div>
 
       <div className="space-y-3">
@@ -129,22 +136,24 @@ export const GoalSteps = (props: StepsProps) => {
               key={step.id}
               className={`flex items-center space-x-3 p-3 rounded-lg transition-all ${styles.container}`}
             >
-              <button
-                onClick={() => handleStepToggle(step, index)}
-                disabled={isLoading}
-                className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${styles.circle} ${
-                  isLoading ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-                title={step.isCompleted ? 'Отметить как невыполненный' : 'Отметить как выполненный'}
-              >
-                {isLoading ? (
-                  <FontAwesomeIcon icon={faSpinner} className="w-3 h-3 animate-spin" />
-                ) : step.isCompleted ? (
-                  <FontAwesomeIcon icon={faCheck} className="w-3 h-3" />
-                ) : status === 'current' ? (
-                  <FontAwesomeIcon icon={faCircle} className="w-2 h-2 text-blue-500 dark:text-blue-400" />
-                ) : null}
-              </button>
+              {isOwner && (
+                <button
+                  onClick={() => handleStepToggle(step, index)}
+                  disabled={isLoading}
+                  className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${styles.circle} ${
+                    isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  title={step.isCompleted ? 'Отметить как невыполненный' : 'Отметить как выполненный'}
+                >
+                  {isLoading ? (
+                    <FontAwesomeIcon icon={faSpinner} className="w-3 h-3 animate-spin" />
+                  ) : step.isCompleted ? (
+                    <FontAwesomeIcon icon={faCheck} className="w-3 h-3" />
+                  ) : status === 'current' ? (
+                    <FontAwesomeIcon icon={faCircle} className="w-2 h-2 text-blue-500 dark:text-blue-400" />
+                  ) : null}
+                </button>
+              )}
 
               <div className="flex-1">
                 <h4 className={`font-medium transition-colors ${styles.title}`}>{step.text}</h4>
