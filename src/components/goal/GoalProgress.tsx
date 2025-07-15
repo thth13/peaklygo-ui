@@ -32,7 +32,6 @@ export const GoalProgress = ({ goal, goalId }: GoalProgressProps) => {
 
   return (
     <>
-      {/* Изображение с прогрессом или компактный заголовок */}
       {goal.image ? (
         <div className="relative">
           <div
@@ -43,10 +42,8 @@ export const GoalProgress = ({ goal, goalId }: GoalProgressProps) => {
               backgroundRepeat: 'no-repeat',
             }}
           >
-            {/* Полупрозрачный overlay для читаемости текста */}
             <div className="absolute inset-0 bg-black/20"></div>
 
-            {/* Текст в левом нижнем углу */}
             <div className="absolute left-0 bottom-0 z-10 text-white p-6">
               <div className="text-3xl font-bold mb-1">{progress}% завершено</div>
               {goal.endDate && (
@@ -131,12 +128,10 @@ export const GoalProgress = ({ goal, goalId }: GoalProgressProps) => {
           )}
         </div>
 
-        {/* Этапы выполнения */}
         {goal.steps.length > 0 && (
           <GoalSteps steps={goal.steps} goalId={goalId} onProgressUpdate={handleProgressUpdate} />
         )}
 
-        {/* Блог прогресса */}
         <ProgressBlog goalId={goalId} />
       </div>
     </>
