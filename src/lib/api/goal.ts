@@ -14,6 +14,17 @@ export const createGoal = async (goal: FormData) => {
   }
 };
 
+export const updateGoal = async (id: string, goal: FormData) => {
+  try {
+    const res = await api.put(`${API_URL}/goals/${id}`, goal);
+
+    nProgress.start();
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
 export const getGoals = async (userId: string): Promise<Goal[]> => {
   try {
     const res = await api.get(`${API_URL}/goals/userGoals/${userId}`);

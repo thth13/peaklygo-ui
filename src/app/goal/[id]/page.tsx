@@ -113,14 +113,13 @@ export default async function GoalPage({ params }: GoalPageProps) {
                     </Link>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <button className="flex items-center space-x-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <Link
+                      href={`/goal/${id}/edit`}
+                      className="flex items-center space-x-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
                       <FontAwesomeIcon icon={faEdit} className="w-4 h-4" />
                       <span>Редактировать</span>
-                    </button>
-                    <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm transition-colors">
-                      <FontAwesomeIcon icon={faPlus} className="w-4 h-4" />
-                      <span>Обновить прогресс</span>
-                    </button>
+                    </Link>
                   </div>
                 </div>
 
