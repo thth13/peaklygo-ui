@@ -104,12 +104,12 @@ export const ProgressBlogEntry = ({
                 {entryComments.map((comment) => (
                   <div key={comment._id} className="flex space-x-3">
                     <div className="flex-shrink-0">
-                      {comment.user?.avatar ? (
-                        <img src={comment.user.avatar} alt={comment.user.name} className="w-8 h-8 rounded-full" />
+                      {comment.profile?.avatar ? (
+                        <img src={comment.profile.avatar} alt={comment.profile.name} className="w-8 h-8 rounded-full" />
                       ) : (
                         <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
                           <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
-                            {comment.user?.name?.charAt(0).toUpperCase() || 'U'}
+                            {comment.profile?.name?.charAt(0).toUpperCase() || 'U'}
                           </span>
                         </div>
                       )}
@@ -117,7 +117,7 @@ export const ProgressBlogEntry = ({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
                         <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                          {comment.user?.name || 'Неизвестный пользователь'}
+                          {comment.profile?.name || 'Неизвестный пользователь'}
                         </span>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
                           {formatTimeAgo(comment.createdAt)}

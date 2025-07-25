@@ -83,13 +83,12 @@ export interface CreateProgressEntryDto {
 export interface Comment {
   _id: string;
   progressEntryId: string;
-  userId: string;
   content: string;
   likes: { _id: string }[];
   isEdited: boolean;
   createdAt: Date;
   updatedAt: Date;
-  user?: {
+  profile: {
     _id: string;
     name: string;
     avatar?: string;
