@@ -1,20 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { useProgressBlog } from '@/hooks/useProgressBlog';
+import { useProgressBlogContext } from '@/context/ProgressBlogContext';
 import { ProgressBlogEntry } from './ProgressBlogEntry';
 
-interface ProgressBlogProps {
-  goalId: string;
-}
-
-export const ProgressBlog = ({ goalId }: ProgressBlogProps) => {
+export const ProgressBlog = () => {
   const {
-    showNewEntryForm,
-    setShowNewEntryForm,
-    newEntry,
-    setNewEntry,
     blogEntries,
     isLoading,
     likeAnimations,
@@ -23,11 +16,25 @@ export const ProgressBlog = ({ goalId }: ProgressBlogProps) => {
     commentTexts,
     setCommentTexts,
     loadingComments,
-    handleSubmitEntry,
+    createEntry,
     handleToggleLike,
     toggleComments,
     handleCommentSubmit,
-  } = useProgressBlog({ goalId });
+  } = useProgressBlogContext();
+
+  const [showNewEntryForm, setShowNewEntryForm] = useState(false);
+  const [newEntry, setNewEntry] = useState({ content: '' });
+
+  const handleSubmitEntry = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await createEntry(newEntry.content);
+      setNewEntry({ content: '' });
+      setShowNewEntryForm(false);
+    } catch (error) {
+      // Error handling is done in context
+    }
+  };
 
   const handleCommentTextChange = (entryId: string, text: string) => {
     setCommentTexts((prev) => ({ ...prev, [entryId]: text }));

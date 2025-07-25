@@ -1,17 +1,41 @@
-import { useState, useEffect, useContext } from 'react';
+'use client';
+
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import toast from 'react-hot-toast';
 import { ProgressEntry, CreateProgressEntryDto, Comment, CreateCommentDto } from '@/types';
 import { getProgressEntries, createProgressEntry, toggleLike, getComments, createComment } from '@/lib/api';
 import { AuthContext } from '@/context/AuthContext';
 
-interface UseProgressBlogOptions {
+interface ProgressBlogContextType {
+  // State
+  blogEntries: ProgressEntry[];
+  isLoading: boolean;
+  likeAnimations: { [key: string]: boolean };
+
+  // Comment state
+  expandedComments: { [key: string]: boolean };
+  comments: { [key: string]: Comment[] };
+  commentTexts: { [key: string]: string };
+  setCommentTexts: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+  loadingComments: { [key: string]: boolean };
+
+  // Actions
+  createEntry: (content: string) => Promise<void>;
+  handleToggleLike: (entryId: string) => Promise<void>;
+  isLikedByCurrentUser: (entry: ProgressEntry) => boolean;
+  toggleComments: (entryId: string) => Promise<void>;
+  handleCommentSubmit: (entryId: string) => Promise<void>;
+}
+
+const ProgressBlogContext = createContext<ProgressBlogContextType | null>(null);
+
+interface ProgressBlogProviderProps {
+  children: ReactNode;
   goalId: string;
 }
 
-export const useProgressBlog = ({ goalId }: UseProgressBlogOptions) => {
+export const ProgressBlogProvider = ({ children, goalId }: ProgressBlogProviderProps) => {
   const { userId } = useContext(AuthContext);
-  const [showNewEntryForm, setShowNewEntryForm] = useState(false);
-  const [newEntry, setNewEntry] = useState({ content: '' });
   const [blogEntries, setBlogEntries] = useState<ProgressEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [likeAnimations, setLikeAnimations] = useState<{ [key: string]: boolean }>({});
@@ -39,9 +63,8 @@ export const useProgressBlog = ({ goalId }: UseProgressBlogOptions) => {
     loadEntries();
   }, [goalId]);
 
-  const handleSubmitEntry = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newEntry.content.trim()) {
+  const createEntry = async (content: string) => {
+    if (!content.trim()) {
       toast.error('Напишите что-нибудь о своем прогрессе');
       return;
     }
@@ -49,17 +72,16 @@ export const useProgressBlog = ({ goalId }: UseProgressBlogOptions) => {
     try {
       const createDto: CreateProgressEntryDto = {
         goalId,
-        content: newEntry.content.trim(),
+        content: content.trim(),
       };
 
       const newProgressEntry = await createProgressEntry(createDto);
       setBlogEntries([newProgressEntry, ...blogEntries]);
-      setNewEntry({ content: '' });
-      setShowNewEntryForm(false);
       toast.success('Запись добавлена!');
     } catch (error) {
       toast.error('Ошибка создания записи');
       console.error('Error creating progress entry:', error);
+      throw error;
     }
   };
 
@@ -139,12 +161,8 @@ export const useProgressBlog = ({ goalId }: UseProgressBlogOptions) => {
     }
   };
 
-  return {
+  const value: ProgressBlogContextType = {
     // State
-    showNewEntryForm,
-    setShowNewEntryForm,
-    newEntry,
-    setNewEntry,
     blogEntries,
     isLoading,
     likeAnimations,
@@ -156,13 +174,21 @@ export const useProgressBlog = ({ goalId }: UseProgressBlogOptions) => {
     setCommentTexts,
     loadingComments,
 
-    // Handlers
-    handleSubmitEntry,
+    // Actions
+    createEntry,
     handleToggleLike,
     isLikedByCurrentUser,
-
-    // Comment handlers
     toggleComments,
     handleCommentSubmit,
   };
+
+  return <ProgressBlogContext.Provider value={value}>{children}</ProgressBlogContext.Provider>;
+};
+
+export const useProgressBlogContext = () => {
+  const context = useContext(ProgressBlogContext);
+  if (!context) {
+    throw new Error('useProgressBlogContext must be used within ProgressBlogProvider');
+  }
+  return context;
 };
