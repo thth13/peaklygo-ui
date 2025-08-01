@@ -16,7 +16,11 @@ export const cn = (...classes: (string | undefined | false)[]): string => {
 export const formatTimeAgo = (date: Date): string => {
   const now = new Date();
   const entryDate = new Date(date);
-  const diffInDays = Math.floor((now.getTime() - entryDate.getTime()) / (1000 * 60 * 60 * 24));
+
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const entryDayStart = new Date(entryDate.getFullYear(), entryDate.getMonth(), entryDate.getDate());
+
+  const diffInDays = Math.floor((todayStart.getTime() - entryDayStart.getTime()) / (1000 * 60 * 60 * 24));
 
   if (diffInDays === 0) return 'сегодня';
   if (diffInDays === 1) return 'вчера';
