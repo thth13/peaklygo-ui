@@ -41,6 +41,7 @@ export interface GoalFormData {
   consequence: string;
   value: number;
   image: File | null;
+  existingImageUrl?: string;
 }
 
 interface GoalFormProps {
@@ -76,6 +77,7 @@ const defaultFormData: GoalFormData = {
   consequence: '',
   value: 100,
   image: null,
+  existingImageUrl: undefined,
 };
 
 const defaultSteps: Step[] = [
@@ -265,7 +267,11 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                 </div>
 
                 {/* Image Upload */}
-                <ImagePreviewer handleInputChange={handleInputChange} image={formData.image} />
+                <ImagePreviewer
+                  handleInputChange={handleInputChange}
+                  image={formData.image}
+                  existingImageUrl={formData.existingImageUrl}
+                />
 
                 {/* Steps */}
                 <div>

@@ -7,12 +7,16 @@ import { faTrash, faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
 interface ImagePreviewerProps {
   handleInputChange: (field: string, value: any) => void;
   image: File | null;
+  existingImageUrl?: string;
 }
 
-export const ImagePreviewer = ({ handleInputChange, image }: ImagePreviewerProps) => {
+export const ImagePreviewer = ({ handleInputChange, image, existingImageUrl }: ImagePreviewerProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Compute the image URL to display (new preview takes priority over existing)
+  const displayImageUrl = imagePreview || existingImageUrl;
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -42,10 +46,10 @@ export const ImagePreviewer = ({ handleInputChange, image }: ImagePreviewerProps
         className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-lg hover:border-blue-400 dark:hover:border-blue-400 transition-colors cursor-pointer relative bg-gray-50 dark:bg-gray-700"
         onClick={() => fileInputRef.current?.click()}
       >
-        {imagePreview ? (
+        {displayImageUrl ? (
           <div className="relative w-full h-48">
             <Image
-              src={imagePreview}
+              src={displayImageUrl}
               alt="Preview"
               fill
               className="object-contain"
@@ -58,6 +62,7 @@ export const ImagePreviewer = ({ handleInputChange, image }: ImagePreviewerProps
                 e.stopPropagation();
                 setImagePreview(null);
                 handleInputChange('image', null);
+                handleInputChange('existingImageUrl', undefined);
                 if (fileInputRef.current) {
                   fileInputRef.current.value = '';
                 }

@@ -5,6 +5,7 @@ import { GoalForm, GoalFormData } from '@/components/goal/GoalForm';
 import { getGoal, updateGoal } from '@/lib/api/goal';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { useRouter, useParams } from 'next/navigation';
+import { IMAGE_URL } from '@/constants';
 
 interface Step {
   id: string;
@@ -40,6 +41,7 @@ const GoalEditPage: React.FC = () => {
           consequence: goal.consequence || '',
           value: goal.value,
           image: null,
+          existingImageUrl: goal.image ? `${IMAGE_URL}/${goal.image}` : undefined,
         });
 
         setInitialSteps(
