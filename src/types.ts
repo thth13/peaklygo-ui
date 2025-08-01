@@ -21,7 +21,7 @@ export interface UserProfile {
   user: string;
 }
 
-enum PrivaciyStatus {
+export enum PrivacyStatus {
   Private = 'private',
   Friends = 'friends',
   Public = 'public',
@@ -45,7 +45,7 @@ export interface Goal {
   steps: Step[];
   reward?: string;
   consequence?: string;
-  privacy: PrivaciyStatus;
+  privacy: PrivacyStatus;
   isCompleted: boolean;
   value: number;
   userId: string;

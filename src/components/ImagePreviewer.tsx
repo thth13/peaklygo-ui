@@ -4,10 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
-import { GoalFormData } from '@/app/goal/create/page';
-
 interface ImagePreviewerProps {
-  handleInputChange: (field: keyof GoalFormData, value: any) => void;
+  handleInputChange: (field: string, value: any) => void;
   image: File | null;
 }
 
