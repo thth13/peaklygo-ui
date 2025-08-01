@@ -1,9 +1,9 @@
 'use client';
 
 import { Step } from '@/types';
-import { faCheck, faCircle, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faCircle, faPlus, faSpinner, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { updateStepStatus } from '@/lib/api/goal';
+import { updateStepStatus, createStep, deleteStep } from '@/lib/api/goal';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
@@ -22,6 +22,14 @@ export const GoalSteps = (props: StepsProps) => {
   // Локальное состояние для шагов
   const [steps, setSteps] = useState<Step[]>(initialSteps);
   const [loadingSteps, setLoadingSteps] = useState<Set<string>>(new Set());
+
+  // Состояние для формы добавления этапа
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newStepText, setNewStepText] = useState('');
+  const [isCreatingStep, setIsCreatingStep] = useState(false);
+
+  // Состояние для удаления этапов
+  const [deletingSteps, setDeletingSteps] = useState<Set<string>>(new Set());
 
   // Проверяем является ли пользователь владельцем цели
   const isOwner = currentUserId === goalUserId;
@@ -77,6 +85,91 @@ export const GoalSteps = (props: StepsProps) => {
     }
   };
 
+  const handleAddStep = async () => {
+    if (!newStepText.trim()) {
+      toast.error('Введите название этапа');
+      return;
+    }
+
+    setIsCreatingStep(true);
+
+    try {
+      // Создаем этап на сервере
+      await createStep(goalId, newStepText.trim());
+
+      // Создаем временный ID для нового этапа
+      const tempId = `temp-${Date.now()}`;
+      const newStep: Step = {
+        id: tempId,
+        text: newStepText.trim(),
+        isCompleted: false,
+      };
+
+      // Обновляем локальное состояние
+      const updatedSteps = [...steps, newStep];
+      setSteps(updatedSteps);
+
+      // Уведомляем родительский компонент
+      onStepsUpdate?.(updatedSteps);
+
+      // Перерасчитываем прогресс
+      const newProgress = calculateProgress(updatedSteps);
+      onProgressUpdate?.(newProgress);
+
+      // Сбрасываем форму
+      setNewStepText('');
+      setShowAddForm(false);
+
+      toast.success('Этап добавлен!');
+    } catch (error) {
+      console.error('Failed to create step:', error);
+      toast.error('Не удалось добавить этап');
+    } finally {
+      setIsCreatingStep(false);
+    }
+  };
+
+  const handleCancelAdd = () => {
+    setNewStepText('');
+    setShowAddForm(false);
+  };
+
+  const handleDeleteStep = async (stepId: string) => {
+    if (steps.length <= 1) {
+      toast.error('Нельзя удалить последний этап');
+      return;
+    }
+
+    setDeletingSteps((prev) => new Set([...prev, stepId]));
+
+    try {
+      // Удаляем этап на сервере
+      await deleteStep(goalId, stepId);
+
+      // Обновляем локальное состояние
+      const updatedSteps = steps.filter((step) => step.id !== stepId);
+      setSteps(updatedSteps);
+
+      // Уведомляем родительский компонент
+      onStepsUpdate?.(updatedSteps);
+
+      // Перерасчитываем прогресс
+      const newProgress = calculateProgress(updatedSteps);
+      onProgressUpdate?.(newProgress);
+
+      toast.success('Этап удален!');
+    } catch (error) {
+      console.error('Failed to delete step:', error);
+      toast.error('Не удалось удалить этап');
+    } finally {
+      setDeletingSteps((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(stepId);
+        return newSet;
+      });
+    }
+  };
+
   const getStepStatus = (step: Step, index: number) => {
     if (step.isCompleted) return 'completed';
     if (index === currentStepIndex) return 'current';
@@ -118,30 +211,80 @@ export const GoalSteps = (props: StepsProps) => {
           Этапы выполнения ({steps.filter((s) => s.isCompleted).length}/{steps.length})
         </h3>
         {isOwner && (
-          <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium transition-colors">
+          <button
+            onClick={() => setShowAddForm(true)}
+            disabled={showAddForm}
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <FontAwesomeIcon icon={faPlus} className="w-4 mr-1" />
             Добавить этап
           </button>
         )}
       </div>
 
+      {/* Форма добавления нового этапа */}
+      {showAddForm && (
+        <div className="mb-4 p-4 border border-blue-200 dark:border-blue-600 rounded-lg bg-blue-50 dark:bg-blue-900">
+          <div className="flex items-center space-x-3">
+            <input
+              type="text"
+              value={newStepText}
+              onChange={(e) => setNewStepText(e.target.value)}
+              placeholder="Введите название этапа..."
+              className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+              disabled={isCreatingStep}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleAddStep();
+                } else if (e.key === 'Escape') {
+                  handleCancelAdd();
+                }
+              }}
+              autoFocus
+            />
+            <button
+              onClick={handleAddStep}
+              disabled={isCreatingStep || !newStepText.trim()}
+              className="px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isCreatingStep ? (
+                <>
+                  <FontAwesomeIcon icon={faSpinner} className="w-4 h-4 animate-spin mr-1" />
+                  Создание...
+                </>
+              ) : (
+                'Добавить'
+              )}
+            </button>
+            <button
+              onClick={handleCancelAdd}
+              disabled={isCreatingStep}
+              className="px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <FontAwesomeIcon icon={faTimes} className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-3">
         {steps.map((step, index) => {
           const status = getStepStatus(step, index);
           const styles = getStepStyles(status);
           const isLoading = loadingSteps.has(step.id);
+          const isDeleting = deletingSteps.has(step.id);
 
           return (
             <div
               key={step.id}
-              className={`flex items-center space-x-3 p-3 rounded-lg transition-all ${styles.container}`}
+              className={`group flex items-center space-x-3 p-3 rounded-lg transition-all relative ${styles.container}`}
             >
               {isOwner && (
                 <button
                   onClick={() => handleStepToggle(step, index)}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                   className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${styles.circle} ${
-                    isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                    isLoading || isDeleting ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                   title={step.isCompleted ? 'Отметить как невыполненный' : 'Отметить как выполненный'}
                 >
@@ -162,9 +305,27 @@ export const GoalSteps = (props: StepsProps) => {
                 </p>
               </div>
 
-              {status === 'current' && (
-                <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full animate-pulse"></div>
-              )}
+              <div className="flex items-center space-x-2">
+                {status === 'current' && (
+                  <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full animate-pulse"></div>
+                )}
+
+                {/* Кнопка удаления - показывается при наведении */}
+                {isOwner && steps.length > 1 && (
+                  <button
+                    onClick={() => handleDeleteStep(step.id)}
+                    disabled={isDeleting || isLoading}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Удалить этап"
+                  >
+                    {isDeleting ? (
+                      <FontAwesomeIcon icon={faSpinner} className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
+                    )}
+                  </button>
+                )}
+              </div>
             </div>
           );
         })}

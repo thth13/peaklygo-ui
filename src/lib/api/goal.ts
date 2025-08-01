@@ -54,3 +54,21 @@ export const updateStepStatus = async (goalId: string, stepId: string, isComplet
     throw err;
   }
 };
+
+export const createStep = async (goalId: string, stepText: string): Promise<void> => {
+  try {
+    await api.post(`${API_URL}/goals/${goalId}/steps`, {
+      text: stepText,
+    });
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const deleteStep = async (goalId: string, stepId: string): Promise<void> => {
+  try {
+    await api.delete(`${API_URL}/goals/${goalId}/steps/${stepId}`);
+  } catch (err: any) {
+    throw err;
+  }
+};
