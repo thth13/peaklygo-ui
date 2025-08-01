@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons';
 import Link from '@/components/Link';
 import { LeftSidebar } from '@/components/layout/LeftSidebar';
-import { Goal } from '@/types';
+import { ActivityTypeLabels, Goal } from '@/types';
 import { getGoal } from '@/lib/api/goal';
 import { formatDate } from '@/lib/utils';
 import { GoalProgress } from '@/components/goal/GoalProgress';
@@ -181,20 +181,17 @@ export default async function GoalPage({ params }: GoalPageProps) {
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Последняя активность</h3>
                 <div className="space-y-3">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full mt-2"></div>
-                    <div>
-                      <p className="text-sm text-gray-900 dark:text-gray-100">Цель создана</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{formatDate(goal.createdAt)}</p>
+                  {goal.activity?.slice(0, 5).map((item, index) => (
+                    <div key={index} className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full mt-2"></div>
+                      <div>
+                        <p className="text-sm text-gray-900 dark:text-gray-100">
+                          {ActivityTypeLabels[item.activityType]}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{formatDate(item.date)}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full mt-2"></div>
-                    <div>
-                      <p className="text-sm text-gray-900 dark:text-gray-100">Последнее обновление</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{formatDate(goal.updatedAt)}</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 

@@ -33,6 +33,29 @@ export interface Step {
   isCompleted?: boolean;
 }
 
+export enum ActivityType {
+  ProgressEntry = 'progressEntry',
+  MarkStep = 'markStep',
+  UnmarkStep = 'unmarkStep',
+  UpdatedDeadline = 'updatedDeadline',
+  EditedGoal = 'editedGoal',
+  CompletedGoal = 'completedGoal',
+}
+
+export const ActivityTypeLabels: Record<ActivityType, string> = {
+  [ActivityType.ProgressEntry]: 'Написал сообщение в блог',
+  [ActivityType.MarkStep]: 'Выполнил шаг',
+  [ActivityType.UnmarkStep]: 'Снял выполнение шага',
+  [ActivityType.UpdatedDeadline]: 'Изменил дедлайн',
+  [ActivityType.EditedGoal]: 'Отредактировал цель',
+  [ActivityType.CompletedGoal]: 'Завершил цель',
+};
+
+export interface Activity {
+  activityType: ActivityType;
+  date: Date;
+}
+
 export interface Goal {
   _id: string;
   goalName: string;
@@ -43,6 +66,7 @@ export interface Goal {
   noDeadline?: boolean;
   image?: string;
   steps: Step[];
+  activity: Activity[];
   reward?: string;
   consequence?: string;
   privacy: PrivacyStatus;
