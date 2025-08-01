@@ -181,7 +181,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
                 <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Последняя активность</h3>
                 <div className="space-y-3">
-                  {goal.activity?.slice(0, 5).map((item, index) => (
+                  {goal.activity?.slice(-5).map((item, index) => (
                     <div key={index} className="flex items-start space-x-3">
                       <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full mt-2"></div>
                       <div>
@@ -195,7 +195,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
                 </div>
               </div>
 
-              <GoalActions />
+              <GoalActions goal={goal} />
             </div>
           </ProgressBlogProvider>
         </div>

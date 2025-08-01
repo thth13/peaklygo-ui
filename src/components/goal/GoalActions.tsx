@@ -2,12 +2,22 @@
 
 import React, { useState } from 'react';
 import { useProgressBlogContext } from '@/context/ProgressBlogContext';
+import { Goal } from '@/types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTelegram, faWhatsapp, faVk, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faSpinner, faCopy, faTimes } from '@fortawesome/free-solid-svg-icons';
 import toast from 'react-hot-toast';
+import { ShareGoal } from './ShareGoal';
 
-export const GoalActions: React.FC = () => {
+interface GoalActionsProps {
+  goal: Goal;
+}
+
+export const GoalActions: React.FC<GoalActionsProps> = ({ goal }) => {
   const { createEntry } = useProgressBlogContext();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newEntry, setNewEntry] = useState({ content: '' });
 
@@ -37,7 +47,10 @@ export const GoalActions: React.FC = () => {
         >
           Записать в блог
         </button>
-        <button className="w-full text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 border border-blue-200 dark:border-blue-500 py-2 px-4 rounded-lg text-sm transition-colors">
+        <button
+          onClick={() => setIsShareModalOpen(true)}
+          className="w-full text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 border border-blue-200 dark:border-blue-500 py-2 px-4 rounded-lg text-sm transition-colors"
+        >
           Поделиться целью
         </button>
         <button className="w-full text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 border border-red-200 dark:border-red-500 py-2 px-4 rounded-lg text-sm transition-colors">
@@ -87,6 +100,8 @@ export const GoalActions: React.FC = () => {
           </div>
         </div>
       )}
+
+      <ShareGoal isShareModalOpen={isShareModalOpen} setIsShareModalOpen={setIsShareModalOpen} goal={goal} />
     </div>
   );
 };
