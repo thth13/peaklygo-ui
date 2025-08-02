@@ -51,6 +51,15 @@ export const ActivityTypeLabels: Record<ActivityType, string> = {
   [ActivityType.CompletedGoal]: 'Завершил цель',
 };
 
+export const ActivityTypeColors: Record<ActivityType, { light: string; dark: string }> = {
+  [ActivityType.ProgressEntry]: { light: 'bg-blue-500', dark: 'dark:bg-blue-400' },
+  [ActivityType.MarkStep]: { light: 'bg-green-500', dark: 'dark:bg-green-400' },
+  [ActivityType.UnmarkStep]: { light: 'bg-orange-500', dark: 'dark:bg-orange-400' },
+  [ActivityType.UpdatedDeadline]: { light: 'bg-purple-500', dark: 'dark:bg-purple-400' },
+  [ActivityType.EditedGoal]: { light: 'bg-yellow-500', dark: 'dark:bg-yellow-400' },
+  [ActivityType.CompletedGoal]: { light: 'bg-emerald-500', dark: 'dark:bg-emerald-400' },
+};
+
 export interface Activity {
   activityType: ActivityType;
   date: Date;

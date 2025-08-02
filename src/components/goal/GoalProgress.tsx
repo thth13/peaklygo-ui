@@ -20,6 +20,10 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
     setProgress(newProgress);
   };
 
+  const handleGoalComplete = () => {
+    // window.location.reload();
+  };
+
   const getDaysLeft = () => {
     if (!goal.endDate) return null;
     const today = new Date();
@@ -136,6 +140,7 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
             currentUserId={currentUserId}
             goalUserId={goal.userId}
             onProgressUpdate={handleProgressUpdate}
+            onGoalComplete={handleGoalComplete}
           />
         )}
 

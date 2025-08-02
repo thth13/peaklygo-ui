@@ -3,7 +3,7 @@
 import { Step } from '@/types';
 import { faCheck, faCircle, faPlus, faSpinner, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { updateStepStatus, createStep, deleteStep } from '@/lib/api/goal';
+import { updateStepStatus, createStep, deleteStep, completeGoal } from '@/lib/api/goal';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
@@ -14,10 +14,19 @@ interface StepsProps {
   goalUserId: string;
   onStepsUpdate?: (updatedSteps: Step[]) => void;
   onProgressUpdate?: (progress: number) => void;
+  onGoalComplete?: () => void;
 }
 
 export const GoalSteps = (props: StepsProps) => {
-  const { steps: initialSteps, goalId, currentUserId, goalUserId, onStepsUpdate, onProgressUpdate } = props;
+  const {
+    steps: initialSteps,
+    goalId,
+    currentUserId,
+    goalUserId,
+    onStepsUpdate,
+    onProgressUpdate,
+    onGoalComplete,
+  } = props;
 
   // Локальное состояние для шагов
   const [steps, setSteps] = useState<Step[]>(initialSteps);
@@ -30,6 +39,9 @@ export const GoalSteps = (props: StepsProps) => {
 
   // Состояние для удаления этапов
   const [deletingSteps, setDeletingSteps] = useState<Set<string>>(new Set());
+
+  // Состояние для завершения цели
+  const [isCompletingGoal, setIsCompletingGoal] = useState(false);
 
   // Проверяем является ли пользователь владельцем цели
   const isOwner = currentUserId === goalUserId;
@@ -47,6 +59,7 @@ export const GoalSteps = (props: StepsProps) => {
   };
 
   const currentStepIndex = steps.findIndex((step) => !step.isCompleted);
+  const allStepsCompleted = steps.length > 0 && steps.every((step) => step.isCompleted);
 
   const handleStepToggle = async (step: Step, index: number) => {
     const newStatus = !step.isCompleted;
@@ -170,6 +183,25 @@ export const GoalSteps = (props: StepsProps) => {
     }
   };
 
+  const handleCompleteGoal = async () => {
+    if (!allStepsCompleted) {
+      toast.error('Сначала завершите все этапы!');
+      return;
+    }
+
+    setIsCompletingGoal(true);
+    try {
+      await completeGoal(goalId);
+      toast.success('Цель завершена! 🎉');
+      onGoalComplete?.();
+    } catch (error) {
+      console.error('Failed to complete goal:', error);
+      toast.error('Не удалось завершить цель');
+    } finally {
+      setIsCompletingGoal(false);
+    }
+  };
+
   const getStepStatus = (step: Step, index: number) => {
     if (step.isCompleted) return 'completed';
     if (index === currentStepIndex) return 'current';
@@ -210,16 +242,37 @@ export const GoalSteps = (props: StepsProps) => {
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
           Этапы выполнения ({steps.filter((s) => s.isCompleted).length}/{steps.length})
         </h3>
-        {isOwner && (
-          <button
-            onClick={() => setShowAddForm(true)}
-            disabled={showAddForm}
-            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <FontAwesomeIcon icon={faPlus} className="w-4 mr-1" />
-            Добавить этап
-          </button>
-        )}
+        <div className="flex items-center space-x-3">
+          {isOwner && allStepsCompleted && (
+            <button
+              onClick={handleCompleteGoal}
+              disabled={isCompletingGoal}
+              className="bg-green-600 dark:bg-green-500 hover:bg-green-700 dark:hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isCompletingGoal ? (
+                <>
+                  <FontAwesomeIcon icon={faSpinner} className="w-4 mr-2 animate-spin" />
+                  Завершаем...
+                </>
+              ) : (
+                <>
+                  <FontAwesomeIcon icon={faCheck} className="w-4 mr-2" />
+                  Завершить цель
+                </>
+              )}
+            </button>
+          )}
+          {isOwner && (
+            <button
+              onClick={() => setShowAddForm(true)}
+              disabled={showAddForm}
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <FontAwesomeIcon icon={faPlus} className="w-4 mr-1" />
+              Добавить этап
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Форма добавления нового этапа */}
