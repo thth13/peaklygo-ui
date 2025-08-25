@@ -1,6 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useStopPropagation } from '@/hooks/useStopPropagation';
 import {
   faCalendar as faCalendarRegular,
   faEllipsisVertical,
@@ -13,12 +16,30 @@ import { Goal } from '@/types';
 import { formatDate } from '@/lib/utils';
 import { IMAGE_URL } from '@/constants';
 import Link from '@/components/Link';
+import { deleteGoal } from '@/lib/api/goal';
 
 interface GoalCardProps {
   goal: Goal;
 }
 
 export const GoalCard = ({ goal }: GoalCardProps) => {
+  const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const { stopPropagation } = useStopPropagation();
+
+  const handleEdit = stopPropagation(() => {
+    setIsMenuOpen(false);
+
+    router.push(`/goal/${goal._id}/edit`);
+  });
+
+  const handleDelete = stopPropagation(async () => {
+    setIsMenuOpen(false);
+    await deleteGoal(goal._id);
+
+    router.refresh();
+  });
+
   return (
     <Link
       href={`/goal/${goal._id}`}
@@ -36,7 +57,7 @@ export const GoalCard = ({ goal }: GoalCardProps) => {
               <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">{goal.goalName}</h3>
               <p className="text-gray-500 dark:text-gray-400 text-sm">Создано {formatDate(goal.startDate)}</p>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 relative group">
               <span
                 className={`px-3 py-1 rounded-full text-sm font-medium
                   ${
@@ -48,9 +69,35 @@ export const GoalCard = ({ goal }: GoalCardProps) => {
               >
                 {goal.isCompleted ? 'Достигнуто' : 'В процессе'}
               </span>
-              <button className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
-                <FontAwesomeIcon icon={faEllipsisVertical} className="w-1" />
-              </button>
+              <div className="relative">
+                <button
+                  onClick={stopPropagation(() => setIsMenuOpen(!isMenuOpen))}
+                  className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded focus:outline-none"
+                  aria-haspopup="menu"
+                  aria-expanded={isMenuOpen}
+                >
+                  <FontAwesomeIcon icon={faEllipsisVertical} className="w-1" />
+                </button>
+                {isMenuOpen && (
+                  <div
+                    className="absolute right-0 top-8 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20"
+                    onClick={stopPropagation()}
+                  >
+                    <button
+                      onClick={handleEdit}
+                      className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Редактировать цель
+                    </button>
+                    <button
+                      onClick={handleDelete}
+                      className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    >
+                      Удалить цель
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

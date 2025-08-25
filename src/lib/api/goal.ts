@@ -25,6 +25,14 @@ export const updateGoal = async (id: string, goal: FormData) => {
   }
 };
 
+export const deleteGoal = async (id: string): Promise<void> => {
+  try {
+    await api.delete(`/goals/${id}`);
+  } catch (err: any) {
+    throw err;
+  }
+};
+
 export const getGoals = async (userId: string): Promise<Goal[]> => {
   try {
     const res = await api.get(`${API_URL}/goals/userGoals/${userId}`);
