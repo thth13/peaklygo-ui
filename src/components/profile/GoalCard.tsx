@@ -124,7 +124,7 @@ export const GoalCard = ({ goal }: GoalCardProps) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
+          <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
             {goal.endDate && (
               <div className="flex items-center">
                 <FontAwesomeIcon icon={faCalendarRegular} className="w-4 mr-2" />
@@ -138,7 +138,7 @@ export const GoalCard = ({ goal }: GoalCardProps) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
+          {/* <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
             <div className="flex space-x-4">
               <button className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm font-medium flex items-center">
                 <FontAwesomeIcon icon={faPencil} className="w-4 mr-1" />
@@ -153,7 +153,7 @@ export const GoalCard = ({ goal }: GoalCardProps) => {
               <FontAwesomeIcon icon={faShare} className="w-4 mr-1" />
               Поделиться
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </Link>

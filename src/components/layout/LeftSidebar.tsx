@@ -66,7 +66,7 @@ export const LeftSidebar = () => {
         </LinkWithProgress>
       </div>
 
-      <div id="navigation-menu" className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 transition-colors">
+      {/* <div id="navigation-menu" className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 transition-colors">
         <nav>
           <ul className="space-y-1">
             <li>
@@ -75,12 +75,12 @@ export const LeftSidebar = () => {
                 <span>Мои цели</span>
               </span>
             </li>
-            {/* <li>
+            <li>
               <span className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors">
                 <FontAwesomeIcon icon={faTrophy} className="w-4 mr-3 text-base" />
                 <span>Мои челленджи</span>
               </span>
-            </li> */}
+            </li>
             <li>
               <span className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors">
                 <FontAwesomeIcon icon={faUsers} className="w-4 mr-3 text-base" />
@@ -96,12 +96,12 @@ export const LeftSidebar = () => {
                 </span>
               </span>
             </li>
-            {/* <li>
+            <li>
               <span className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors">
                 <FontAwesomeIcon icon={faChartLine} className="w-4 mr-3 text-base" />
                 <span>Прогресс</span>
               </span>
-            </li> */}
+            </li>
             <li>
               <span className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors">
                 <FontAwesomeIcon icon={faPeopleGroup} className="w-4 mr-3 text-base" />
@@ -110,7 +110,7 @@ export const LeftSidebar = () => {
             </li>
           </ul>
         </nav>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -47,7 +47,7 @@ export default async function Profile({ params }: ProfilePageProps) {
               Новая цель
             </LinkWithProgress>
           </div>
-          <div className="flex space-x-3">
+          {/* <div className="flex space-x-3">
             <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg text-sm transition-colors">
               <option>Все статусы</option>
               <option>В процессе</option>
@@ -59,7 +59,7 @@ export default async function Profile({ params }: ProfilePageProps) {
               <option>По приоритету</option>
               <option>По прогрессу</option>
             </select>
-          </div>
+          </div> */}
         </div>
         {goals.map((goal) => (
           <GoalCard key={goal._id} goal={goal} />
