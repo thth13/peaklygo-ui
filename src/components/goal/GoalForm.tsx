@@ -280,6 +280,14 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                     onStepChange={handleStepChange}
                     onAddStep={addStep}
                     onRemoveStep={removeStep}
+                    onReorderSteps={(sourceIndex: number, targetIndex: number) => {
+                      setStepsState((prev) => {
+                        const next: Step[] = [...prev];
+                        const [moved] = next.splice(sourceIndex, 1);
+                        next.splice(targetIndex, 0, moved);
+                        return next;
+                      });
+                    }}
                   />
                 </div>
 

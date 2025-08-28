@@ -1,6 +1,17 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPlus, faGripVertical } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  DndContext,
+  closestCenter,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { StepRow } from './StepRow';
 
 interface Step {
   id: string;
@@ -12,43 +23,56 @@ interface StepsProps {
   onStepChange: (id: string, text: string) => void;
   onAddStep: () => void;
   onRemoveStep: (id: string) => void;
+  onReorderSteps: (sourceIndex: number, targetIndex: number) => void;
 }
 
-export const Steps: React.FC<StepsProps> = ({ steps, onStepChange, onAddStep, onRemoveStep }) => {
+export const Steps: React.FC<StepsProps> = ({ steps, onStepChange, onAddStep, onRemoveStep, onReorderSteps }) => {
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 5 },
+    }),
+    useSensor(KeyboardSensor),
+  );
+
+  const ids: string[] = steps.map((step) => step.id);
+
+  const handleDragEnd = (event: DragEndEvent): void => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const oldIndex: number = ids.indexOf(String(active.id));
+    const newIndex: number = ids.indexOf(String(over.id));
+
+    if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) {
+      return;
+    }
+
+    onReorderSteps(oldIndex, newIndex);
+  };
+
   return (
     <div>
       <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Подцели и шаги</label>
-      <div className="space-y-3">
-        {steps.map((step) => (
-          <div
-            key={step.id}
-            className="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg transition-colors"
-          >
-            <FontAwesomeIcon icon={faGripVertical} className="text-gray-400 dark:text-gray-500 cursor-move" />
-            <input
-              className="flex-1 border-none outline-none bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
-              placeholder="Введите шаг..."
-              value={step.text}
-              onChange={(e) => onStepChange(step.id, e.target.value)}
-            />
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={ids} strategy={verticalListSortingStrategy}>
+          <div className="space-y-3">
+            {steps.map((step) => (
+              <StepRow key={step.id} id={step.id} step={step} onChange={onStepChange} onRemove={onRemoveStep} />
+            ))}
             <button
               type="button"
-              className="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
-              onClick={() => onRemoveStep(step.id)}
+              className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 flex items-center gap-2 transition-colors"
+              onClick={onAddStep}
             >
-              <FontAwesomeIcon icon={faTrash} />
+              <FontAwesomeIcon icon={faPlus} />
+              <span>Добавить шаг</span>
             </button>
           </div>
-        ))}
-        <button
-          type="button"
-          className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 flex items-center gap-2 transition-colors"
-          onClick={onAddStep}
-        >
-          <FontAwesomeIcon icon={faPlus} />
-          <span>Добавить шаг</span>
-        </button>
-      </div>
+        </SortableContext>
+      </DndContext>
     </div>
   );
 };

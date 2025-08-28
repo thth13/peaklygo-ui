@@ -362,22 +362,6 @@ export const GoalSteps = (props: StepsProps) => {
                 {status === 'current' && (
                   <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full animate-pulse"></div>
                 )}
-
-                {/* Кнопка удаления - показывается при наведении */}
-                {isOwner && steps.length > 1 && (
-                  <button
-                    onClick={() => handleDeleteStep(step.id)}
-                    disabled={isDeleting || isLoading}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                    title="Удалить этап"
-                  >
-                    {isDeleting ? (
-                      <FontAwesomeIcon icon={faSpinner} className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
-                    )}
-                  </button>
-                )}
               </div>
             </div>
           );
