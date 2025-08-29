@@ -1,5 +1,5 @@
 import { API_URL } from '@/constants';
-import { UserProfile } from '@/types';
+import { UserProfile, ProfileStats } from '@/types';
 import api from '../clientAxios';
 import nProgress from 'nprogress';
 
@@ -21,6 +21,16 @@ export const editProfile = async (id: string, profile: FormData): Promise<UserPr
       },
     });
     nProgress.start();
+
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const getProfileStats = async (id: string): Promise<ProfileStats> => {
+  try {
+    const res = await api.get(`${API_URL}/profile/${id}/stats`);
 
     return res.data;
   } catch (err: any) {

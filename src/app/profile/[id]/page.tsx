@@ -65,7 +65,7 @@ export default async function Profile({ params }: ProfilePageProps) {
           <GoalCard key={goal._id} goal={goal} />
         ))}
       </div>
-      <RightSidebar />
+      <RightSidebar userId={id} />
     </main>
   );
 }

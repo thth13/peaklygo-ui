@@ -131,3 +131,12 @@ export interface Comment {
 export interface CreateCommentDto {
   content: string;
 }
+
+export interface ProfileStats {
+  goalsCreatedThisMonth: number;
+  activeGoalsNow: number;
+  completedGoals: number;
+  closedTasks: number;
+  blogPosts: number;
+  rating: number;
+}
