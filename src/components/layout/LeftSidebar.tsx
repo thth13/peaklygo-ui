@@ -1,16 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faPlus,
-  faBullseye,
-  faTrophy,
-  faUsers,
-  faEnvelope,
-  faChartLine,
-  faPeopleGroup,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import LinkWithProgress from '../Link';
+import { RatingSummary } from './RatingSummary';
 
 export const LeftSidebar = () => {
+  const myRating: number = 150;
+
   return (
     <div id="left-sidebar" className="w-1/4 pr-6">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
@@ -28,19 +23,7 @@ export const LeftSidebar = () => {
           </div>
         </div>
 
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-gray-600 dark:text-gray-300 font-medium">Рейтинг</span>
-            <span className="text-primary-600 dark:text-primary-400 font-bold text-xl">785</span>
-          </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full">
-            <div className="bg-primary-500 dark:bg-primary-400 h-2 rounded-full" style={{ width: '78.5%' }}></div>
-          </div>
-          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-            <span>0</span>
-            <span>1000</span>
-          </div>
-        </div>
+        <RatingSummary rating={myRating} />
 
         <div className="grid grid-cols-3 gap-2 mb-6">
           <div className="text-center">
