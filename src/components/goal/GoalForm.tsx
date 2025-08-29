@@ -80,11 +80,6 @@ const defaultFormData: GoalFormData = {
   existingImageUrl: undefined,
 };
 
-const defaultSteps: Step[] = [
-  { id: '1', text: 'Купить беговые кроссовки' },
-  { id: '2', text: 'Составить план тренировок' },
-];
-
 export const GoalForm: React.FC<GoalFormProps> = ({
   mode,
   initialData = {},
@@ -99,7 +94,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({
   });
 
   const [stepsState, setStepsState] = useState<Step[]>(
-    initialSteps.length > 0 ? initialSteps : mode === 'create' ? defaultSteps : [],
+    initialSteps.length > 0 ? initialSteps : mode === 'create' ? [{ id: Date.now().toString(), text: '' }] : [],
   );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -114,14 +109,11 @@ export const GoalForm: React.FC<GoalFormProps> = ({
     }
   }, [initialData]);
 
-  // Update steps when initialSteps changes
   useEffect(() => {
     if (initialSteps.length > 0) {
       setStepsState(initialSteps);
-    } else if (mode === 'create') {
-      setStepsState(defaultSteps);
     }
-  }, [initialSteps, mode]);
+  }, [initialSteps]);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => ({
