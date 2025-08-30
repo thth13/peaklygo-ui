@@ -7,12 +7,14 @@ import GoogleLoginButton from '@/components/GoogleLoginButton';
 
 interface FormData {
   email: string;
+  username: string;
   password: string;
   confirmPassword: string;
 }
 
 interface ValidationErrors {
   email?: string;
+  username?: string;
   password?: string;
   confirmPassword?: string;
   server?: string;
@@ -30,6 +32,7 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
 
   const [formData, setFormData] = useState<FormData>({
     email: '',
+    username: '',
     password: '',
     confirmPassword: '',
   });
@@ -39,9 +42,25 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
   const validateForm = (): boolean => {
     const newErrors: ValidationErrors = {};
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+    if (isLogin) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isEmail = emailRegex.test(formData.email);
+      const isUsername = formData.email.length >= 3 && !formData.email.includes('@');
+
+      if (!isEmail && !isUsername) {
+        newErrors.email = 'Please enter a valid email or username (min 3 characters)';
+      }
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        newErrors.email = 'Please enter a valid email';
+      }
+
+      if (formData.username.length < 3) {
+        newErrors.username = 'Username must be at least 3 characters';
+      } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
+        newErrors.username = 'Username can only contain letters, numbers, and underscores';
+      }
     }
 
     if (formData.password.length < 5) {
@@ -72,11 +91,11 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
       return;
     }
 
-    const { email, password } = formData;
+    const { email, password, username } = formData;
     setLoading(true);
 
     try {
-      await authUser(email, password, isLogin);
+      await authUser(email, password, isLogin, username);
     } catch (error: any) {
       const serverErrors = error.response.data;
 
@@ -129,21 +148,40 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">
-                      Email
+                      {isLogin ? 'Email or Username' : 'Email'}
                     </label>
                     <input
-                      type="email"
+                      type={isLogin ? 'text' : 'email'}
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
                       className={`w-full px-4 py-3 rounded-lg border ${
                         errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                       } bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors`}
-                      placeholder="your@email.com"
+                      placeholder={isLogin ? 'your@email.com or username' : 'your@email.com'}
                       required
                     />
                     {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                   </div>
+                  {!isLogin && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">
+                        Username
+                      </label>
+                      <input
+                        type="text"
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        className={`w-full px-4 py-3 rounded-lg border ${
+                          errors.username ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                        } bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors`}
+                        placeholder="username"
+                        required
+                      />
+                      {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
+                    </div>
+                  )}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">
                       Password

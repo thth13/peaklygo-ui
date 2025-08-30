@@ -8,7 +8,7 @@ import { CodeResponse } from '@react-oauth/google';
 
 interface AuthContextType {
   userId: string;
-  authUser: (email: string, password: string, isLogin: boolean) => Promise<void>;
+  authUser: (email: string, password: string, isLogin: boolean, username?: string) => Promise<void>;
   googleLogin: (codeResponse: CodeResponse) => Promise<void>;
   logout: () => void;
 }
@@ -43,14 +43,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const authUser = async (email: string, password: string, isLogin: boolean) => {
+  const authUser = async (email: string, password: string, isLogin: boolean, username?: string) => {
     try {
       let data;
 
       if (isLogin) {
         data = await loginUser(email, password);
       } else {
-        data = await registerUser(email, password);
+        if (!username) {
+          throw new Error('Username is required for registration');
+        }
+        data = await registerUser(email, username, password);
       }
 
       signIn(data);

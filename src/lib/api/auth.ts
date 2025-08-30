@@ -8,10 +8,10 @@ interface AuthResponse {
   id: string;
 }
 
-export const loginUser = async (email: string, password: string): Promise<AuthResponse> => {
+export const loginUser = async (identifier: string, password: string): Promise<AuthResponse> => {
   try {
     const res = await api.post(`${API_URL}/user/login`, {
-      email,
+      identifier,
       password,
     });
 
@@ -33,10 +33,11 @@ export const googleLoginUser = async (codeResponse: CodeResponse): Promise<AuthR
   }
 };
 
-export const registerUser = async (email: string, password: string): Promise<AuthResponse> => {
+export const registerUser = async (email: string, username: string, password: string): Promise<AuthResponse> => {
   try {
     const res = await api.post(`${API_URL}/user/register`, {
       email,
+      username,
       password,
     });
 
