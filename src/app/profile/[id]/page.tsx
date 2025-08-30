@@ -1,15 +1,15 @@
 import { cookies } from 'next/headers';
+import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
 
-import LinkWithProgress from '@/components/Link';
-import { getProfile } from '@/lib/api';
 import { getGoals } from '@/lib/api/goal';
+import { getProfileStats } from '@/lib/api/profile';
 import { RightSidebar } from '@/components/layout/RightSidebar';
+import { RightSidebarSkeleton } from '@/components/layout/RightSidebarSkeleton';
 import { LeftSidebar } from '@/components/layout/LeftSidebar';
-import { GoalCard } from '@/components/profile/GoalCard';
-import { UserProfile } from '@/types';
-import { Goal } from '@/types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { ProfileContent } from '@/components/profile/ProfileContent';
+import { ProfileContentSkeleton } from '@/components/profile/ProfileContentSkeleton';
+import { Goal, ProfileStats } from '@/types';
 
 type ProfilePageProps = {
   params: Promise<{ id: string }>;
@@ -25,57 +25,32 @@ export default async function Profile({ params }: ProfilePageProps) {
   const isMyProfile = myUserId === id;
 
   const data = await fetchUserProfile(id);
-  if (!data) return null;
+  if (!data) {
+    notFound();
+  }
 
-  const { profile, goals }: { profile: UserProfile; goals: Goal[] } = data;
+  const { goals, stats }: { goals: Goal[]; stats: ProfileStats } = data;
 
   return (
     <main className="max-w-7xl mx-auto mt-6 px-4 flex">
-      <LeftSidebar />
+      <LeftSidebar userId={id} stats={stats} />
       <div id="main-content" className="w-3/5 px-6">
-        <div id="goals-header" className="mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Мои цели</h2>
-              <p className="text-gray-500 dark:text-gray-400">Управляйте своими целями и отслеживайте прогресс</p>
-            </div>
-            <LinkWithProgress
-              href="/goal/create"
-              className="bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors"
-            >
-              <FontAwesomeIcon icon={faPlus} className="w-4 mr-2 text-base" />
-              Новая цель
-            </LinkWithProgress>
-          </div>
-          {/* <div className="flex space-x-3">
-            <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg text-sm transition-colors">
-              <option>Все статусы</option>
-              <option>В процессе</option>
-              <option>Достигнуто</option>
-              <option>Провалено</option>
-            </select>
-            <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg text-sm transition-colors">
-              <option>По дате</option>
-              <option>По приоритету</option>
-              <option>По прогрессу</option>
-            </select>
-          </div> */}
-        </div>
-        {goals.map((goal) => (
-          <GoalCard key={goal._id} goal={goal} />
-        ))}
+        <Suspense fallback={<ProfileContentSkeleton />}>
+          <ProfileContent goals={goals} isMyProfile={isMyProfile} />
+        </Suspense>
       </div>
-      <RightSidebar userId={id} />
+      <Suspense fallback={<RightSidebarSkeleton />}>
+        <RightSidebar stats={stats} />
+      </Suspense>
     </main>
   );
 }
 
-async function fetchUserProfile(id: string): Promise<{ profile: UserProfile; goals: Goal[] } | null> {
+async function fetchUserProfile(id: string): Promise<{ goals: Goal[]; stats: ProfileStats } | null> {
   try {
-    const profile = await getProfile(id);
-    const goals = await getGoals(id);
+    const [goals, stats] = await Promise.all([getGoals(id), getProfileStats(id)]);
 
-    return { profile, goals };
+    return { goals, stats };
   } catch (err) {
     console.error('Failed to fetch user profile:', err);
     return null;

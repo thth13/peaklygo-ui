@@ -13,12 +13,10 @@ export interface UserProfile {
   avatar: string;
   description: string;
   views: number;
+  user: string | { username: string };
   following: string[];
   followers: string[];
-  reading: string[];
-  finished: string[];
-  wantsToRead: string[];
-  user: string;
+  rating: number;
 }
 
 export enum PrivacyStatus {
