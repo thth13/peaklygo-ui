@@ -28,6 +28,20 @@ export function PaginatedProfileContent({ userId, isMyProfile, initialGoals }: P
     }
   };
 
+  const handleGoalArchived = (goalId: string) => {
+    setGoalsData((currentData) => {
+      if (Array.isArray(currentData)) {
+        return currentData.filter((goal) => goal._id !== goalId);
+      } else {
+        return {
+          ...currentData,
+          goals: currentData.goals.filter((goal) => goal._id !== goalId),
+          total: currentData.total - 1,
+        };
+      }
+    });
+  };
+
   // Initialize with server-provided data - no need for additional useEffect
 
   if (loading) {
@@ -38,5 +52,12 @@ export function PaginatedProfileContent({ userId, isMyProfile, initialGoals }: P
     );
   }
 
-  return <ProfileContent goalsData={goalsData} isMyProfile={isMyProfile} onPageChange={handlePageChange} />;
+  return (
+    <ProfileContent
+      goalsData={goalsData}
+      isMyProfile={isMyProfile}
+      onPageChange={handlePageChange}
+      onGoalArchived={handleGoalArchived}
+    />
+  );
 }

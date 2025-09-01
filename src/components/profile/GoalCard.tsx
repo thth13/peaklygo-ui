@@ -9,16 +9,19 @@ import { Goal } from '@/types';
 import { formatDate } from '@/lib/utils';
 import { IMAGE_URL } from '@/constants';
 import Link from '@/components/Link';
-import { deleteGoal } from '@/lib/api/goal';
+import { archiveGoal } from '@/lib/api/goal';
 import Image from 'next/image';
+import toast from 'react-hot-toast';
 
 interface GoalCardProps {
   goal: Goal;
+  onGoalArchived?: (goalId: string) => void;
 }
 
-export const GoalCard = ({ goal }: GoalCardProps) => {
+export const GoalCard = ({ goal, onGoalArchived }: GoalCardProps) => {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isArchiving, setIsArchiving] = useState<boolean>(false);
   const { stopPropagation } = useStopPropagation();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -44,11 +47,27 @@ export const GoalCard = ({ goal }: GoalCardProps) => {
     router.push(`/goal/${goal._id}/edit`);
   });
 
-  const handleDelete = stopPropagation(async () => {
+  const handleArchive = stopPropagation(async () => {
     setIsMenuOpen(false);
-    await deleteGoal(goal._id);
+    setIsArchiving(true);
 
-    router.refresh();
+    try {
+      await archiveGoal(goal._id);
+      toast.success('Цель успешно архивирована');
+
+      // Удаляем цель из списка если есть callback
+      if (onGoalArchived) {
+        onGoalArchived(goal._id);
+      } else {
+        // Откат к старому поведению
+        router.refresh();
+      }
+    } catch (error) {
+      toast.error('Ошибка архивирования цели');
+      console.error('Error archiving goal:', error);
+    } finally {
+      setIsArchiving(false);
+    }
   });
 
   return (
@@ -103,10 +122,11 @@ export const GoalCard = ({ goal }: GoalCardProps) => {
                     Редактировать цель
                   </button>
                   <button
-                    onClick={handleDelete}
-                    className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    onClick={handleArchive}
+                    disabled={isArchiving}
+                    className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-60"
                   >
-                    Удалить цель
+                    Архивировать цель
                   </button>
                 </div>
               )}
@@ -154,10 +174,11 @@ export const GoalCard = ({ goal }: GoalCardProps) => {
                         Редактировать цель
                       </button>
                       <button
-                        onClick={handleDelete}
-                        className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                        onClick={handleArchive}
+                        disabled={isArchiving}
+                        className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-60"
                       >
-                        Удалить цель
+                        Архивировать цель
                       </button>
                     </div>
                   )}

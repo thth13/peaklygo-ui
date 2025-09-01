@@ -160,6 +160,12 @@ function LeftSidebarContent({ profile, stats, isMyProfile, userId }: LeftSidebar
         </div>
       </div>
 
+      {profile?.description && (
+        <div className="mb-4">
+          <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed break-words">{profile.description}</p>
+        </div>
+      )}
+
       <RatingSummary rating={profile?.rating || 0} />
 
       <div className="grid grid-cols-3 gap-2 mb-6">

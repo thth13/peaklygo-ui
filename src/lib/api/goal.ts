@@ -107,3 +107,12 @@ export const completeGoal = async (goalId: string): Promise<Goal> => {
     throw err;
   }
 };
+
+export const archiveGoal = async (goalId: string): Promise<Goal> => {
+  try {
+    const res = await api.put(`${API_URL}/goals/${goalId}/archive`);
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};

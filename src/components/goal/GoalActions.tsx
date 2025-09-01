@@ -8,6 +8,9 @@ import { faTelegram, faWhatsapp, faVk, faTwitter } from '@fortawesome/free-brand
 import { faSpinner, faCopy, faTimes } from '@fortawesome/free-solid-svg-icons';
 import toast from 'react-hot-toast';
 import { ShareGoal } from './ShareGoal';
+import { ArchiveGoalModal } from './ArchiveGoalModal';
+import { archiveGoal } from '@/lib/api/goal';
+import { useRouter } from 'next/navigation';
 
 interface GoalActionsProps {
   goal: Goal;
@@ -18,8 +21,12 @@ export const GoalActions: React.FC<GoalActionsProps> = ({ goal }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isArchiving, setIsArchiving] = useState(false);
   const [newEntry, setNewEntry] = useState({ content: '' });
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +41,26 @@ export const GoalActions: React.FC<GoalActionsProps> = ({ goal }) => {
       console.error('Error creating progress entry:', error);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleArchiveGoal = () => {
+    setIsArchiveModalOpen(true);
+  };
+
+  const confirmArchive = async () => {
+    setIsArchiving(true);
+    setIsArchiveModalOpen(false);
+
+    try {
+      await archiveGoal(goal._id);
+      toast.success('Цель успешно архивирована');
+      router.push('/profile/' + goal.userId);
+    } catch (error) {
+      toast.error('Ошибка архивирования цели');
+      console.error('Error archiving goal:', error);
+    } finally {
+      setIsArchiving(false);
     }
   };
 
@@ -53,8 +80,12 @@ export const GoalActions: React.FC<GoalActionsProps> = ({ goal }) => {
         >
           Поделиться целью
         </button>
-        <button className="w-full text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 border border-red-200 dark:border-red-500 py-2 px-4 rounded-lg text-sm transition-colors">
-          Архивировать цель
+        <button
+          onClick={handleArchiveGoal}
+          disabled={isArchiving}
+          className="w-full text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 border border-red-200 dark:border-red-500 py-2 px-4 rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {isArchiving ? 'Архивируем...' : 'Архивировать цель'}
         </button>
       </div>
 
@@ -100,6 +131,13 @@ export const GoalActions: React.FC<GoalActionsProps> = ({ goal }) => {
           </div>
         </div>
       )}
+
+      <ArchiveGoalModal
+        isOpen={isArchiveModalOpen}
+        isArchiving={isArchiving}
+        onClose={() => setIsArchiveModalOpen(false)}
+        onConfirm={confirmArchive}
+      />
 
       <ShareGoal isShareModalOpen={isShareModalOpen} setIsShareModalOpen={setIsShareModalOpen} goal={goal} />
     </div>

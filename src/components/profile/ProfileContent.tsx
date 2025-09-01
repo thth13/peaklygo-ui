@@ -10,9 +10,10 @@ interface ProfileContentProps {
   goalsData: Goal[] | PaginatedGoalsResponse;
   isMyProfile: boolean;
   onPageChange?: (page: number) => void;
+  onGoalArchived?: (goalId: string) => void;
 }
 
-export function ProfileContent({ goalsData, isMyProfile, onPageChange }: ProfileContentProps) {
+export function ProfileContent({ goalsData, isMyProfile, onPageChange, onGoalArchived }: ProfileContentProps) {
   const isPaginated = !Array.isArray(goalsData);
   const goals = isPaginated ? goalsData.goals : goalsData;
   const paginationData = isPaginated ? goalsData : null;
@@ -57,7 +58,7 @@ export function ProfileContent({ goalsData, isMyProfile, onPageChange }: Profile
       ) : (
         <div className="space-y-6">
           {goals.map((goal) => (
-            <GoalCard key={goal._id} goal={goal} />
+            <GoalCard key={goal._id} goal={goal} onGoalArchived={onGoalArchived} />
           ))}
         </div>
       )}
