@@ -138,3 +138,18 @@ export interface ProfileStats {
   blogPosts: number;
   rating: number;
 }
+
+export interface GetGoalsPaginationDto {
+  page?: number;
+  limit?: number;
+}
+
+export interface PaginatedGoalsResponse {
+  goals: Goal[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}

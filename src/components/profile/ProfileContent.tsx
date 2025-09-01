@@ -3,14 +3,20 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import LinkWithProgress from '@/components/Link';
 import { GoalCard } from '@/components/profile/GoalCard';
-import { Goal } from '@/types';
+import { Goal, PaginatedGoalsResponse } from '@/types';
+import { Pagination } from '@/components/Pagination';
 
 interface ProfileContentProps {
-  goals: Goal[];
+  goalsData: Goal[] | PaginatedGoalsResponse;
   isMyProfile: boolean;
+  onPageChange?: (page: number) => void;
 }
 
-export function ProfileContent({ goals, isMyProfile }: ProfileContentProps) {
+export function ProfileContent({ goalsData, isMyProfile, onPageChange }: ProfileContentProps) {
+  const isPaginated = !Array.isArray(goalsData);
+  const goals = isPaginated ? goalsData.goals : goalsData;
+  const paginationData = isPaginated ? goalsData : null;
+
   return (
     <>
       <div id="goals-header" className="mb-6">
@@ -54,6 +60,16 @@ export function ProfileContent({ goals, isMyProfile }: ProfileContentProps) {
             <GoalCard key={goal._id} goal={goal} />
           ))}
         </div>
+      )}
+
+      {paginationData && onPageChange && (
+        <Pagination
+          currentPage={paginationData.page}
+          totalPages={paginationData.totalPages}
+          hasNextPage={paginationData.hasNextPage}
+          hasPrevPage={paginationData.hasPrevPage}
+          onPageChange={onPageChange}
+        />
       )}
     </>
   );

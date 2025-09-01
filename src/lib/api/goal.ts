@@ -1,7 +1,7 @@
 import { API_URL } from '@/constants';
 import api from '../clientAxios';
 import nProgress from 'nprogress';
-import { Goal } from '@/types';
+import { Goal, GetGoalsPaginationDto, PaginatedGoalsResponse } from '@/types';
 
 export const createGoal = async (goal: FormData) => {
   try {
@@ -33,9 +33,17 @@ export const deleteGoal = async (id: string): Promise<void> => {
   }
 };
 
-export const getGoals = async (userId: string): Promise<Goal[]> => {
+export const getGoals = async (
+  userId: string,
+  pagination?: GetGoalsPaginationDto,
+): Promise<Goal[] | PaginatedGoalsResponse> => {
   try {
-    const res = await api.get(`${API_URL}/goals/userGoals/${userId}`);
+    const params = new URLSearchParams();
+    if (pagination?.page) params.append('page', pagination.page.toString());
+    if (pagination?.limit) params.append('limit', pagination.limit.toString());
+
+    const url = `${API_URL}/goals/userGoals/${userId}${params.toString() ? `?${params.toString()}` : ''}`;
+    const res = await api.get(url);
 
     return res.data;
   } catch (err: any) {
