@@ -1,9 +1,9 @@
 'use client';
 
 import { Step } from '@/types';
-import { faCheck, faCircle, faPlus, faSpinner, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faCircle, faEdit, faPlus, faSpinner, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { updateStepStatus, createStep, deleteStep, completeGoal } from '@/lib/api/goal';
+import { updateStepStatus, updateStepText, createStep, deleteStep, completeGoal } from '@/lib/api/goal';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
@@ -42,6 +42,11 @@ export const GoalSteps = (props: StepsProps) => {
 
   // Состояние для завершения цели
   const [isCompletingGoal, setIsCompletingGoal] = useState(false);
+
+  // Состояние для редактирования этапов
+  const [editingStepId, setEditingStepId] = useState<string | null>(null);
+  const [editingStepText, setEditingStepText] = useState('');
+  const [isUpdatingStep, setIsUpdatingStep] = useState(false);
 
   // Проверяем является ли пользователь владельцем цели
   const isOwner = currentUserId === goalUserId;
@@ -202,6 +207,50 @@ export const GoalSteps = (props: StepsProps) => {
     }
   };
 
+  const handleStartEdit = (step: Step) => {
+    setEditingStepId(step.id);
+    setEditingStepText(step.text);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingStepId(null);
+    setEditingStepText('');
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingStepId || !editingStepText.trim()) {
+      toast.error('Введите название этапа');
+      return;
+    }
+
+    setIsUpdatingStep(true);
+
+    try {
+      // Обновляем этап на сервере
+      await updateStepText(goalId, editingStepId, editingStepText.trim());
+
+      // Обновляем локальное состояние
+      const updatedSteps = steps.map((step) =>
+        step.id === editingStepId ? { ...step, text: editingStepText.trim() } : step,
+      );
+      setSteps(updatedSteps);
+
+      // Уведомляем родительский компонент
+      onStepsUpdate?.(updatedSteps);
+
+      // Сбрасываем состояние редактирования
+      setEditingStepId(null);
+      setEditingStepText('');
+
+      toast.success('Этап обновлен!');
+    } catch (error) {
+      console.error('Failed to update step text:', error);
+      toast.error('Не удалось обновить этап');
+    } finally {
+      setIsUpdatingStep(false);
+    }
+  };
+
   const getStepStatus = (step: Step, index: number) => {
     if (step.isCompleted) return 'completed';
     if (index === currentStepIndex) return 'current';
@@ -352,14 +401,64 @@ export const GoalSteps = (props: StepsProps) => {
               )}
 
               <div className="flex-1">
-                <h4 className={`font-medium transition-colors ${styles.title}`}>{step.text}</h4>
-                <p className={`text-sm transition-colors ${styles.description}`}>
-                  {step.isCompleted ? 'Завершено' : status === 'current' ? 'В процессе' : 'Ожидает выполнения'}
-                </p>
+                {editingStepId === step.id ? (
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="text"
+                      value={editingStepText}
+                      onChange={(e) => setEditingStepText(e.target.value)}
+                      className="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                      disabled={isUpdatingStep}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleSaveEdit();
+                        } else if (e.key === 'Escape') {
+                          handleCancelEdit();
+                        }
+                      }}
+                      autoFocus
+                    />
+                    <button
+                      onClick={handleSaveEdit}
+                      disabled={isUpdatingStep || !editingStepText.trim()}
+                      className="px-2 py-1 bg-green-600 dark:bg-green-500 text-white rounded text-xs hover:bg-green-700 dark:hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      {isUpdatingStep ? (
+                        <FontAwesomeIcon icon={faSpinner} className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <FontAwesomeIcon icon={faCheck} className="w-3 h-3" />
+                      )}
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      disabled={isUpdatingStep}
+                      className="px-2 py-1 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <FontAwesomeIcon icon={faTimes} className="w-3 h-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <h4 className={`font-medium transition-colors ${styles.title}`}>{step.text}</h4>
+                    <p className={`text-sm transition-colors ${styles.description}`}>
+                      {step.isCompleted ? 'Завершено' : status === 'current' ? 'В процессе' : 'Ожидает выполнения'}
+                    </p>
+                  </>
+                )}
               </div>
 
               <div className="flex items-center space-x-2">
-                {status === 'current' && (
+                {isOwner && editingStepId !== step.id && editingStepId === null && (
+                  <button
+                    onClick={() => handleStartEdit(step)}
+                    disabled={isLoading || isDeleting}
+                    className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Редактировать этап"
+                  >
+                    <FontAwesomeIcon icon={faEdit} className="w-3 h-3" />
+                  </button>
+                )}
+                {status === 'current' && editingStepId !== step.id && (
                   <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full animate-pulse"></div>
                 )}
               </div>

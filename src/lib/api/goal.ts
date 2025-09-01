@@ -81,6 +81,16 @@ export const createStep = async (goalId: string, stepText: string): Promise<void
   }
 };
 
+export const updateStepText = async (goalId: string, stepId: string, text: string): Promise<void> => {
+  try {
+    await api.put(`${API_URL}/goals/${goalId}/steps/${stepId}`, {
+      text,
+    });
+  } catch (err: any) {
+    throw err;
+  }
+};
+
 export const deleteStep = async (goalId: string, stepId: string): Promise<void> => {
   try {
     await api.delete(`${API_URL}/goals/${goalId}/steps/${stepId}`);
