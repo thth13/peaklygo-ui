@@ -1,5 +1,5 @@
 import LinkWithProgress from '@/components/Link';
-import { LeftSidebar } from '@/components/layout/LeftSidebar';
+import { LeftSidebar } from '@/components/layout/sidebar';
 
 export default function ProfileNotFound() {
   return (

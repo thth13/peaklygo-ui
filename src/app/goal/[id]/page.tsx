@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons';
 import Link from '@/components/Link';
-import { LeftSidebar } from '@/components/layout/LeftSidebar';
+import { LeftSidebar } from '@/components/layout/sidebar';
 import { ActivityTypeLabels, ActivityTypeColors, Goal } from '@/types';
 import { getGoal } from '@/lib/api/goal';
 import { formatDate } from '@/lib/utils';

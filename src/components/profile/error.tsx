@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import LinkWithProgress from '@/components/Link';
-import { LeftSidebar } from '@/components/layout/LeftSidebar';
+import { LeftSidebar } from '@/components/layout/sidebar';
 
 interface ErrorPageProps {
   error: Error & { digest?: string };

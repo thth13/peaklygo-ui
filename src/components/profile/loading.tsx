@@ -1,4 +1,4 @@
-import { LeftSidebar } from '@/components/layout/LeftSidebar';
+import { LeftSidebar } from '@/components/layout/sidebar';
 
 export default function ProfileLoading() {
   return (

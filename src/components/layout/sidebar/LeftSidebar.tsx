@@ -1,0 +1,129 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import Cookies from 'js-cookie';
+import { useUserProfile } from '@/context/UserProfileContext';
+import { getProfile, getProfileStats } from '@/lib/api/profile';
+import { ProfileStats, UserProfile } from '@/types';
+import { LeftSidebarContent } from './LeftSidebarContent';
+import { LeftSidebarSkeleton } from './LeftSidebarSkeleton';
+import { LeftSidebarError } from './LeftSidebarError';
+
+interface LeftSidebarProps {
+  isProfilePage?: boolean;
+}
+
+export const LeftSidebar = ({ isProfilePage = false }: LeftSidebarProps) => {
+  const params = useParams();
+  const { profile: currentUserProfile, isLoading: profileLoading, error: profileError } = useUserProfile();
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [stats, setStats] = useState<ProfileStats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const userId = params?.id as string;
+  const myUserId = Cookies.get('userId');
+
+  const actualUserId = isProfilePage && userId ? userId : myUserId;
+  const isMyProfile = myUserId === actualUserId;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        if (actualUserId) {
+          const [profileData, statsData] = await Promise.all([getProfile(actualUserId), getProfileStats(actualUserId)]);
+          setProfile(profileData);
+          setStats(statsData);
+        } else {
+          if (currentUserProfile) {
+            setProfile(currentUserProfile);
+            const statsData = await getProfileStats(currentUserProfile._id);
+            setStats(statsData);
+          }
+        }
+      } catch (err: any) {
+        const errorMessage = err?.response?.data?.message || err?.message || 'Ошибка загрузки данных';
+        setError(errorMessage);
+        console.error('Failed to fetch user data:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (!isProfilePage && profileError) {
+      setError(profileError);
+      setIsLoading(false);
+      return;
+    }
+
+    fetchUserData();
+  }, [isProfilePage, userId, actualUserId, currentUserProfile, profileLoading, profileError]);
+
+  return (
+    <div id="left-sidebar" className="w-1/4 pr-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
+        {isLoading ? (
+          <LeftSidebarSkeleton />
+        ) : error ? (
+          <LeftSidebarError error={error} />
+        ) : (
+          <LeftSidebarContent
+            profile={profile}
+            stats={stats}
+            isMyProfile={isMyProfile}
+            userId={actualUserId || undefined}
+          />
+        )}
+      </div>
+
+      {/* <div id="navigation-menu" className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 transition-colors">
+        <nav>
+          <ul className="space-y-1">
+            <li>
+              <span className="flex items-center py-2 px-3 rounded-md text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 font-medium cursor-pointer text-sm transition-colors">
+                <FontAwesomeIcon icon={faBullseye} className="w-4 mr-3 text-base" />
+                <span>Мои цели</span>
+              </span>
+            </li>
+            <li>
+              <span className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors">
+                <FontAwesomeIcon icon={faTrophy} className="w-4 mr-3 text-base" />
+                <span>Мои челленджи</span>
+              </span>
+            </li>
+            <li>
+              <span className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors">
+                <FontAwesomeIcon icon={faUsers} className="w-4 mr-3 text-base" />
+                <span>Подписки</span>
+              </span>
+            </li>
+            <li>
+              <span className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors">
+                <FontAwesomeIcon icon={faEnvelope} className="w-4 mr-3 text-base" />
+                <span>Сообщения</span>
+                <span className="ml-auto bg-primary-500 dark:bg-primary-400 text-white text-xs px-2 py-0.5 rounded-full">
+                  3
+                </span>
+              </span>
+            </li>
+            <li>
+              <span className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors">
+                <FontAwesomeIcon icon={faChartLine} className="w-4 mr-3 text-base" />
+                <span>Прогресс</span>
+              </span>
+            </li>
+            <li>
+              <span className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors">
+                <FontAwesomeIcon icon={faPeopleGroup} className="w-4 mr-3 text-base" />
+                <span>Групповые цели</span>
+              </span>
+            </li>
+          </ul>
+        </nav>
+      </div> */}
+    </div>
+  );
+};
