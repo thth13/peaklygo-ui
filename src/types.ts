@@ -13,7 +13,7 @@ export interface UserProfile {
   avatar: string;
   description: string;
   views: number;
-  user: string | { username: string };
+  user: { username: string; _id: string };
   following: string[];
   followers: string[];
   rating: number;

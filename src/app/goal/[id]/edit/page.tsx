@@ -84,7 +84,7 @@ const GoalEditPage: React.FC = () => {
         formDataToSend.append('image', formData.image);
       }
 
-      formDataToSend.append('userId', profile.user);
+      formDataToSend.append('userId', profile.user._id);
       await updateGoal(goalId, formDataToSend);
 
       router.push(`/goal/${goalId}`);

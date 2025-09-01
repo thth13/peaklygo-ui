@@ -1,7 +1,7 @@
 'use client';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import LinkWithProgress from '../Link';
 import { RatingSummary } from './RatingSummary';
@@ -12,9 +12,10 @@ import { ProfileStats, UserProfile } from '@/types';
 interface LeftSidebarProps {
   userId?: string;
   stats?: ProfileStats;
+  isMyProfile?: boolean;
 }
 
-export const LeftSidebar = ({ userId, stats: passedStats }: LeftSidebarProps) => {
+export const LeftSidebar = ({ userId, stats: passedStats, isMyProfile }: LeftSidebarProps) => {
   const { profile: currentUserProfile, isLoading: profileLoading, error: profileError } = useUserProfile();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState<ProfileStats | null>(null);
@@ -77,7 +78,7 @@ export const LeftSidebar = ({ userId, stats: passedStats }: LeftSidebarProps) =>
         ) : error ? (
           <LeftSidebarError error={error} />
         ) : (
-          <LeftSidebarContent profile={profile} stats={stats} />
+          <LeftSidebarContent profile={profile} stats={stats} isMyProfile={isMyProfile} userId={userId} />
         )}
       </div>
 
@@ -133,9 +134,11 @@ export const LeftSidebar = ({ userId, stats: passedStats }: LeftSidebarProps) =>
 interface LeftSidebarContentProps {
   profile: UserProfile | null;
   stats: ProfileStats | null;
+  isMyProfile?: boolean;
+  userId?: string;
 }
 
-function LeftSidebarContent({ profile, stats }: LeftSidebarContentProps) {
+function LeftSidebarContent({ profile, stats, isMyProfile, userId }: LeftSidebarContentProps) {
   return (
     <>
       <div className="flex items-center space-x-4 mb-4">
@@ -174,13 +177,27 @@ function LeftSidebarContent({ profile, stats }: LeftSidebarContentProps) {
         </div>
       </div>
 
-      <LinkWithProgress
-        href="/goal/create"
-        className="w-full bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-600 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-all text-sm"
-      >
-        <FontAwesomeIcon icon={faPlus} className="w-4 mr-2 text-base" />
-        <span>Добавить цель</span>
-      </LinkWithProgress>
+      <div className="space-y-3">
+        {isMyProfile && userId && (
+          <LinkWithProgress
+            href={`/profile/${userId}/edit`}
+            className="w-full bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-all text-sm"
+          >
+            <FontAwesomeIcon icon={faEdit} className="w-4 mr-2 text-base" />
+            <span>Редактировать профиль</span>
+          </LinkWithProgress>
+        )}
+
+        {isMyProfile && (
+          <LinkWithProgress
+            href="/goal/create"
+            className="w-full bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-600 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-all text-sm"
+          >
+            <FontAwesomeIcon icon={faPlus} className="w-4 mr-2 text-base" />
+            <span>Добавить цель</span>
+          </LinkWithProgress>
+        )}
+      </div>
     </>
   );
 }
