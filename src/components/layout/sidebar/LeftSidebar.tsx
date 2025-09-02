@@ -12,9 +12,19 @@ import { LeftSidebarError } from './LeftSidebarError';
 
 interface LeftSidebarProps {
   isProfilePage?: boolean;
+  profile?: UserProfile | null;
+  stats?: ProfileStats | null;
+  isMyProfile?: boolean;
+  userId?: string;
 }
 
-export const LeftSidebar = ({ isProfilePage = false }: LeftSidebarProps) => {
+export const LeftSidebar = ({
+  isProfilePage = false,
+  profile: passedProfile,
+  stats: passedStats,
+  isMyProfile: passedIsMyProfile,
+  userId: passedUserId,
+}: LeftSidebarProps) => {
   const params = useParams();
   const { profile: currentUserProfile, isLoading: profileLoading, error: profileError } = useUserProfile();
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -29,6 +39,13 @@ export const LeftSidebar = ({ isProfilePage = false }: LeftSidebarProps) => {
   const isMyProfile = myUserId === actualUserId;
 
   useEffect(() => {
+    if (isProfilePage && passedProfile && passedStats) {
+      setProfile(passedProfile);
+      setStats(passedStats);
+      setIsLoading(false);
+      return;
+    }
+
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
@@ -53,6 +70,7 @@ export const LeftSidebar = ({ isProfilePage = false }: LeftSidebarProps) => {
         setIsLoading(false);
       }
     };
+
     if (!isProfilePage && profileError) {
       setError(profileError);
       setIsLoading(false);
@@ -60,7 +78,16 @@ export const LeftSidebar = ({ isProfilePage = false }: LeftSidebarProps) => {
     }
 
     fetchUserData();
-  }, [isProfilePage, userId, actualUserId, currentUserProfile, profileLoading, profileError]);
+  }, [
+    isProfilePage,
+    passedProfile,
+    passedStats,
+    userId,
+    actualUserId,
+    currentUserProfile,
+    profileLoading,
+    profileError,
+  ]);
 
   return (
     <div id="left-sidebar" className="w-1/4 pr-6">
@@ -73,8 +100,8 @@ export const LeftSidebar = ({ isProfilePage = false }: LeftSidebarProps) => {
           <LeftSidebarContent
             profile={profile}
             stats={stats}
-            isMyProfile={isMyProfile}
-            userId={actualUserId || undefined}
+            isMyProfile={passedIsMyProfile !== undefined ? passedIsMyProfile : isMyProfile}
+            userId={passedUserId || actualUserId || undefined}
           />
         )}
       </div>

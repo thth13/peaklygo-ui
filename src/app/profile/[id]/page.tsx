@@ -3,14 +3,14 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 
 import { getGoals } from '@/lib/api/goal';
-import { getProfileStats } from '@/lib/api/profile';
+import { getProfileStats, getProfile } from '@/lib/api/profile';
 import { GOALS_PER_PAGE } from '@/constants';
 import { RightSidebar } from '@/components/layout/RightSidebar';
 import { RightSidebarSkeleton } from '@/components/layout/RightSidebarSkeleton';
 import { LeftSidebar } from '@/components/layout/sidebar';
 import { PaginatedProfileContent } from '@/components/profile/PaginatedProfileContent';
 import { ProfileContentSkeleton } from '@/components/profile/ProfileContentSkeleton';
-import { Goal, ProfileStats, PaginatedGoalsResponse } from '@/types';
+import { Goal, ProfileStats, PaginatedGoalsResponse, UserProfile } from '@/types';
 
 type ProfilePageProps = {
   params: Promise<{ id: string }>;
@@ -30,11 +30,15 @@ export default async function Profile({ params }: ProfilePageProps) {
     notFound();
   }
 
-  const { goalsData, stats }: { goalsData: Goal[] | PaginatedGoalsResponse; stats: ProfileStats } = data;
+  const {
+    goalsData,
+    stats,
+    profile,
+  }: { goalsData: Goal[] | PaginatedGoalsResponse; stats: ProfileStats; profile: UserProfile } = data;
 
   return (
     <main className="max-w-7xl mx-auto mt-6 px-4 flex">
-      <LeftSidebar isProfilePage={true} />
+      <LeftSidebar isProfilePage={true} profile={profile} stats={stats} isMyProfile={isMyProfile} userId={id} />
       <div id="main-content" className="w-3/5 px-6">
         <Suspense fallback={<ProfileContentSkeleton />}>
           <PaginatedProfileContent userId={id} isMyProfile={isMyProfile} initialGoals={goalsData} />
@@ -49,14 +53,15 @@ export default async function Profile({ params }: ProfilePageProps) {
 
 async function fetchUserProfile(
   id: string,
-): Promise<{ goalsData: Goal[] | PaginatedGoalsResponse; stats: ProfileStats } | null> {
+): Promise<{ goalsData: Goal[] | PaginatedGoalsResponse; stats: ProfileStats; profile: UserProfile } | null> {
   try {
-    const [goalsResponse, stats] = await Promise.all([
+    const [goalsResponse, stats, profile] = await Promise.all([
       getGoals(id, { page: 1, limit: GOALS_PER_PAGE }),
       getProfileStats(id),
+      getProfile(id),
     ]);
 
-    return { goalsData: goalsResponse, stats };
+    return { goalsData: goalsResponse, stats, profile };
   } catch (err) {
     console.error('Failed to fetch user profile:', err);
     return null;
