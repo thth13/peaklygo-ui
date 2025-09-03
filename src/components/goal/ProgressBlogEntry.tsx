@@ -8,6 +8,8 @@ import { ProgressEntry, Comment } from '@/types';
 import { useProgressBlogEntry } from '@/hooks/useProgressBlogEntry';
 import { AuthContext } from '@/context/AuthContext';
 import Link from 'next/link';
+import DOMPurify from 'dompurify';
+import './progress-blog-entry.css';
 
 interface ProgressBlogActions {
   onToggleLike: (entryId: string) => void;
@@ -46,6 +48,14 @@ export const ProgressBlogEntry = ({
 
   const { userId } = useContext(AuthContext);
 
+  // Функция для безопасного рендеринга HTML
+  const sanitizeHTML = (html: string) => {
+    return DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: ['p', 'strong', 'em', 'u', 'ul', 'ol', 'li', 'br'],
+      ALLOWED_ATTR: [],
+    });
+  };
+
   return (
     <div className="flex space-x-4">
       <div className="flex-shrink-0">
@@ -57,7 +67,10 @@ export const ProgressBlogEntry = ({
 
       {/* Содержимое записи */}
       <div className="flex-1 min-w-0">
-        <p className="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">{entry.content}</p>
+        <div
+          className="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed progress-blog-content"
+          dangerouslySetInnerHTML={{ __html: sanitizeHTML(entry.content) }}
+        />
 
         <div className="flex items-center justify-between text-sm mb-3">
           <div className="flex items-center space-x-4">

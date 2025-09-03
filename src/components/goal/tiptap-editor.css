@@ -1,0 +1,60 @@
+/* Стили для Tiptap редактора */
+.ProseMirror {
+  outline: none;
+  padding: 12px;
+  min-height: 120px;
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+.dark .ProseMirror p.is-editor-empty:first-child::before {
+  color: #6b7280;
+}
+
+/* Стили для форматирования */
+.ProseMirror strong {
+  font-weight: bold;
+}
+
+.ProseMirror em {
+  font-style: italic;
+}
+
+.ProseMirror u {
+  text-decoration: underline;
+}
+
+.ProseMirror ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+  padding-left: 0;
+}
+
+.ProseMirror ol {
+  list-style-type: decimal;
+  margin-left: 1.5rem;
+  padding-left: 0;
+}
+
+.ProseMirror li {
+  margin: 0.25rem 0;
+}
+
+.ProseMirror p {
+  margin: 0.5rem 0;
+}
+
+.ProseMirror p:first-child {
+  margin-top: 0;
+}
+
+.ProseMirror p:last-child {
+  margin-bottom: 0;
+}

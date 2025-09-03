@@ -5,6 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useProgressBlogContext } from '@/context/ProgressBlogContext';
 import { ProgressBlogEntry } from './ProgressBlogEntry';
+import { EditorToolbar } from './EditorToolbar';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder';
+import Underline from '@tiptap/extension-underline';
+import './tiptap-editor.css';
 
 export const ProgressBlog = () => {
   const {
@@ -23,13 +29,32 @@ export const ProgressBlog = () => {
   } = useProgressBlogContext();
 
   const [showNewEntryForm, setShowNewEntryForm] = useState(false);
-  const [newEntry, setNewEntry] = useState({ content: '' });
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      Placeholder.configure({
+        placeholder: 'Расскажите о своем прогрессе...',
+      }),
+    ],
+    content: '',
+    immediatelyRender: false,
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none min-h-[120px] p-3',
+      },
+    },
+  });
 
   const handleSubmitEntry = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!editor) return;
+
     try {
-      await createEntry(newEntry.content);
-      setNewEntry({ content: '' });
+      const content = editor.getHTML();
+      await createEntry(content);
+      editor.commands.clearContent();
       setShowNewEntryForm(false);
     } catch (error) {
       // Error handling is done in context
@@ -75,13 +100,16 @@ export const ProgressBlog = () => {
         <div className="mb-6 p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700">
           <form onSubmit={handleSubmitEntry} className="space-y-4">
             <div>
-              <textarea
-                placeholder="Расскажите о своем прогрессе..."
-                value={newEntry.content}
-                onChange={(e) => setNewEntry({ content: e.target.value })}
-                rows={4}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
+              {/* Панель инструментов */}
+              <EditorToolbar editor={editor} />
+
+              {/* Редактор */}
+              <div className="border border-gray-300 dark:border-gray-600 border-t-0 rounded-b-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+                <EditorContent
+                  editor={editor}
+                  className="prose prose-sm max-w-none dark:prose-invert focus-within:ring-2 focus-within:ring-blue-500 rounded-b-lg"
+                />
+              </div>
             </div>
             <div className="flex space-x-3">
               <button
@@ -92,7 +120,10 @@ export const ProgressBlog = () => {
               </button>
               <button
                 type="button"
-                onClick={() => setShowNewEntryForm(false)}
+                onClick={() => {
+                  editor?.commands.clearContent();
+                  setShowNewEntryForm(false);
+                }}
                 className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg text-sm transition-colors"
               >
                 Отмена

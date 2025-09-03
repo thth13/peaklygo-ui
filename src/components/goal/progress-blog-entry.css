@@ -1,0 +1,51 @@
+/* Стили для записей блога прогресса */
+.progress-blog-content {
+  /* Базовые стили для текста */
+}
+
+.progress-blog-content p {
+  margin: 0.5rem 0;
+}
+
+.progress-blog-content p:first-child {
+  margin-top: 0;
+}
+
+.progress-blog-content p:last-child {
+  margin-bottom: 0;
+}
+
+.progress-blog-content strong {
+  font-weight: 600;
+}
+
+.progress-blog-content em {
+  font-style: italic;
+}
+
+.progress-blog-content u {
+  text-decoration: underline;
+}
+
+.progress-blog-content ul {
+  list-style-type: disc;
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.progress-blog-content ol {
+  list-style-type: decimal;
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.progress-blog-content li {
+  margin: 0.25rem 0;
+}
+
+.progress-blog-content ul ul,
+.progress-blog-content ol ol,
+.progress-blog-content ul ol,
+.progress-blog-content ol ul {
+  margin: 0;
+}
