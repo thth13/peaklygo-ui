@@ -9,6 +9,9 @@ import { ProfileStats, UserProfile } from '@/types';
 import { LeftSidebarContent } from './LeftSidebarContent';
 import { LeftSidebarSkeleton } from './LeftSidebarSkeleton';
 import { LeftSidebarError } from './LeftSidebarError';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBullseye, faArchive } from '@fortawesome/free-solid-svg-icons';
+import LinkWithProgress from '@/components/Link';
 
 interface LeftSidebarProps {
   isProfilePage?: boolean;
@@ -106,16 +109,28 @@ export const LeftSidebar = ({
         )}
       </div>
 
-      {/* <div id="navigation-menu" className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 transition-colors">
+      <div id="navigation-menu" className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 transition-colors">
         <nav>
           <ul className="space-y-1">
             <li>
-              <span className="flex items-center py-2 px-3 rounded-md text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 font-medium cursor-pointer text-sm transition-colors">
+              <LinkWithProgress
+                href={`/profile/${actualUserId || myUserId || ''}`}
+                className="flex items-center py-2 px-3 rounded-md text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 font-medium cursor-pointer text-sm transition-colors hover:bg-primary-100 dark:hover:bg-primary-800"
+              >
                 <FontAwesomeIcon icon={faBullseye} className="w-4 mr-3 text-base" />
                 <span>Мои цели</span>
-              </span>
+              </LinkWithProgress>
             </li>
             <li>
+              <LinkWithProgress
+                href={`/profile/${actualUserId || myUserId || ''}/archive`}
+                className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors"
+              >
+                <FontAwesomeIcon icon={faArchive} className="w-4 mr-3 text-base" />
+                <span>Архивные цели</span>
+              </LinkWithProgress>
+            </li>
+            {/* <li>
               <span className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors">
                 <FontAwesomeIcon icon={faTrophy} className="w-4 mr-3 text-base" />
                 <span>Мои челленджи</span>
@@ -147,10 +162,10 @@ export const LeftSidebar = ({
                 <FontAwesomeIcon icon={faPeopleGroup} className="w-4 mr-3 text-base" />
                 <span>Групповые цели</span>
               </span>
-            </li>
+            </li> */}
           </ul>
         </nav>
-      </div> */}
+      </div>
     </div>
   );
 };

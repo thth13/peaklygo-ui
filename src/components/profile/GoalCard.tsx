@@ -16,9 +16,10 @@ import toast from 'react-hot-toast';
 interface GoalCardProps {
   goal: Goal;
   onGoalArchived?: (goalId: string) => void;
+  isArchived?: boolean;
 }
 
-export const GoalCard = ({ goal, onGoalArchived }: GoalCardProps) => {
+export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardProps) => {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isArchiving, setIsArchiving] = useState<boolean>(false);
@@ -100,38 +101,40 @@ export const GoalCard = ({ goal, onGoalArchived }: GoalCardProps) => {
             </span>
           </div>
           {/* Menu button */}
-          <div className="absolute top-2 right-2">
-            <div className="relative" ref={menuRef}>
-              <button
-                onClick={stopPropagation(() => setIsMenuOpen(!isMenuOpen))}
-                className="bg-white/80 dark:bg-gray-800/80 backdrop-blur text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 p-2 rounded-full focus:outline-none shadow-sm"
-                aria-haspopup="menu"
-                aria-expanded={isMenuOpen}
-              >
-                <FontAwesomeIcon icon={faEllipsisVertical} className="w-3" />
-              </button>
-              {isMenuOpen && (
-                <div
-                  className="absolute right-0 top-10 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20"
-                  onClick={stopPropagation()}
+          {!isArchived && (
+            <div className="absolute top-2 right-2">
+              <div className="relative" ref={menuRef}>
+                <button
+                  onClick={stopPropagation(() => setIsMenuOpen(!isMenuOpen))}
+                  className="bg-white/80 dark:bg-gray-800/80 backdrop-blur text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 p-2 rounded-full focus:outline-none shadow-sm"
+                  aria-haspopup="menu"
+                  aria-expanded={isMenuOpen}
                 >
-                  <button
-                    onClick={handleEdit}
-                    className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  <FontAwesomeIcon icon={faEllipsisVertical} className="w-3" />
+                </button>
+                {isMenuOpen && (
+                  <div
+                    className="absolute right-0 top-10 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20"
+                    onClick={stopPropagation()}
                   >
-                    Редактировать цель
-                  </button>
-                  <button
-                    onClick={handleArchive}
-                    disabled={isArchiving}
-                    className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-60"
-                  >
-                    Архивировать цель
-                  </button>
-                </div>
-              )}
+                    <button
+                      onClick={handleEdit}
+                      className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Редактировать цель
+                    </button>
+                    <button
+                      onClick={handleArchive}
+                      disabled={isArchiving}
+                      className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-60"
+                    >
+                      Архивировать цель
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
@@ -153,36 +156,38 @@ export const GoalCard = ({ goal, onGoalArchived }: GoalCardProps) => {
                 >
                   {goal.isCompleted ? 'Достигнуто' : 'В процессе'}
                 </span>
-                <div className="relative" ref={menuRef}>
-                  <button
-                    onClick={stopPropagation(() => setIsMenuOpen(!isMenuOpen))}
-                    className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded focus:outline-none"
-                    aria-haspopup="menu"
-                    aria-expanded={isMenuOpen}
-                  >
-                    <FontAwesomeIcon icon={faEllipsisVertical} className="w-3" />
-                  </button>
-                  {isMenuOpen && (
-                    <div
-                      className="absolute right-0 top-8 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20"
-                      onClick={stopPropagation()}
+                {!isArchived && (
+                  <div className="relative" ref={menuRef}>
+                    <button
+                      onClick={stopPropagation(() => setIsMenuOpen(!isMenuOpen))}
+                      className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded focus:outline-none"
+                      aria-haspopup="menu"
+                      aria-expanded={isMenuOpen}
                     >
-                      <button
-                        onClick={handleEdit}
-                        className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      <FontAwesomeIcon icon={faEllipsisVertical} className="w-3" />
+                    </button>
+                    {isMenuOpen && (
+                      <div
+                        className="absolute right-0 top-8 w-44 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20"
+                        onClick={stopPropagation()}
                       >
-                        Редактировать цель
-                      </button>
-                      <button
-                        onClick={handleArchive}
-                        disabled={isArchiving}
-                        className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-60"
-                      >
-                        Архивировать цель
-                      </button>
-                    </div>
-                  )}
-                </div>
+                        <button
+                          onClick={handleEdit}
+                          className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          Редактировать цель
+                        </button>
+                        <button
+                          onClick={handleArchive}
+                          disabled={isArchiving}
+                          className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-60"
+                        >
+                          Архивировать цель
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>

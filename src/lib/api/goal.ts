@@ -116,3 +116,21 @@ export const archiveGoal = async (goalId: string): Promise<Goal> => {
     throw err;
   }
 };
+
+export const getArchivedGoals = async (
+  userId: string,
+  pagination?: GetGoalsPaginationDto,
+): Promise<Goal[] | PaginatedGoalsResponse> => {
+  try {
+    const params = new URLSearchParams();
+    if (pagination?.page) params.append('page', pagination.page.toString());
+    if (pagination?.limit) params.append('limit', pagination.limit.toString());
+
+    const url = `${API_URL}/goals/userGoals/${userId}/archived${params.toString() ? `?${params.toString()}` : ''}`;
+    const res = await api.get(url);
+
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
