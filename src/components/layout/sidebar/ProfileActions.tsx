@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import LinkWithProgress from '../../Link';
 
 interface ProfileActionsProps {
@@ -10,16 +10,6 @@ interface ProfileActionsProps {
 export function ProfileActions({ isMyProfile, userId }: ProfileActionsProps) {
   return (
     <div className="space-y-3">
-      {isMyProfile && userId && (
-        <LinkWithProgress
-          href={`/profile/${userId}/edit`}
-          className="w-full bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-all text-sm"
-        >
-          <FontAwesomeIcon icon={faEdit} className="w-4 mr-2 text-base" />
-          <span>Редактировать профиль</span>
-        </LinkWithProgress>
-      )}
-
       {isMyProfile && (
         <LinkWithProgress
           href="/goal/create"

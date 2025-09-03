@@ -14,7 +14,7 @@ interface LeftSidebarContentProps {
 export function LeftSidebarContent({ profile, stats, isMyProfile, userId }: LeftSidebarContentProps) {
   return (
     <>
-      <ProfileHeader profile={profile} />
+      <ProfileHeader profile={profile} isMyProfile={isMyProfile} userId={userId} />
 
       {profile?.description && (
         <div className="mb-4">

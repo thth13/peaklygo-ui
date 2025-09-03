@@ -39,7 +39,7 @@ export default async function Profile({ params }: ProfilePageProps) {
   return (
     <main className="max-w-7xl mx-auto mt-6 px-4 flex">
       <LeftSidebar isProfilePage={true} profile={profile} stats={stats} isMyProfile={isMyProfile} userId={id} />
-      <div id="main-content" className="w-3/5 px-6">
+      <div id="main-content" className="w-1/2 px-6">
         <Suspense fallback={<ProfileContentSkeleton />}>
           <PaginatedProfileContent userId={id} isMyProfile={isMyProfile} initialGoals={goalsData} />
         </Suspense>

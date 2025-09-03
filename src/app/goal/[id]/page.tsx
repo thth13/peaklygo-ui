@@ -93,117 +93,111 @@ export default async function GoalPage({ params }: GoalPageProps) {
   const completedSteps = getCompletedSteps();
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="flex gap-6">
-          {/* Левая боковая панель */}
-          <LeftSidebar />
+    <main className="max-w-7xl mx-auto mt-6 px-4 flex">
+      {/* Левая боковая панель */}
+      <LeftSidebar />
 
-          <ProgressBlogProvider goalId={id}>
-            {/* Основная область */}
-            <div className="flex-1 px-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-colors">
-                {/* Заголовок */}
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <Link
-                        href="/"
-                        className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center space-x-2 transition-colors"
-                      >
-                        <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
-                        <span className="text-sm">Назад к целям</span>
-                      </Link>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Link
-                        href={`/goal/${id}/edit`}
-                        className="flex items-center space-x-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                      >
-                        <FontAwesomeIcon icon={faEdit} className="w-4 h-4" />
-                        <span>Редактировать</span>
-                      </Link>
-                    </div>
-                  </div>
-
-                  <div className="mb-4">
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">{goal.goalName}</h1>
-                    <div className="flex items-center space-x-3">
-                      <span className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-sm font-medium">
-                        {goal.category}
-                      </span>
-                      <span className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-medium">
-                        {goal.isCompleted ? 'Завершено' : 'В процессе'}
-                      </span>
-                      <span className="text-gray-500 dark:text-gray-400 text-sm">
-                        Создано {formatDate(goal.startDate)}
-                      </span>
-                    </div>
-                  </div>
+      <ProgressBlogProvider goalId={id}>
+        {/* Основная область */}
+        <div className="w-1/2 px-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-colors">
+            {/* Заголовок */}
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <Link
+                    href="/"
+                    className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center space-x-2 transition-colors"
+                  >
+                    <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
+                    <span className="text-sm">Назад к целям</span>
+                  </Link>
                 </div>
+                <div className="flex items-center space-x-3">
+                  <Link
+                    href={`/goal/${id}/edit`}
+                    className="flex items-center space-x-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <FontAwesomeIcon icon={faEdit} className="w-4 h-4" />
+                    <span>Редактировать</span>
+                  </Link>
+                </div>
+              </div>
 
-                <GoalProgress goal={goal} goalId={id} currentUserId={currentUserId} />
+              <div className="mb-4">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">{goal.goalName}</h1>
+                <div className="flex items-center space-x-3">
+                  <span className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-sm font-medium">
+                    {goal.category}
+                  </span>
+                  <span className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-medium">
+                    {goal.isCompleted ? 'Завершено' : 'В процессе'}
+                  </span>
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">Создано {formatDate(goal.startDate)}</span>
+                </div>
               </div>
             </div>
 
-            {/* Правая боковая панель */}
-            <div className="w-1/4 pl-6">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Статистика</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-300">Ценность цели</span>
-                    <span className="font-medium text-blue-600 dark:text-blue-400">{goal.value} баллов</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-300">Дней прошло</span>
-                    <span className="font-medium text-gray-900 dark:text-gray-100">{daysPassed}</span>
-                  </div>
-                  {goal.endDate && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-300">Дней осталось</span>
-                      <span className="font-medium text-gray-900 dark:text-gray-100">{daysLeft}</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-300">Этапов завершено</span>
-                    <span className="font-medium text-gray-900 dark:text-gray-100">
-                      {completedSteps} из {goal.steps.length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-300">Приватность</span>
-                    <span className={`px-2 py-1 rounded text-sm ${getPrivacyColor()}`}>{getPrivacyLabel()}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
-                <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Последняя активность</h3>
-                <div className="space-y-3">
-                  {goal.activity?.slice(-5).map((item, index) => {
-                    const colors = ActivityTypeColors[item.activityType];
-                    return (
-                      <div key={index} className="flex items-start space-x-3">
-                        <div className={`w-2 h-2 ${colors.light} ${colors.dark} rounded-full mt-2`}></div>
-                        <div>
-                          <p className="text-sm text-gray-900 dark:text-gray-100">
-                            {ActivityTypeLabels[item.activityType]}
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">{formatDate(item.date)}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <GoalActions goal={goal} />
-            </div>
-          </ProgressBlogProvider>
+            <GoalProgress goal={goal} goalId={id} currentUserId={currentUserId} />
+          </div>
         </div>
-      </div>
-    </div>
+
+        {/* Правая боковая панель */}
+        <div className="w-1/4 pl-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Статистика</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-300">Ценность цели</span>
+                <span className="font-medium text-blue-600 dark:text-blue-400">{goal.value} баллов</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-300">Дней прошло</span>
+                <span className="font-medium text-gray-900 dark:text-gray-100">{daysPassed}</span>
+              </div>
+              {goal.endDate && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-300">Дней осталось</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{daysLeft}</span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-300">Этапов завершено</span>
+                <span className="font-medium text-gray-900 dark:text-gray-100">
+                  {completedSteps} из {goal.steps.length}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-300">Приватность</span>
+                <span className={`px-2 py-1 rounded text-sm ${getPrivacyColor()}`}>{getPrivacyLabel()}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Последняя активность</h3>
+            <div className="space-y-3">
+              {goal.activity?.slice(-5).map((item, index) => {
+                const colors = ActivityTypeColors[item.activityType];
+                return (
+                  <div key={index} className="flex items-start space-x-3">
+                    <div className={`w-2 h-2 ${colors.light} ${colors.dark} rounded-full mt-2`}></div>
+                    <div>
+                      <p className="text-sm text-gray-900 dark:text-gray-100">
+                        {ActivityTypeLabels[item.activityType]}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{formatDate(item.date)}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <GoalActions goal={goal} />
+        </div>
+      </ProgressBlogProvider>
+    </main>
   );
 }
 

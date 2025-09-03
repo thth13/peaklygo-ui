@@ -1,15 +1,18 @@
 import { IMAGE_URL } from '@/constants';
 import { UserProfile } from '@/types';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import LinkWithProgress from '../../Link';
 
 interface ProfileHeaderProps {
   profile: UserProfile | null;
+  isMyProfile?: boolean;
+  userId?: string;
 }
 
-export function ProfileHeader({ profile }: ProfileHeaderProps) {
+export function ProfileHeader({ profile, isMyProfile, userId }: ProfileHeaderProps) {
   return (
-    <div className="flex items-center space-x-4 mb-4">
+    <div className="relative flex items-center space-x-4 mb-4">
       <div className="h-16 w-16 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
         {profile?.avatar ? (
           <img src={`${IMAGE_URL}/${profile.avatar}`} alt="Profile" className="h-16 w-16 object-cover rounded-full" />
@@ -28,6 +31,15 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
             : profile?.name?.toLowerCase().replace(/\s+/g, '') || 'user'}
         </p>
       </div>
+      {isMyProfile && userId && (
+        <LinkWithProgress
+          href={`/profile/${userId}/edit`}
+          className="absolute top-0 right-0 h-8 w-8 flex items-center justify-center rounded-md text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          aria-label="Edit profile"
+        >
+          <FontAwesomeIcon icon={faPenToSquare} className="text-base" />
+        </LinkWithProgress>
+      )}
     </div>
   );
 }
