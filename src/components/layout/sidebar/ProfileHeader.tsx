@@ -3,6 +3,7 @@ import { UserProfile } from '@/types';
 import { faPenToSquare, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LinkWithProgress from '../../Link';
+import Image from 'next/image';
 
 interface ProfileHeaderProps {
   profile: UserProfile | null;
@@ -15,7 +16,13 @@ export function ProfileHeader({ profile, isMyProfile, userId }: ProfileHeaderPro
     <div className="relative flex items-center space-x-4 mb-4">
       <div className="h-16 w-16 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
         {profile?.avatar ? (
-          <img src={`${IMAGE_URL}/${profile.avatar}`} alt="Profile" className="h-16 w-16 object-cover rounded-full" />
+          <Image
+            src={`${IMAGE_URL}/${profile.avatar}`}
+            alt="Profile"
+            width={64}
+            height={64}
+            className="h-16 w-16 object-cover rounded-full"
+          />
         ) : (
           <div className="h-16 w-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
             <FontAwesomeIcon icon={faUser} className="text-white text-xl" />

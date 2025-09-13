@@ -57,7 +57,7 @@ export const ProgressBlog = () => {
       editor.commands.clearContent();
       setShowNewEntryForm(false);
     } catch (error) {
-      // Error handling is done in context
+      console.log('Error submitting entry:', error);
     }
   };
 

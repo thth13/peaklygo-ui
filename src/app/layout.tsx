@@ -5,6 +5,7 @@ import ProgressBar from './ProgressBar';
 import './globals.css';
 import { UserProfileProvider } from '@/context/UserProfileContext';
 import { Header } from '@/components/layout/Header';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'PeaklyGo',
@@ -22,7 +23,9 @@ export default function RootLayout({
         <Header />
         <AuthProvider>
           <UserProfileProvider>
-            <ProgressBar />
+            <Suspense fallback={null}>
+              <ProgressBar />
+            </Suspense>
             {children}
             <Toaster position="top-right" />
           </UserProfileProvider>

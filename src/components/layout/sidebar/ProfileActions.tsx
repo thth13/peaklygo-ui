@@ -7,7 +7,7 @@ interface ProfileActionsProps {
   userId?: string;
 }
 
-export function ProfileActions({ isMyProfile, userId }: ProfileActionsProps) {
+export function ProfileActions({ isMyProfile }: ProfileActionsProps) {
   return (
     <div className="space-y-3">
       {isMyProfile && (

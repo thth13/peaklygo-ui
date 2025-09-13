@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { ProgressEntry, CreateProgressEntryDto, Comment, CreateCommentDto } from '@/types';
 import { getProgressEntries, createProgressEntry, toggleLike, getComments, createComment } from '@/lib/api';
@@ -46,7 +46,7 @@ export const ProgressBlogProvider = ({ children, goalId }: ProgressBlogProviderP
   const [commentTexts, setCommentTexts] = useState<{ [key: string]: string }>({});
   const [loadingComments, setLoadingComments] = useState<{ [key: string]: boolean }>({});
 
-  const loadEntries = async () => {
+  const loadEntries = useCallback(async () => {
     try {
       setIsLoading(true);
       const entries = await getProgressEntries(goalId);
@@ -57,11 +57,11 @@ export const ProgressBlogProvider = ({ children, goalId }: ProgressBlogProviderP
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [goalId]);
 
   useEffect(() => {
     loadEntries();
-  }, [goalId]);
+  }, [goalId, loadEntries]);
 
   const createEntry = async (content: string) => {
     if (!content.trim()) {

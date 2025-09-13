@@ -3,8 +3,6 @@ import toast from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faTelegram } from '@fortawesome/free-brands-svg-icons';
-import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
-import { faVk } from '@fortawesome/free-brands-svg-icons';
 import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
@@ -28,6 +26,7 @@ export const ShareGoal = ({ isShareModalOpen, setIsShareModalOpen, goal }: Share
       toast.success('Ссылка скопирована!');
     } catch (error) {
       toast.error('Ошибка копирования ссылки');
+      console.error('Error copying link:', error);
     } finally {
       setIsCopying(false);
     }

@@ -1,9 +1,9 @@
 'use client';
 
 import { Step } from '@/types';
-import { faCheck, faCircle, faEdit, faPlus, faSpinner, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faCircle, faEdit, faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { updateStepStatus, updateStepText, createStep, deleteStep, completeGoal } from '@/lib/api/goal';
+import { updateStepStatus, updateStepText, createStep, completeGoal } from '@/lib/api/goal';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
@@ -38,7 +38,7 @@ export const GoalSteps = (props: StepsProps) => {
   const [isCreatingStep, setIsCreatingStep] = useState(false);
 
   // Состояние для удаления этапов
-  const [deletingSteps, setDeletingSteps] = useState<Set<string>>(new Set());
+  const [deletingSteps] = useState<Set<string>>(new Set());
 
   // Состояние для завершения цели
   const [isCompletingGoal, setIsCompletingGoal] = useState(false);
@@ -66,7 +66,7 @@ export const GoalSteps = (props: StepsProps) => {
   const currentStepIndex = steps.findIndex((step) => !step.isCompleted);
   const allStepsCompleted = steps.length > 0 && steps.every((step) => step.isCompleted);
 
-  const handleStepToggle = async (step: Step, index: number) => {
+  const handleStepToggle = async (step: Step) => {
     const newStatus = !step.isCompleted;
 
     // Устанавливаем состояние загрузки
@@ -152,41 +152,41 @@ export const GoalSteps = (props: StepsProps) => {
     setShowAddForm(false);
   };
 
-  const handleDeleteStep = async (stepId: string) => {
-    if (steps.length <= 1) {
-      toast.error('Нельзя удалить последний этап');
-      return;
-    }
+  // const handleDeleteStep = async (stepId: string) => {
+  //   if (steps.length <= 1) {
+  //     toast.error('Нельзя удалить последний этап');
+  //     return;
+  //   }
 
-    setDeletingSteps((prev) => new Set([...prev, stepId]));
+  //   setDeletingSteps((prev) => new Set([...prev, stepId]));
 
-    try {
-      // Удаляем этап на сервере
-      await deleteStep(goalId, stepId);
+  //   try {
+  //     // Удаляем этап на сервере
+  //     await deleteStep(goalId, stepId);
 
-      // Обновляем локальное состояние
-      const updatedSteps = steps.filter((step) => step.id !== stepId);
-      setSteps(updatedSteps);
+  //     // Обновляем локальное состояние
+  //     const updatedSteps = steps.filter((step) => step.id !== stepId);
+  //     setSteps(updatedSteps);
 
-      // Уведомляем родительский компонент
-      onStepsUpdate?.(updatedSteps);
+  //     // Уведомляем родительский компонент
+  //     onStepsUpdate?.(updatedSteps);
 
-      // Перерасчитываем прогресс
-      const newProgress = calculateProgress(updatedSteps);
-      onProgressUpdate?.(newProgress);
+  //     // Перерасчитываем прогресс
+  //     const newProgress = calculateProgress(updatedSteps);
+  //     onProgressUpdate?.(newProgress);
 
-      toast.success('Этап удален!');
-    } catch (error) {
-      console.error('Failed to delete step:', error);
-      toast.error('Не удалось удалить этап');
-    } finally {
-      setDeletingSteps((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(stepId);
-        return newSet;
-      });
-    }
-  };
+  //     toast.success('Этап удален!');
+  //   } catch (error) {
+  //     console.error('Failed to delete step:', error);
+  //     toast.error('Не удалось удалить этап');
+  //   } finally {
+  //     setDeletingSteps((prev) => {
+  //       const newSet = new Set(prev);
+  //       newSet.delete(stepId);
+  //       return newSet;
+  //     });
+  //   }
+  // };
 
   const handleCompleteGoal = async () => {
     if (!allStepsCompleted) {
@@ -383,7 +383,7 @@ export const GoalSteps = (props: StepsProps) => {
             >
               {isOwner && (
                 <button
-                  onClick={() => handleStepToggle(step, index)}
+                  onClick={() => handleStepToggle(step)}
                   disabled={isLoading || isDeleting}
                   className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${styles.circle} ${
                     isLoading || isDeleting ? 'opacity-50 cursor-not-allowed' : ''

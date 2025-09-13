@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
 import Link from '@/components/Link';
 import { LeftSidebar } from '@/components/layout/sidebar';
 import { ActivityTypeLabels, ActivityTypeColors, Goal } from '@/types';

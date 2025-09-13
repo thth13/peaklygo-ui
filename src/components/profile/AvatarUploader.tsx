@@ -11,7 +11,7 @@ interface AvatarUploaderProps {
   existingAvatarUrl?: string;
 }
 
-export const AvatarUploader: React.FC<AvatarUploaderProps> = ({ onAvatarChange, avatar, existingAvatarUrl }) => {
+export const AvatarUploader: React.FC<AvatarUploaderProps> = ({ onAvatarChange, existingAvatarUrl }) => {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);

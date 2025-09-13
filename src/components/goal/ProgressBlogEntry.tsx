@@ -2,7 +2,7 @@
 
 import { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faComment, faChevronDown, faChevronUp, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faComment, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { formatTimeAgo } from '@/lib/utils';
 import { ProgressEntry, Comment } from '@/types';
 import { useProgressBlogEntry } from '@/hooks/useProgressBlogEntry';
@@ -10,6 +10,7 @@ import { AuthContext } from '@/context/AuthContext';
 import Link from 'next/link';
 import DOMPurify from 'dompurify';
 import './progress-blog-entry.css';
+import Image from 'next/image';
 
 interface ProgressBlogActions {
   onToggleLike: (entryId: string) => void;
@@ -118,7 +119,11 @@ export const ProgressBlogEntry = ({
                   <div key={comment._id} className="flex space-x-3">
                     <div className="flex-shrink-0">
                       {comment.profile?.avatar ? (
-                        <img src={comment.profile.avatar} alt={comment.profile.name} className="w-8 h-8 rounded-full" />
+                        <Image
+                          src={comment.profile.avatar}
+                          alt={comment.profile.name}
+                          className="w-8 h-8 rounded-full"
+                        />
                       ) : (
                         <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
                           <span className="text-xs font-medium text-gray-700 dark:text-gray-300">

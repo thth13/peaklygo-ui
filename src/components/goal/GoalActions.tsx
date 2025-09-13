@@ -3,9 +3,6 @@
 import React, { useState } from 'react';
 import { useProgressBlogContext } from '@/context/ProgressBlogContext';
 import { Goal } from '@/types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTelegram, faWhatsapp, faVk, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { faSpinner, faCopy, faTimes } from '@fortawesome/free-solid-svg-icons';
 import toast from 'react-hot-toast';
 import { ShareGoal } from './ShareGoal';
 import { ArchiveGoalModal } from './ArchiveGoalModal';
