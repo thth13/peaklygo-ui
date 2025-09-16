@@ -8,8 +8,25 @@ import { Header } from '@/components/layout/Header';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
-  title: 'PeaklyGo',
-  description: 'PeaklyGo',
+  title: 'PeaklyGo - Делайте прогресс видимым. Достигайте цели осознанно',
+  description:
+    'Место, где ваши цели превращаются в чёткий план и понятную историю прогресса. Без сложностей, без шума — только движение вперёд.',
+  openGraph: {
+    title: 'PeaklyGo - Делайте прогресс видимым. Достигайте цели осознанно',
+    description:
+      'Место, где ваши цели превращаются в чёткий план и понятную историю прогресса. Без сложностей, без шума — только движение вперёд.',
+    url: 'https://peaklygo.com',
+    siteName: 'PeaklyGo',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'PeaklyGo',
+      },
+    ],
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
