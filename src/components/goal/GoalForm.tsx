@@ -67,7 +67,7 @@ const categories = [
 const defaultFormData: GoalFormData = {
   goalName: '',
   description: '',
-  category: '',
+  category: 'health',
   customCategory: '',
   startDate: new Date().toISOString().slice(0, 10),
   endDate: null,
