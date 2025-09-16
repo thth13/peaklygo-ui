@@ -93,17 +93,17 @@ export default async function GoalPage({ params }: GoalPageProps) {
   const completedSteps = getCompletedSteps();
 
   return (
-    <main className="max-w-7xl mx-auto mt-6 px-4 flex">
+    <main className="max-w-7xl mx-auto mt-6 px-4 flex flex-col lg:flex-row">
       {/* Левая боковая панель */}
       <LeftSidebar />
 
       <ProgressBlogProvider goalId={id}>
         {/* Основная область */}
-        <div className="w-1/2 px-6">
+        <div className="w-full lg:w-1/2 px-0 lg:px-6 mb-6 lg:mb-0">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-colors">
             {/* Заголовок */}
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
+            <div className="p-4 lg:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-3 sm:space-y-0">
                 <div className="flex items-center space-x-3">
                   <Link
                     href="/"
@@ -125,8 +125,10 @@ export default async function GoalPage({ params }: GoalPageProps) {
               </div>
 
               <div className="mb-4">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">{goal.goalName}</h1>
-                <div className="flex items-center space-x-3">
+                <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+                  {goal.goalName}
+                </h1>
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-sm font-medium">
                     {goal.category}
                   </span>
@@ -143,8 +145,8 @@ export default async function GoalPage({ params }: GoalPageProps) {
         </div>
 
         {/* Правая боковая панель */}
-        <div className="w-1/4 pl-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
+        <div className="w-full lg:w-1/4 px-0 lg:pl-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 lg:p-6 mb-6 transition-colors">
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Статистика</h3>
             <div className="space-y-3">
               <div className="flex justify-between">
@@ -174,7 +176,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 lg:p-6 mb-6 transition-colors">
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Последняя активность</h3>
             <div className="space-y-3">
               {goal.activity?.slice(-5).map((item, index) => {

@@ -6,7 +6,7 @@ interface RightSidebarProps {
 
 export const RightSidebar = ({ stats }: RightSidebarProps) => {
   return (
-    <div id="right-sidebar" className="w-1/4 pl-6">
+    <div id="right-sidebar" className="w-1/4 pl-6 hidden md:block">
       <div id="quick-stats" className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Статистика</h3>
         <div className="space-y-4">

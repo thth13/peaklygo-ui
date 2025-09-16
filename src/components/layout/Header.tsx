@@ -4,10 +4,14 @@ import { usePathname } from 'next/navigation';
 import LinkWithProgress from '../Link';
 import ThemeToggle from '../ThemeToggle';
 import Image from 'next/image';
+import { useUserProfile } from '@/context/UserProfileContext';
 
 export const Header = () => {
   const pathname = usePathname();
-  if (pathname === '/') return null;
+  const { profile } = useUserProfile();
+
+  if (pathname === '/auth/login' || pathname === '/auth/register') return null;
+
   return (
     <header className="bg-white dark:bg-gray-900 shadow-sm py-4 sticky top-0 z-50 transition-colors">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
@@ -26,7 +30,7 @@ export const Header = () => {
           </button>
           <div className="h-8 w-8 rounded-full overflow-hidden">
             <Image
-              src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
+              src={profile?.avatar || '/default-avatar.png'}
               alt="Profile"
               width={32}
               height={32}

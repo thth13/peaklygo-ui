@@ -37,9 +37,9 @@ export default async function ArchivePage({ params }: ArchivePageProps) {
   }: { archivedGoalsData: Goal[] | PaginatedGoalsResponse; stats: ProfileStats; profile: UserProfile } = data;
 
   return (
-    <main className="max-w-7xl mx-auto mt-6 px-4 flex">
+    <main className="max-w-7xl mx-auto mt-6 px-2 md:px-4 flex">
       <LeftSidebar isProfilePage={true} profile={profile} stats={stats} isMyProfile={isMyProfile} userId={id} />
-      <div id="main-content" className="w-1/2 px-6">
+      <div id="main-content" className="w-full md:w-1/2 px-2 md:px-6">
         <Suspense fallback={<ProfileContentSkeleton />}>
           <ArchivedProfileContent userId={id} isMyProfile={isMyProfile} initialArchivedGoals={archivedGoalsData} />
         </Suspense>

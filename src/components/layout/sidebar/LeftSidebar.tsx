@@ -93,7 +93,7 @@ export const LeftSidebar = ({
   ]);
 
   return (
-    <div id="left-sidebar" className="w-1/4 pr-6">
+    <div id="left-sidebar" className="w-1/4 pr-6 hidden md:block">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6 transition-colors">
         {isLoading ? (
           <LeftSidebarSkeleton />
