@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '../context/AuthContext';
 import ProgressBar from './ProgressBar';
@@ -37,6 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-gray-50 dark:bg-gray-900 font-sans transition-colors">
+        <GoogleAnalytics gaId="G-2T8QM142RE" />
         <AuthProvider>
           <UserProfileProvider>
             <Header />
