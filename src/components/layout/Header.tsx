@@ -29,12 +29,12 @@ export const Header = () => {
           </div>
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <button className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
-              <i className="fa-solid fa-bell"></i>
+            {/* <button className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
+              <FontAwesomeIcon icon={faBell} />
             </button>
             <button className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
-              <i className="fa-solid fa-envelope"></i>
-            </button>
+              <FontAwesomeIcon icon={faEnvelope} />
+            </button> */}
             {isLoading ? (
               <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" aria-hidden />
             ) : profile ? (

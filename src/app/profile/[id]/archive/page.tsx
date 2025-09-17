@@ -3,14 +3,14 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 
 import { getArchivedGoals } from '@/lib/api/goal';
-import { getProfileStats, getProfile } from '@/lib/api/profile';
+import { getProfileStats } from '@/lib/api/profile';
 import { GOALS_PER_PAGE } from '@/constants';
 import { RightSidebar } from '@/components/layout/RightSidebar';
 import { RightSidebarSkeleton } from '@/components/layout/RightSidebarSkeleton';
 import { LeftSidebar } from '@/components/layout/sidebar';
 import { ArchivedProfileContent } from '@/components/profile/ArchivedProfileContent';
 import { ProfileContentSkeleton } from '@/components/profile/ProfileContentSkeleton';
-import { Goal, ProfileStats, PaginatedGoalsResponse, UserProfile } from '@/types';
+import { Goal, ProfileStats, PaginatedGoalsResponse } from '@/types';
 
 type ArchivePageProps = {
   params: Promise<{ id: string }>;

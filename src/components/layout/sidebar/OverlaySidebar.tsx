@@ -9,7 +9,7 @@ import { LeftSidebarContent } from './LeftSidebarContent';
 import { LeftSidebarSkeleton } from './LeftSidebarSkeleton';
 import { LeftSidebarError } from './LeftSidebarError';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faBullseye, faArchive } from '@fortawesome/free-solid-svg-icons';
+import { faBullseye, faArchive } from '@fortawesome/free-solid-svg-icons';
 import LinkWithProgress from '@/components/Link';
 
 interface OverlaySidebarProps {
