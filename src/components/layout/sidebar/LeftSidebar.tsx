@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { getProfile, getProfileStats } from '@/lib/api/profile';
@@ -22,10 +23,21 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
   const [stats, setStats] = useState<ProfileStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const pathname = usePathname();
 
   const myUserId = Cookies.get('userId');
   const actualUserId = userId || myUserId;
   const isMyProfile = !!myUserId && myUserId === actualUserId;
+
+  const isActivePage = (path: string) => {
+    if (path === `/profile/${myUserId}` && pathname === `/profile/${myUserId}`) {
+      return true;
+    }
+    if (path === `/profile/${myUserId}/archive` && pathname === `/profile/${myUserId}/archive`) {
+      return true;
+    }
+    return false;
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -85,8 +97,12 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
           <ul className="space-y-1">
             <li>
               <LinkWithProgress
-                href={`/profile/${actualUserId || myUserId || ''}`}
-                className="flex items-center py-2 px-3 rounded-md text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 font-medium cursor-pointer text-sm transition-colors hover:bg-primary-100 dark:hover:bg-primary-800"
+                href={`/profile/${myUserId || ''}`}
+                className={`flex items-center py-2 px-3 rounded-md font-medium cursor-pointer text-sm transition-colors ${
+                  isActivePage(`/profile/${myUserId}`)
+                    ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 hover:bg-primary-100 dark:hover:bg-primary-800'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
               >
                 <FontAwesomeIcon icon={faBullseye} className="w-4 mr-3 text-base" />
                 <span>Мои цели</span>
@@ -94,8 +110,12 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
             </li>
             <li>
               <LinkWithProgress
-                href={`/profile/${actualUserId || myUserId || ''}/archive`}
-                className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors"
+                href={`/profile/${myUserId || ''}/archive`}
+                className={`flex items-center py-2 px-3 rounded-md font-medium cursor-pointer text-sm transition-colors ${
+                  isActivePage(`/profile/${myUserId}/archive`)
+                    ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 hover:bg-primary-100 dark:hover:bg-primary-800'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
               >
                 <FontAwesomeIcon icon={faArchive} className="w-4 mr-3 text-base" />
                 <span>Архивные цели</span>

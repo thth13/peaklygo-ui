@@ -11,9 +11,10 @@ import { useRouter } from 'next/navigation';
 
 interface GoalActionsProps {
   goal: Goal;
+  currentUserId?: string;
 }
 
-export const GoalActions: React.FC<GoalActionsProps> = ({ goal }) => {
+export const GoalActions: React.FC<GoalActionsProps> = ({ goal, currentUserId }) => {
   const { createEntry } = useProgressBlogContext();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,33 +62,39 @@ export const GoalActions: React.FC<GoalActionsProps> = ({ goal }) => {
     }
   };
 
+  const isOwner = currentUserId === goal.userId;
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 transition-colors">
       <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Действия</h3>
       <div className="space-y-3">
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="w-full bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-sm transition-colors"
-        >
-          Записать в блог
-        </button>
+        {isOwner && (
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="w-full bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-sm transition-colors"
+          >
+            Записать в блог
+          </button>
+        )}
         <button
           onClick={() => setIsShareModalOpen(true)}
           className="w-full text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 border border-blue-200 dark:border-blue-500 py-2 px-4 rounded-lg text-sm transition-colors"
         >
           Поделиться целью
         </button>
-        <button
-          onClick={handleArchiveGoal}
-          disabled={isArchiving}
-          className="w-full text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 border border-red-200 dark:border-red-500 py-2 px-4 rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          {isArchiving ? 'Архивируем...' : 'Архивировать цель'}
-        </button>
+        {isOwner && (
+          <button
+            onClick={handleArchiveGoal}
+            disabled={isArchiving}
+            className="w-full text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 border border-red-200 dark:border-red-500 py-2 px-4 rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {isArchiving ? 'Архивируем...' : 'Архивировать цель'}
+          </button>
+        )}
       </div>
 
       {/* Modal */}
-      {isModalOpen && (
+      {isOwner && isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-md p-6 relative">
             <button
@@ -129,12 +136,14 @@ export const GoalActions: React.FC<GoalActionsProps> = ({ goal }) => {
         </div>
       )}
 
-      <ArchiveGoalModal
-        isOpen={isArchiveModalOpen}
-        isArchiving={isArchiving}
-        onClose={() => setIsArchiveModalOpen(false)}
-        onConfirm={confirmArchive}
-      />
+      {isOwner && (
+        <ArchiveGoalModal
+          isOpen={isArchiveModalOpen}
+          isArchiving={isArchiving}
+          onClose={() => setIsArchiveModalOpen(false)}
+          onConfirm={confirmArchive}
+        />
+      )}
 
       <ShareGoal isShareModalOpen={isShareModalOpen} setIsShareModalOpen={setIsShareModalOpen} goal={goal} />
     </div>

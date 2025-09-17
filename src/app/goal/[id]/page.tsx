@@ -105,22 +105,24 @@ export default async function GoalPage({ params }: GoalPageProps) {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-3 sm:space-y-0">
                 <div className="flex items-center space-x-3">
                   <Link
-                    href="/"
+                    href={`/profile/${goal.userId}`}
                     className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center space-x-2 transition-colors"
                   >
                     <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
                     <span className="text-sm">Назад к целям</span>
                   </Link>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <Link
-                    href={`/goal/${id}/edit`}
-                    className="flex items-center space-x-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    <FontAwesomeIcon icon={faEdit} className="w-4 h-4" />
-                    <span>Редактировать</span>
-                  </Link>
-                </div>
+                {currentUserId === goal.userId && (
+                  <div className="flex items-center space-x-3">
+                    <Link
+                      href={`/goal/${id}/edit`}
+                      className="flex items-center space-x-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <FontAwesomeIcon icon={faEdit} className="w-4 h-4" />
+                      <span>Редактировать</span>
+                    </Link>
+                  </div>
+                )}
               </div>
 
               <div className="mb-4">
@@ -195,7 +197,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
             </div>
           </div>
 
-          <GoalActions goal={goal} />
+          <GoalActions goal={goal} currentUserId={currentUserId} />
         </div>
       </ProgressBlogProvider>
     </main>
