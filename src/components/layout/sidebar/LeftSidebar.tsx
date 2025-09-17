@@ -23,9 +23,9 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
   const [stats, setStats] = useState<ProfileStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [myUserId, setMyUserId] = useState<string | null>(null);
   const pathname = usePathname();
 
-  const myUserId = Cookies.get('userId');
   const actualUserId = userId || myUserId;
   const isMyProfile = !!myUserId && myUserId === actualUserId;
 
@@ -38,6 +38,11 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
     }
     return false;
   };
+
+  useEffect(() => {
+    const userId = Cookies.get('userId');
+    setMyUserId(userId || null);
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -95,32 +100,52 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
       <div id="navigation-menu" className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 transition-colors">
         <nav>
           <ul className="space-y-1">
-            <li>
-              <LinkWithProgress
-                href={`/profile/${myUserId || ''}`}
-                className={`flex items-center py-2 px-3 rounded-md font-medium cursor-pointer text-sm transition-colors ${
-                  isActivePage(`/profile/${myUserId}`)
-                    ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 hover:bg-primary-100 dark:hover:bg-primary-800'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                <FontAwesomeIcon icon={faBullseye} className="w-4 mr-3 text-base" />
-                <span>Мои цели</span>
-              </LinkWithProgress>
-            </li>
-            <li>
-              <LinkWithProgress
-                href={`/profile/${myUserId || ''}/archive`}
-                className={`flex items-center py-2 px-3 rounded-md font-medium cursor-pointer text-sm transition-colors ${
-                  isActivePage(`/profile/${myUserId}/archive`)
-                    ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 hover:bg-primary-100 dark:hover:bg-primary-800'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                <FontAwesomeIcon icon={faArchive} className="w-4 mr-3 text-base" />
-                <span>Архивные цели</span>
-              </LinkWithProgress>
-            </li>
+            {myUserId ? (
+              <>
+                <li>
+                  <LinkWithProgress
+                    href={`/profile/${myUserId}`}
+                    className={`flex items-center py-2 px-3 rounded-md font-medium cursor-pointer text-sm transition-colors ${
+                      isActivePage(`/profile/${myUserId}`)
+                        ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 hover:bg-primary-100 dark:hover:bg-primary-800'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={faBullseye} className="w-4 mr-3 text-base" />
+                    <span>Мои цели</span>
+                  </LinkWithProgress>
+                </li>
+                <li>
+                  <LinkWithProgress
+                    href={`/profile/${myUserId}/archive`}
+                    className={`flex items-center py-2 px-3 rounded-md font-medium cursor-pointer text-sm transition-colors ${
+                      isActivePage(`/profile/${myUserId}/archive`)
+                        ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 hover:bg-primary-100 dark:hover:bg-primary-800'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={faArchive} className="w-4 mr-3 text-base" />
+                    <span>Архивные цели</span>
+                  </LinkWithProgress>
+                </li>
+              </>
+            ) : (
+              // Показываем скелетон навигации пока userId загружается
+              <>
+                <li>
+                  <div className="flex items-center py-2 px-3 rounded-md animate-pulse">
+                    <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded mr-3"></div>
+                    <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-20"></div>
+                  </div>
+                </li>
+                <li>
+                  <div className="flex items-center py-2 px-3 rounded-md animate-pulse">
+                    <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded mr-3"></div>
+                    <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-24"></div>
+                  </div>
+                </li>
+              </>
+            )}
             {/* <li>
               <span className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors">
                 <FontAwesomeIcon icon={faTrophy} className="w-4 mr-3 text-base" />
