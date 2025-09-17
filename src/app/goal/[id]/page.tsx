@@ -17,7 +17,6 @@ interface GoalPageProps {
 export default async function GoalPage({ params }: GoalPageProps) {
   const { id } = await params;
 
-  // Get userId from cookies on the server
   const cookieStore = await cookies();
   const currentUserId = cookieStore.get('userId')?.value;
 
@@ -95,7 +94,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
   return (
     <main className="max-w-7xl mx-auto mt-6 px-4 flex flex-col lg:flex-row">
       {/* Левая боковая панель */}
-      <LeftSidebar />
+      <LeftSidebar userId={goal.userId} />
 
       <ProgressBlogProvider goalId={id}>
         {/* Основная область */}

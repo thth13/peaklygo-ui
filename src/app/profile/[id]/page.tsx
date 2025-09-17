@@ -10,6 +10,7 @@ import { RightSidebarSkeleton } from '@/components/layout/RightSidebarSkeleton';
 import { LeftSidebar } from '@/components/layout/sidebar';
 import { PaginatedProfileContent } from '@/components/profile/PaginatedProfileContent';
 import { ProfileContentSkeleton } from '@/components/profile/ProfileContentSkeleton';
+import MobileProfileHeader from '@/components/profile/MobileProfileHeader';
 import { Goal, ProfileStats, PaginatedGoalsResponse, UserProfile } from '@/types';
 
 type ProfilePageProps = {
@@ -38,8 +39,9 @@ export default async function Profile({ params }: ProfilePageProps) {
 
   return (
     <main className="max-w-7xl mx-auto mt-6 px-2 md:px-4 flex">
-      <LeftSidebar isProfilePage={true} profile={profile} stats={stats} isMyProfile={isMyProfile} userId={id} />
+      <LeftSidebar userId={id} />
       <div id="main-content" className="w-full md:w-1/2 px-2 md:px-6">
+        <MobileProfileHeader profile={profile} stats={stats} isMyProfile={isMyProfile} userId={id} />
         <Suspense fallback={<ProfileContentSkeleton />}>
           <PaginatedProfileContent userId={id} isMyProfile={isMyProfile} initialGoals={goalsData} />
         </Suspense>

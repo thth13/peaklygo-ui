@@ -6,7 +6,7 @@ import ThemeToggle from '../ThemeToggle';
 import Image from 'next/image';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { useState } from 'react';
-import { LeftSidebar } from './sidebar/LeftSidebar';
+import OverlaySidebar from './sidebar/OverlaySidebar';
 import { IMAGE_URL } from '@/constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
@@ -70,7 +70,7 @@ export const Header = () => {
         </div>
       </header>
 
-      {sidebarOpen && <LeftSidebar overlay onClose={() => setSidebarOpen(false)} />}
+      {sidebarOpen && <OverlaySidebar onClose={() => setSidebarOpen(false)} />}
     </>
   );
 };

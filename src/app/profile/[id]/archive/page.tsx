@@ -30,15 +30,12 @@ export default async function ArchivePage({ params }: ArchivePageProps) {
     notFound();
   }
 
-  const {
-    archivedGoalsData,
-    stats,
-    profile,
-  }: { archivedGoalsData: Goal[] | PaginatedGoalsResponse; stats: ProfileStats; profile: UserProfile } = data;
+  const { archivedGoalsData, stats }: { archivedGoalsData: Goal[] | PaginatedGoalsResponse; stats: ProfileStats } =
+    data;
 
   return (
     <main className="max-w-7xl mx-auto mt-6 px-2 md:px-4 flex">
-      <LeftSidebar isProfilePage={true} profile={profile} stats={stats} isMyProfile={isMyProfile} userId={id} />
+      <LeftSidebar userId={id} />
       <div id="main-content" className="w-full md:w-1/2 px-2 md:px-6">
         <Suspense fallback={<ProfileContentSkeleton />}>
           <ArchivedProfileContent userId={id} isMyProfile={isMyProfile} initialArchivedGoals={archivedGoalsData} />
@@ -53,15 +50,14 @@ export default async function ArchivePage({ params }: ArchivePageProps) {
 
 async function fetchUserArchive(
   id: string,
-): Promise<{ archivedGoalsData: Goal[] | PaginatedGoalsResponse; stats: ProfileStats; profile: UserProfile } | null> {
+): Promise<{ archivedGoalsData: Goal[] | PaginatedGoalsResponse; stats: ProfileStats } | null> {
   try {
-    const [archivedGoalsResponse, stats, profile] = await Promise.all([
+    const [archivedGoalsResponse, stats] = await Promise.all([
       getArchivedGoals(id, { page: 1, limit: GOALS_PER_PAGE }),
       getProfileStats(id),
-      getProfile(id),
     ]);
 
-    return { archivedGoalsData: archivedGoalsResponse, stats, profile };
+    return { archivedGoalsData: archivedGoalsResponse, stats };
   } catch (err) {
     console.error('Failed to fetch user archive:', err);
     return null;
