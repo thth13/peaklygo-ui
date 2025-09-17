@@ -1,0 +1,63 @@
+{
+  "common": {
+    "welcome": "Welcome",
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "rememberMe": "Remember Me",
+    "signInWithGoogle": "Sign in with Google"
+  },
+  "navigation": {
+    "home": "Home",
+    "profile": "Profile",
+    "goals": "Goals",
+    "settings": "Settings",
+    "dashboard": "Dashboard"
+  },
+  "goals": {
+    "title": "Goals",
+    "create": "Create Goal",
+    "edit": "Edit Goal",
+    "delete": "Delete Goal",
+    "archive": "Archive",
+    "progress": "Progress",
+    "steps": "Steps",
+    "share": "Share",
+    "description": "Description",
+    "deadline": "Deadline",
+    "category": "Category",
+    "status": "Status"
+  },
+  "profile": {
+    "title": "Profile",
+    "edit": "Edit Profile",
+    "avatar": "Avatar",
+    "name": "Name",
+    "bio": "Bio",
+    "location": "Location",
+    "website": "Website",
+    "joinedDate": "Joined",
+    "stats": "Statistics",
+    "achievements": "Achievements"
+  }
+}

@@ -10,6 +10,7 @@ import OverlaySidebar from './sidebar/OverlaySidebar';
 import { IMAGE_URL } from '@/constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { LanguageSwitcher } from '../LanguageSwitcher';
 
 export const Header = () => {
   const pathname = usePathname();
@@ -66,6 +67,7 @@ export const Header = () => {
                 Регистрация
               </a>
             )}
+            <LanguageSwitcher />
           </div>
         </div>
       </header>

@@ -7,13 +7,15 @@ import './globals.css';
 import { UserProfileProvider } from '@/context/UserProfileContext';
 import { Header } from '@/components/layout/Header';
 import { Suspense } from 'react';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, getLocale } from 'next-intl/server';
 
 export const metadata: Metadata = {
-  title: 'PeaklyGo - Делайте прогресс видимым. Достигайте цели осознанно',
+  title: 'PeaklyGo - Делайте прогресс видимым. Достигайте цели осознанно',
   description:
     'Место, где ваши цели превращаются в чёткий план и понятную историю прогресса. Без сложностей, без шума — только движение вперёд.',
   openGraph: {
-    title: 'PeaklyGo - Делайте прогресс видимым. Достигайте цели осознанно',
+    title: 'PeaklyGo - Делайте прогресс видимым. Достигайте цели осознанно',
     description:
       'Место, где ваши цели превращаются в чёткий план и понятную историю прогресса. Без сложностей, без шума — только движение вперёд.',
     url: 'https://peaklygo.com',
@@ -30,25 +32,30 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className="bg-gray-50 dark:bg-gray-900 font-sans transition-colors">
         <GoogleAnalytics gaId="G-2T8QM142RE" />
-        <AuthProvider>
-          <UserProfileProvider>
-            <Header />
-            <Suspense fallback={null}>
-              <ProgressBar />
-            </Suspense>
-            {children}
-            <Toaster position="top-right" />
-          </UserProfileProvider>
-        </AuthProvider>
+        <NextIntlClientProvider messages={messages}>
+          <AuthProvider>
+            <UserProfileProvider>
+              <Header />
+              <Suspense fallback={null}>
+                <ProgressBar />
+              </Suspense>
+              {children}
+              <Toaster position="top-right" />
+            </UserProfileProvider>
+          </AuthProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

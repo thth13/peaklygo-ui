@@ -1,0 +1,63 @@
+{
+  "common": {
+    "welcome": "Добро пожаловать",
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "back": "Назад",
+    "next": "Далее",
+    "previous": "Предыдущий",
+    "submit": "Отправить",
+    "close": "Закрыть",
+    "confirm": "Подтвердить",
+    "yes": "Да",
+    "no": "Нет"
+  },
+  "auth": {
+    "login": "Войти",
+    "register": "Регистрация",
+    "logout": "Выйти",
+    "email": "Email",
+    "password": "Пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "forgotPassword": "Забыли пароль?",
+    "rememberMe": "Запомнить меня",
+    "signInWithGoogle": "Войти через Google"
+  },
+  "navigation": {
+    "home": "Главная",
+    "profile": "Профиль",
+    "goals": "Цели",
+    "settings": "Настройки",
+    "dashboard": "Панель управления"
+  },
+  "goals": {
+    "title": "Цели",
+    "create": "Создать цель",
+    "edit": "Редактировать цель",
+    "delete": "Удалить цель",
+    "archive": "Архив",
+    "progress": "Прогресс",
+    "steps": "Шаги",
+    "share": "Поделиться",
+    "description": "Описание",
+    "deadline": "Крайний срок",
+    "category": "Категория",
+    "status": "Статус"
+  },
+  "profile": {
+    "title": "Профиль",
+    "edit": "Редактировать профиль",
+    "avatar": "Аватар",
+    "name": "Имя",
+    "bio": "О себе",
+    "location": "Местоположение",
+    "website": "Веб-сайт",
+    "joinedDate": "Дата регистрации",
+    "stats": "Статистика",
+    "achievements": "Достижения"
+  }
+}
