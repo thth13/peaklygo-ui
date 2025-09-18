@@ -2,9 +2,7 @@ import { cookies } from 'next/headers';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getLocale } from 'next-intl/server';
 import { getTranslations } from 'next-intl/server';
-
 import { getGoals } from '@/lib/api/goal';
 import { getProfileStats, getProfile } from '@/lib/api/profile';
 import { GOALS_PER_PAGE, IMAGE_URL } from '@/constants';
