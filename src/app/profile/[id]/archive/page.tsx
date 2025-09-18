@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 
 import { getArchivedGoals } from '@/lib/api/goal';
 import { getProfileStats } from '@/lib/api/profile';
+import { createServerApi } from '@/lib/serverAxios';
 import { GOALS_PER_PAGE } from '@/constants';
 import { RightSidebar } from '@/components/layout/RightSidebar';
 import { RightSidebarSkeleton } from '@/components/layout/RightSidebarSkeleton';
@@ -52,9 +53,11 @@ async function fetchUserArchive(
   id: string,
 ): Promise<{ archivedGoalsData: Goal[] | PaginatedGoalsResponse; stats: ProfileStats } | null> {
   try {
+    const serverApi = await createServerApi();
+
     const [archivedGoalsResponse, stats] = await Promise.all([
-      getArchivedGoals(id, { page: 1, limit: GOALS_PER_PAGE }),
-      getProfileStats(id),
+      getArchivedGoals(id, { page: 1, limit: GOALS_PER_PAGE }, serverApi),
+      getProfileStats(id, serverApi),
     ]);
 
     return { archivedGoalsData: archivedGoalsResponse, stats };

@@ -2,6 +2,7 @@ import { API_URL } from '@/constants';
 import api from '../clientAxios';
 import nProgress from 'nprogress';
 import { Goal, GetGoalsPaginationDto, PaginatedGoalsResponse } from '@/types';
+import { AxiosInstance } from 'axios';
 
 export const createGoal = async (goal: FormData) => {
   try {
@@ -36,6 +37,7 @@ export const deleteGoal = async (id: string): Promise<void> => {
 export const getGoals = async (
   userId: string,
   pagination?: GetGoalsPaginationDto,
+  apiInstance?: AxiosInstance,
 ): Promise<Goal[] | PaginatedGoalsResponse> => {
   try {
     const params = new URLSearchParams();
@@ -43,7 +45,8 @@ export const getGoals = async (
     if (pagination?.limit) params.append('limit', pagination.limit.toString());
 
     const url = `${API_URL}/goals/userGoals/${userId}${params.toString() ? `?${params.toString()}` : ''}`;
-    const res = await api.get(url);
+    const client = apiInstance ?? api;
+    const res = await client.get(url);
 
     return res.data;
   } catch (err: any) {
@@ -51,9 +54,10 @@ export const getGoals = async (
   }
 };
 
-export const getGoal = async (id: string): Promise<Goal> => {
+export const getGoal = async (id: string, apiInstance?: AxiosInstance): Promise<Goal> => {
   try {
-    const res = await api.get(`${API_URL}/goals/${id}`);
+    const client = apiInstance ?? api;
+    const res = await client.get(`${API_URL}/goals/${id}`);
 
     return res.data;
   } catch (err: any) {
@@ -120,6 +124,7 @@ export const archiveGoal = async (goalId: string): Promise<Goal> => {
 export const getArchivedGoals = async (
   userId: string,
   pagination?: GetGoalsPaginationDto,
+  apiInstance?: AxiosInstance,
 ): Promise<Goal[] | PaginatedGoalsResponse> => {
   try {
     const params = new URLSearchParams();
@@ -127,7 +132,8 @@ export const getArchivedGoals = async (
     if (pagination?.limit) params.append('limit', pagination.limit.toString());
 
     const url = `${API_URL}/goals/userGoals/${userId}/archived${params.toString() ? `?${params.toString()}` : ''}`;
-    const res = await api.get(url);
+    const client = apiInstance ?? api;
+    const res = await client.get(url);
 
     return res.data;
   } catch (err: any) {

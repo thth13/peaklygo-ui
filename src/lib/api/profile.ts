@@ -1,11 +1,13 @@
 import { API_URL } from '@/constants';
 import { UserProfile, ProfileStats } from '@/types';
 import api from '../clientAxios';
+import { AxiosInstance } from 'axios';
 import nProgress from 'nprogress';
 
-export const getProfile = async (id: string): Promise<UserProfile> => {
+export const getProfile = async (id: string, apiInstance?: AxiosInstance): Promise<UserProfile> => {
   try {
-    const res = await api.get(`${API_URL}/profile/${id}`);
+    const client = apiInstance ?? api;
+    const res = await client.get(`${API_URL}/profile/${id}`);
 
     return res.data;
   } catch (err: any) {
@@ -28,9 +30,10 @@ export const editProfile = async (id: string, profile: FormData): Promise<UserPr
   }
 };
 
-export const getProfileStats = async (id: string): Promise<ProfileStats> => {
+export const getProfileStats = async (id: string, apiInstance?: AxiosInstance): Promise<ProfileStats> => {
   try {
-    const res = await api.get(`${API_URL}/profile/${id}/stats`);
+    const client = apiInstance ?? api;
+    const res = await client.get(`${API_URL}/profile/${id}/stats`);
 
     return res.data;
   } catch (err: any) {
