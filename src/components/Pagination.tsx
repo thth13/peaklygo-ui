@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
@@ -9,6 +11,8 @@ interface PaginationProps {
 }
 
 export function Pagination({ currentPage, totalPages, hasNextPage, hasPrevPage, onPageChange }: PaginationProps) {
+  const t = useTranslations('pagination');
+
   const handlePrevious = () => {
     if (hasPrevPage) {
       onPageChange(currentPage - 1);
@@ -54,7 +58,7 @@ export function Pagination({ currentPage, totalPages, hasNextPage, hasPrevPage, 
             : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 border border-gray-200 dark:border-gray-600 cursor-not-allowed'
         }`}
       >
-        Назад
+        {t('previous')}
       </button>
 
       {getVisiblePages().map((page) => (
@@ -80,7 +84,7 @@ export function Pagination({ currentPage, totalPages, hasNextPage, hasPrevPage, 
             : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 border border-gray-200 dark:border-gray-600 cursor-not-allowed'
         }`}
       >
-        Вперед
+        {t('next')}
       </button>
     </div>
   );

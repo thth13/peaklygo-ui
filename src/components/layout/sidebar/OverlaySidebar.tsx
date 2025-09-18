@@ -10,6 +10,7 @@ import { LeftSidebarSkeleton } from './LeftSidebarSkeleton';
 import { LeftSidebarError } from './LeftSidebarError';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBullseye, faArchive } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 import LinkWithProgress from '@/components/Link';
 
 interface OverlaySidebarProps {
@@ -18,6 +19,7 @@ interface OverlaySidebarProps {
 }
 
 const OverlaySidebar = ({ userId, onClose }: OverlaySidebarProps) => {
+  const t = useTranslations('sidebar');
   const { profile: currentUserProfile, isLoading: profileLoading, error: profileError } = useUserProfile();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState<ProfileStats | null>(null);
@@ -48,7 +50,7 @@ const OverlaySidebar = ({ userId, onClose }: OverlaySidebarProps) => {
           setStats(null);
         }
       } catch (err: any) {
-        const errorMessage = err?.response?.data?.message || err?.message || 'Ошибка загрузки данных';
+        const errorMessage = err?.response?.data?.message || err?.message || t('error.dataLoadingError');
         setError(errorMessage);
         console.error('Failed to fetch user data:', err);
       } finally {
@@ -63,17 +65,17 @@ const OverlaySidebar = ({ userId, onClose }: OverlaySidebarProps) => {
     }
 
     fetchUserData();
-  }, [userId, actualUserId, currentUserProfile, profileLoading, profileError]);
+  }, [userId, actualUserId, currentUserProfile, profileLoading, profileError, t]);
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 10);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setVisible(true), 10);
+    return () => clearTimeout(timer);
   }, []);
 
   const startClose = () => {
     setVisible(false);
-    const t = setTimeout(() => onClose && onClose(), 300);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => onClose && onClose(), 300);
+    return () => clearTimeout(timer);
   };
 
   return (
@@ -92,7 +94,7 @@ const OverlaySidebar = ({ userId, onClose }: OverlaySidebarProps) => {
         }`}
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Меню</h2>
+          <h2 className="text-lg font-semibold">{t('menu')}</h2>
           <button aria-label="Close sidebar" onClick={startClose} className="text-gray-600 dark:text-gray-200">
             ✕
           </button>
@@ -122,7 +124,7 @@ const OverlaySidebar = ({ userId, onClose }: OverlaySidebarProps) => {
                   className="flex items-center py-2 px-3 rounded-md text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 font-medium cursor-pointer text-sm transition-colors hover:bg-primary-100 dark:hover:bg-primary-800"
                 >
                   <FontAwesomeIcon icon={faBullseye} className="w-4 mr-3 text-base" />
-                  <span>Мои цели</span>
+                  <span>{t('myGoals')}</span>
                 </LinkWithProgress>
               </li>
               <li>
@@ -131,7 +133,7 @@ const OverlaySidebar = ({ userId, onClose }: OverlaySidebarProps) => {
                   className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors"
                 >
                   <FontAwesomeIcon icon={faArchive} className="w-4 mr-3 text-base" />
-                  <span>Архивные цели</span>
+                  <span>{t('archivedGoals')}</span>
                 </LinkWithProgress>
               </li>
             </ul>

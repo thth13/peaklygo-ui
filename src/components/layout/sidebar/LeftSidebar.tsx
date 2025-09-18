@@ -11,6 +11,7 @@ import { LeftSidebarSkeleton } from './LeftSidebarSkeleton';
 import { LeftSidebarError } from './LeftSidebarError';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBullseye, faArchive } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 import LinkWithProgress from '@/components/Link';
 
 interface LeftSidebarProps {
@@ -18,6 +19,7 @@ interface LeftSidebarProps {
 }
 
 export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
+  const t = useTranslations('sidebar');
   const { profile: currentUserProfile, isLoading: profileLoading, error: profileError } = useUserProfile();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState<ProfileStats | null>(null);
@@ -63,7 +65,7 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
           setStats(null);
         }
       } catch (err: any) {
-        const errorMessage = err?.response?.data?.message || err?.message || 'Ошибка загрузки данных';
+        const errorMessage = err?.response?.data?.message || err?.message || t('error.dataLoadingError');
         setError(errorMessage);
         console.error('Failed to fetch user data:', err);
       } finally {
@@ -78,7 +80,7 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
     }
 
     fetchUserData();
-  }, [userId, actualUserId, currentUserProfile, profileLoading, profileError]);
+  }, [userId, actualUserId, currentUserProfile, profileLoading, profileError, t]);
 
   return (
     <div id="left-sidebar" className="w-1/4 pr-6 hidden md:block">
@@ -112,7 +114,7 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
                     }`}
                   >
                     <FontAwesomeIcon icon={faBullseye} className="w-4 mr-3 text-base" />
-                    <span>Мои цели</span>
+                    <span>{t('myGoals')}</span>
                   </LinkWithProgress>
                 </li>
                 <li>
@@ -125,7 +127,7 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
                     }`}
                   >
                     <FontAwesomeIcon icon={faArchive} className="w-4 mr-3 text-base" />
-                    <span>Архивные цели</span>
+                    <span>{t('archivedGoals')}</span>
                   </LinkWithProgress>
                 </li>
               </>

@@ -1,8 +1,11 @@
+import { useTranslations } from 'next-intl';
+
 interface LeftSidebarErrorProps {
   error: string;
 }
 
 export function LeftSidebarError({ error }: LeftSidebarErrorProps) {
+  const t = useTranslations('sidebar');
   return (
     <div className="text-center py-4">
       <div className="text-red-500 dark:text-red-400 mb-2">
@@ -14,13 +17,13 @@ export function LeftSidebarError({ error }: LeftSidebarErrorProps) {
           />
         </svg>
       </div>
-      <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">Ошибка загрузки профиля</p>
+      <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">{t('error.profileLoadingError')}</p>
       <p className="text-red-500 dark:text-red-400 text-xs mb-4">{error}</p>
       <button
         onClick={() => window.location.reload()}
         className="text-xs bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-600 text-white px-3 py-1 rounded transition-colors"
       >
-        Попробовать снова
+        {t('error.tryAgain')}
       </button>
     </div>
   );

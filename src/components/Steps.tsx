@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 import {
   DndContext,
   closestCenter,
@@ -27,6 +28,8 @@ interface StepsProps {
 }
 
 export const Steps: React.FC<StepsProps> = ({ steps, onStepChange, onAddStep, onRemoveStep, onReorderSteps }) => {
+  const t = useTranslations('steps');
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: { distance: 5 },
@@ -55,7 +58,9 @@ export const Steps: React.FC<StepsProps> = ({ steps, onStepChange, onAddStep, on
 
   return (
     <div>
-      <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Подцели и шаги</label>
+      <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+        {t('subgoalsAndSteps')}
+      </label>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={ids} strategy={verticalListSortingStrategy}>
           <div className="space-y-3">
@@ -68,7 +73,7 @@ export const Steps: React.FC<StepsProps> = ({ steps, onStepChange, onAddStep, on
               onClick={onAddStep}
             >
               <FontAwesomeIcon icon={faPlus} />
-              <span>Добавить шаг</span>
+              <span>{t('addStep')}</span>
             </button>
           </div>
         </SortableContext>

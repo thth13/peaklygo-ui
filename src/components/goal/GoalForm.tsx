@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useTranslations } from 'next-intl';
 import {
   faHeart,
   faCoins,
@@ -53,17 +54,6 @@ interface GoalFormProps {
   isLoading?: boolean;
 }
 
-const categories = [
-  { id: 'health', name: 'Здоровье', icon: faHeart, color: 'text-red-500' },
-  { id: 'finance', name: 'Финансы', icon: faCoins, color: 'text-yellow-500' },
-  { id: 'development', name: 'Саморазвитие', icon: faBrain, color: 'text-purple-500' },
-  { id: 'work', name: 'Работа', icon: faBriefcase, color: 'text-blue-500' },
-  { id: 'education', name: 'Образование', icon: faGraduationCap, color: 'text-green-500' },
-  { id: 'relationships', name: 'Отношения', icon: faUsers, color: 'text-pink-500' },
-  { id: 'sport', name: 'Спорт', icon: faTrophy, color: 'text-orange-500' },
-  { id: 'custom', name: 'Своя категория', icon: faPlus, color: 'text-gray-500' },
-];
-
 const defaultFormData: GoalFormData = {
   goalName: '',
   description: '',
@@ -88,6 +78,20 @@ export const GoalForm: React.FC<GoalFormProps> = ({
   onCancel,
   isLoading = false,
 }) => {
+  const t = useTranslations('goals');
+  const tCommon = useTranslations('common');
+
+  const categories = [
+    { id: 'health', name: t('categories.health'), icon: faHeart, color: 'text-red-500' },
+    { id: 'finance', name: t('categories.finance'), icon: faCoins, color: 'text-yellow-500' },
+    { id: 'development', name: t('categories.development'), icon: faBrain, color: 'text-purple-500' },
+    { id: 'work', name: t('categories.work'), icon: faBriefcase, color: 'text-blue-500' },
+    { id: 'education', name: t('categories.education'), icon: faGraduationCap, color: 'text-green-500' },
+    { id: 'relationships', name: t('categories.relationships'), icon: faUsers, color: 'text-pink-500' },
+    { id: 'sport', name: t('categories.sport'), icon: faTrophy, color: 'text-orange-500' },
+    { id: 'custom', name: t('categories.custom'), icon: faPlus, color: 'text-gray-500' },
+  ];
+
   const [formData, setFormData] = useState<GoalFormData>({
     ...defaultFormData,
     ...initialData,
@@ -153,9 +157,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-300">
-            {mode === 'edit' ? 'Загрузка цели...' : 'Загрузка...'}
-          </p>
+          <p className="mt-4 text-gray-600 dark:text-gray-300">{mode === 'edit' ? t('loading') : tCommon('loading')}</p>
         </div>
       </div>
     );
@@ -167,12 +169,10 @@ export const GoalForm: React.FC<GoalFormProps> = ({
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors">
           <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-6">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-              {mode === 'create' ? 'Создание новой цели' : 'Редактирование цели'}
+              {mode === 'create' ? t('createNew') : t('editGoal')}
             </h1>
             <p className="mt-2 text-gray-600 dark:text-gray-300">
-              {mode === 'create'
-                ? 'Создайте цель, которая будет мотивировать вас к достижению результата'
-                : 'Обновите данные вашей цели'}
+              {mode === 'create' ? t('createDescription') : t('editDescription')}
             </p>
           </div>
 
@@ -182,12 +182,12 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                 {/* Goal Name */}
                 <div>
                   <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                    Название цели
+                    {t('goalName')}
                     <span className="text-red-500">*</span>
                   </label>
                   <input
                     className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors"
-                    placeholder="Например, Пробежать полумарафон"
+                    placeholder={t('goalNamePlaceholder')}
                     type="text"
                     maxLength={80}
                     value={formData.goalName}
@@ -196,7 +196,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                     disabled={isSubmitting}
                   />
                   <div className="mt-2 flex justify-between text-sm text-gray-500 dark:text-gray-400">
-                    <span>Сформулируйте конкретную и измеримую цель</span>
+                    <span>{t('goalNameHelper')}</span>
                     <span>{formData.goalName.length}/80</span>
                   </div>
                 </div>
@@ -204,23 +204,23 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                 {/* Goal Description */}
                 <div>
                   <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                    Описание цели
+                    {t('description')}
                   </label>
                   <textarea
                     className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent min-h-[120px] transition-colors"
-                    placeholder="Я давно мечтаю стать выносливее и проверить себя..."
+                    placeholder={t('descriptionPlaceholder')}
                     value={formData.description}
                     onChange={(e) => handleInputChange('description', e.target.value)}
                     disabled={isSubmitting}
                   />
-                  <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                    Опишите, почему эта цель важна для вас и что она даст
-                  </div>
+                  <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">{t('descriptionHelper')}</div>
                 </div>
 
                 {/* Category */}
                 <div>
-                  <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Категория</label>
+                  <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                    {t('category')}
+                  </label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                     {categories.map((category) => (
                       <button
@@ -248,7 +248,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                     <div className="mt-3">
                       <input
                         className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
-                        placeholder="Введите свою категорию"
+                        placeholder={t('categories.customPlaceholder')}
                         type="text"
                         value={formData.customCategory}
                         onChange={(e) => handleInputChange('customCategory', e.target.value)}
@@ -286,12 +286,12 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                 {/* Timeframe */}
                 <div>
                   <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                    Временные рамки
+                    {t('timeframe')}
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Дата начала
+                        {t('startDate')}
                       </label>
                       <input
                         type="date"
@@ -304,7 +304,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                     {!formData.noDeadline && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          Дата завершения
+                          {t('endDate')}
                         </label>
                         <input
                           type="date"
@@ -325,7 +325,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                         onChange={(e) => handleInputChange('noDeadline', e.target.checked)}
                         disabled={isSubmitting}
                       />
-                      <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">Без конкретного дедлайна</span>
+                      <span className="ml-2 text-sm text-gray-600 dark:text-gray-300">{t('noDeadline')}</span>
                     </label>
                   </div>
                 </div>
@@ -333,7 +333,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                 {/* Privacy */}
                 <div>
                   <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                    Уровень приватности
+                    {t('privacyLevel')}
                   </label>
                   <div className="space-y-3">
                     <label className="flex items-center p-4 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
@@ -349,9 +349,9 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                       <div className="ml-3">
                         <div className="flex items-center gap-2">
                           <FontAwesomeIcon icon={faLock} className="text-gray-600 dark:text-gray-400" />
-                          <span className="font-medium text-gray-900 dark:text-gray-100">Приватная</span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">{t('privacy.private')}</span>
                         </div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Только вы видите эту цель</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{t('privacy.privateDescription')}</p>
                       </div>
                     </label>
                     <label className="flex items-center p-4 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
@@ -367,9 +367,9 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                       <div className="ml-3">
                         <div className="flex items-center gap-2">
                           <FontAwesomeIcon icon={faUserGroup} className="text-blue-600 dark:text-blue-400" />
-                          <span className="font-medium text-gray-900 dark:text-gray-100">Для друзей</span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">{t('privacy.friends')}</span>
                         </div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Только ваши друзья могут видеть</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{t('privacy.friendsDescription')}</p>
                       </div>
                     </label>
                     <label className="flex items-center p-4 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
@@ -385,11 +385,9 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                       <div className="ml-3">
                         <div className="flex items-center gap-2">
                           <FontAwesomeIcon icon={faGlobe} className="text-green-600 dark:text-green-400" />
-                          <span className="font-medium text-gray-900 dark:text-gray-100">Публичная</span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">{t('privacy.public')}</span>
                         </div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          Все пользователи могут видеть и поддерживать
-                        </p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{t('privacy.publicDescription')}</p>
                       </div>
                     </label>
                   </div>
@@ -398,17 +396,17 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                 {/* Goal Value */}
                 <div>
                   <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                    Ценность цели
+                    {t('goalValue')}
                   </label>
                   <div className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          Награда за достижение
+                          {t('rewardForCompletion')}
                         </label>
                         <input
                           className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
-                          placeholder="Например: Новые кроссовки"
+                          placeholder={t('rewardPlaceholder')}
                           type="text"
                           value={formData.reward}
                           onChange={(e) => handleInputChange('reward', e.target.value)}
@@ -417,11 +415,11 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                          Последствия невыполнения
+                          {t('consequenceOfFailure')}
                         </label>
                         <input
                           className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
-                          placeholder="Например: Пожертвование на благотворительность"
+                          placeholder={t('consequencePlaceholder')}
                           type="text"
                           value={formData.consequence}
                           onChange={(e) => handleInputChange('consequence', e.target.value)}
@@ -431,7 +429,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                        Ценность цели
+                        {t('goalValue')}
                       </label>
                       <div className="px-3">
                         <input
@@ -444,19 +442,17 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                           disabled={isSubmitting}
                         />
                         <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-2">
-                          <span>Низкая</span>
+                          <span>{t('valueLow')}</span>
                           <div className="text-center mt-2">
                             <span className="text-2xl font-medium text-blue-600 dark:text-blue-400">
                               {formData.value}
                             </span>
-                            <span className="text-gray-500 dark:text-gray-400"> баллов</span>
+                            <span className="text-gray-500 dark:text-gray-400"> {t('points')}</span>
                           </div>
-                          <span>Высокая</span>
+                          <span>{t('valueHigh')}</span>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                        Чем сложнее цель, тем больше баллов вы получите за её достижение
-                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">{t('valueHelper')}</p>
                     </div>
                   </div>
                 </div>
@@ -470,7 +466,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                       disabled={isSubmitting}
                       className="bg-gray-600 dark:bg-gray-500 text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Отмена
+                      {tCommon('cancel')}
                     </button>
                   )}
                   <button
@@ -480,11 +476,11 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                   >
                     {isSubmitting
                       ? mode === 'edit'
-                        ? 'Сохраняем...'
-                        : 'Создаем...'
+                        ? t('saving')
+                        : t('creating')
                       : mode === 'edit'
-                      ? 'Сохранить изменения'
-                      : 'Создать цель'}
+                      ? t('saveChanges')
+                      : t('createGoal')}
                   </button>
                 </div>
               </div>
@@ -495,30 +491,32 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                   <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-50 dark:from-blue-900 dark:to-blue-900 rounded-lg border border-blue-100 dark:border-blue-800 transition-colors">
                     <div className="flex items-center gap-2 mb-3">
                       <FontAwesomeIcon icon={faQuoteLeft} className="text-blue-500 dark:text-blue-400" />
-                      <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Мотивация дня</span>
+                      <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                        {t('motivationTitle')}
+                      </span>
                     </div>
                     <p className="text-sm text-gray-700 dark:text-gray-300 italic leading-relaxed">
-                      Каждое утро у тебя два выбора: продолжать спать с мечтой или проснуться и начать её достигать.
+                      {t('motivationQuote')}
                     </p>
                   </div>
 
                   <div className="p-6 bg-yellow-50 dark:bg-yellow-900 rounded-lg border border-yellow-200 dark:border-yellow-700 transition-colors">
                     <div className="flex items-center gap-2 mb-3">
                       <FontAwesomeIcon icon={faLightbulb} className="text-yellow-600 dark:text-yellow-400" />
-                      <span className="text-sm font-medium text-yellow-800 dark:text-yellow-300">Советы</span>
+                      <span className="text-sm font-medium text-yellow-800 dark:text-yellow-300">{t('tipsTitle')}</span>
                     </div>
                     <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2">
                       <li className="flex items-start gap-2">
                         <FontAwesomeIcon icon={faCheck} className="text-green-500 dark:text-green-400 text-xs mt-1" />
-                        <span>Формулируйте цели конкретно и измеримо</span>
+                        <span>{t('tip1')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <FontAwesomeIcon icon={faCheck} className="text-green-500 dark:text-green-400 text-xs mt-1" />
-                        <span>Разбивайте большие цели на маленькие шаги</span>
+                        <span>{t('tip2')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <FontAwesomeIcon icon={faCheck} className="text-green-500 dark:text-green-400 text-xs mt-1" />
-                        <span>Устанавливайте реалистичные сроки</span>
+                        <span>{t('tip3')}</span>
                       </li>
                     </ul>
                   </div>

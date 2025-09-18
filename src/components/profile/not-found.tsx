@@ -1,7 +1,10 @@
 import LinkWithProgress from '@/components/Link';
 import { LeftSidebar } from '@/components/layout/sidebar';
+import { useTranslations } from 'next-intl';
 
 export default function ProfileNotFound() {
+  const t = useTranslations('profile');
+
   return (
     <main className="max-w-7xl mx-auto mt-6 px-4 flex">
       <LeftSidebar />
@@ -23,23 +26,23 @@ export default function ProfileNotFound() {
             </svg>
           </div>
 
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Профиль не найден</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('notFound.title')}</h2>
 
-          <p className="text-gray-600 dark:text-gray-400 mb-6">Пользователь с таким ID не существует или был удален.</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">{t('notFound.description')}</p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <LinkWithProgress
               href="/"
               className="px-6 py-3 bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-600 text-white rounded-lg font-medium transition-colors"
             >
-              Вернуться на главную
+              {t('notFound.backToHome')}
             </LinkWithProgress>
 
             <LinkWithProgress
               href="/auth/register"
               className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors"
             >
-              Зарегистрироваться
+              {t('notFound.register')}
             </LinkWithProgress>
           </div>
         </div>
@@ -47,12 +50,14 @@ export default function ProfileNotFound() {
 
       <div className="w-1/5 pl-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Возможные причины</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+            {t('notFound.possibleReasons')}
+          </h3>
           <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-            <li>• Неверный ID пользователя</li>
-            <li>• Пользователь удалил аккаунт</li>
-            <li>• Профиль заблокирован</li>
-            <li>• Ошибка в ссылке</li>
+            <li>• {t('notFound.wrongId')}</li>
+            <li>• {t('notFound.deletedAccount')}</li>
+            <li>• {t('notFound.blockedProfile')}</li>
+            <li>• {t('notFound.linkError')}</li>
           </ul>
         </div>
       </div>

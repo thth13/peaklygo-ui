@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { AvatarUploader } from './AvatarUploader';
 import { IMAGE_URL } from '@/constants';
+import { useTranslations } from 'next-intl';
 
 interface ProfileEditFormData {
   fullName: string;
@@ -25,6 +26,9 @@ interface ValidationErrors {
 }
 
 const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialData, onSubmit, onCancel }) => {
+  const t = useTranslations('profile');
+  const tCommon = useTranslations('common');
+
   const [formData, setFormData] = useState({
     fullName: initialData.fullName || '',
     username: initialData.username || '',
@@ -39,21 +43,21 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialData, onSubmit
     const newErrors: ValidationErrors = {};
 
     if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Полное имя обязательно для заполнения';
+      newErrors.fullName = t('validation.fullNameRequired');
     } else if (formData.fullName.trim().length > 255) {
-      newErrors.fullName = 'Полное имя не должно превышать 255 символов';
+      newErrors.fullName = t('validation.fullNameTooLong');
     }
 
     if (!formData.username.trim()) {
-      newErrors.username = 'Имя пользователя обязательно для заполнения';
+      newErrors.username = t('validation.usernameRequired');
     } else if (formData.username.trim().length > 50) {
-      newErrors.username = 'Имя пользователя не должно превышать 50 символов';
+      newErrors.username = t('validation.usernameTooLong');
     } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username.trim())) {
-      newErrors.username = 'Имя пользователя может содержать только буквы, цифры и знак подчеркивания';
+      newErrors.username = t('validation.usernameInvalid');
     }
 
     if (formData.description.length > 1024) {
-      newErrors.description = 'Описание не должно превышать 1024 символа';
+      newErrors.description = t('validation.bioTooLong');
     }
 
     setErrors(newErrors);
@@ -116,7 +120,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialData, onSubmit
           {/* Full Name Field */}
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Полное имя
+              {t('fullName')}
             </label>
             <input
               type="text"
@@ -124,7 +128,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialData, onSubmit
               value={formData.fullName}
               onChange={(e) => handleInputChange('fullName', e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
-              placeholder="Алексей Иванов"
+              placeholder={t('fullNamePlaceholder')}
             />
             {errors.fullName && <p className="text-red-500 dark:text-red-400 text-sm mt-1">{errors.fullName}</p>}
           </div>
@@ -132,7 +136,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialData, onSubmit
           {/* Username (Editable) */}
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Имя пользователя
+              {t('username')}
             </label>
             <input
               type="text"
@@ -140,7 +144,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialData, onSubmit
               value={formData.username}
               onChange={(e) => handleInputChange('username', e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors"
-              placeholder="alexivanov"
+              placeholder={t('usernamePlaceholder')}
             />
             {errors.username && <p className="text-red-500 dark:text-red-400 text-sm mt-1">{errors.username}</p>}
           </div>
@@ -148,7 +152,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialData, onSubmit
           {/* About */}
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              О себе
+              {t('bio')}
             </label>
             <textarea
               id="description"
@@ -157,7 +161,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialData, onSubmit
               rows={4}
               maxLength={1024}
               className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-colors resize-none"
-              placeholder="Успехсью бегом, чтением и саморазвитием. Стремлюсь к постоянному росту и достижению поставленных целей."
+              placeholder={t('bioPlaceholder')}
             />
             <div className="flex justify-between mt-1">
               {errors.description && <p className="text-red-500 dark:text-red-400 text-sm">{errors.description}</p>}
@@ -202,7 +206,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialData, onSubmit
           onClick={onCancel}
           className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
         >
-          Отменить
+          {tCommon('cancel')}
         </button>
 
         <button
@@ -210,7 +214,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ initialData, onSubmit
           disabled={isSubmitting}
           className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors font-medium"
         >
-          {isSubmitting ? 'Сохранение...' : 'Сохранить изменения'}
+          {isSubmitting ? t('saving') : t('saveChanges')}
         </button>
       </div>
     </form>

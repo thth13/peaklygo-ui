@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 import Image from 'next/image';
 import LinkWithProgress from '@/components/Link';
+import { useTranslations } from 'next-intl';
 
 interface Feature {
   title: string;
@@ -20,74 +21,80 @@ interface Testimonial {
   avatar: string;
 }
 
-const features: readonly Feature[] = [
-  {
-    title: 'Цели под контролем',
-    description: 'Создавайте SMART‑цели, разбивайте на шаги и фиксируйте прогресс без лишней рутины.',
-    iconSrc: '/window.svg',
-  },
-  {
-    title: 'Видимый прогресс',
-    description: 'Лента прогресса превращает путь в историю. Делитесь и вдохновляйте других.',
-    iconSrc: '/file.svg',
-  },
-  {
-    title: 'Фокус на важном',
-    description: 'Минимум кликов, максимум смысла. Интерфейс, который не отвлекает.',
-    iconSrc: '/globe.svg',
-  },
-  {
-    title: 'Синхронизация',
-    description: 'Мобильный и десктопный опыт без компромиссов. Всё работает быстро.',
-    iconSrc: '/next.svg',
-  },
-  {
-    title: 'Приватность по умолчанию',
-    description: 'Публичность — по вашему желанию. Вы управляете доступом к целям.',
-    iconSrc: '/vercel.svg',
-  },
-  {
-    title: 'Гибкость',
-    description: 'Подходит для личных проектов, обучения, спорта и командной работы.',
-    iconSrc: '/globe.svg',
-  },
-];
+function getFeatures(t: any): readonly Feature[] {
+  return [
+    {
+      title: t('home.features.goalsUnderControl.title'),
+      description: t('home.features.goalsUnderControl.description'),
+      iconSrc: '/window.svg',
+    },
+    {
+      title: t('home.features.visibleProgress.title'),
+      description: t('home.features.visibleProgress.description'),
+      iconSrc: '/file.svg',
+    },
+    {
+      title: t('home.features.focusOnImportant.title'),
+      description: t('home.features.focusOnImportant.description'),
+      iconSrc: '/globe.svg',
+    },
+    {
+      title: t('home.features.synchronization.title'),
+      description: t('home.features.synchronization.description'),
+      iconSrc: '/next.svg',
+    },
+    {
+      title: t('home.features.privacyByDefault.title'),
+      description: t('home.features.privacyByDefault.description'),
+      iconSrc: '/vercel.svg',
+    },
+    {
+      title: t('home.features.flexibility.title'),
+      description: t('home.features.flexibility.description'),
+      iconSrc: '/globe.svg',
+    },
+  ];
+}
 
-const steps: readonly Step[] = [
-  {
-    title: 'Сформулируйте цель',
-    description: 'Опишите результат и дедлайн. Добавьте ключевые метрики для измеримости.',
-  },
-  {
-    title: 'Разбейте на шаги',
-    description: 'Создайте понятный план: этапы, чек‑поинты и прогресс‑посты.',
-  },
-  {
-    title: 'Достигайте и делитесь',
-    description: 'Отмечайте прогресс, получайте обратную связь и закрывайте цели.',
-  },
-];
+function getSteps(t: any): readonly Step[] {
+  return [
+    {
+      title: t('home.howItWorks.step1.title'),
+      description: t('home.howItWorks.step1.description'),
+    },
+    {
+      title: t('home.howItWorks.step2.title'),
+      description: t('home.howItWorks.step2.description'),
+    },
+    {
+      title: t('home.howItWorks.step3.title'),
+      description: t('home.howItWorks.step3.description'),
+    },
+  ];
+}
 
-const testimonials: readonly Testimonial[] = [
-  {
-    quote: 'С PeaklyGo я впервые действительно увидел, как двигаюсь к целям, а не просто пишу планы.',
-    author: 'Алексей',
-    role: 'Продуктовый менеджер',
-    avatar: 'https://i.pravatar.cc/120?img=12',
-  },
-  {
-    quote: 'Идеально для учебных проектов: прогресс прозрачен, мотивация не теряется.',
-    author: 'Мария',
-    role: 'Студентка',
-    avatar: 'https://i.pravatar.cc/120?img=32',
-  },
-  {
-    quote: 'Команда стала быстрее достигать результатов: меньше совещаний, больше движения.',
-    author: 'Дмитрий',
-    role: 'Тимлид',
-    avatar: 'https://i.pravatar.cc/120?img=5',
-  },
-];
+function getTestimonials(t: any): readonly Testimonial[] {
+  return [
+    {
+      quote: t('home.testimonials.user1.quote'),
+      author: t('home.testimonials.user1.name'),
+      role: t('home.testimonials.user1.role'),
+      avatar: 'https://i.pravatar.cc/120?img=12',
+    },
+    {
+      quote: t('home.testimonials.user2.quote'),
+      author: t('home.testimonials.user2.name'),
+      role: t('home.testimonials.user2.role'),
+      avatar: 'https://i.pravatar.cc/120?img=32',
+    },
+    {
+      quote: t('home.testimonials.user3.quote'),
+      author: t('home.testimonials.user3.name'),
+      role: t('home.testimonials.user3.role'),
+      avatar: 'https://i.pravatar.cc/120?img=5',
+    },
+  ];
+}
 
 function renderFeature(feature: Feature): ReactElement {
   return (
@@ -146,6 +153,11 @@ function renderTestimonial(item: Testimonial): ReactElement {
 }
 
 export default function Home(): ReactElement {
+  const t = useTranslations();
+  const features = getFeatures(t);
+  const steps = getSteps(t);
+  const testimonials = getTestimonials(t);
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-primary-50/60 to-transparent dark:from-primary-900/10">
       {/* Hero */}
@@ -159,27 +171,26 @@ export default function Home(): ReactElement {
             <div className="text-center md:text-left">
               <div className="inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-white/60 dark:bg-gray-900/60 px-3 py-1 text-xs text-primary-700 dark:text-primary-300 backdrop-blur">
                 <span className="h-2 w-2 rounded-full bg-primary-500 animate-pulse"></span>
-                Запускайте цели быстрее — фокусируйтесь на результате
+                {t('home.hero.badge')}
               </div>
               <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
-                Делайте прогресс видимым. Достигайте целей осознанно.
+                {t('home.hero.title')}
               </h1>
               <p className="mt-6 text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-3xl">
-                PeaklyGo — место, где ваши цели превращаются в чёткий план и понятную историю прогресса. Без сложностей,
-                без шума — только движение вперёд.
+                {t('home.hero.subtitle')}
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-4 md:justify-start justify-center">
                 <LinkWithProgress
                   href="/auth/register"
                   className="px-6 py-3 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors"
                 >
-                  Начать бесплатно
+                  {t('home.hero.startFree')}
                 </LinkWithProgress>
                 <LinkWithProgress
                   href="/auth/login"
                   className="px-6 py-3 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  Войти
+                  {t('home.hero.signIn')}
                 </LinkWithProgress>
               </div>
               <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6 opacity-80">
@@ -192,7 +203,7 @@ export default function Home(): ReactElement {
                   >
                     <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.53-9.47a.75.75 0 00-1.06-1.06L9 10.94 7.53 9.47a.75.75 0 10-1.06 1.06l2 2a.75.75 0 001.06 0l4-4z" />
                   </svg>
-                  Без рекламы
+                  {t('home.hero.features.noAds')}
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                   <svg
@@ -203,7 +214,7 @@ export default function Home(): ReactElement {
                   >
                     <path d="M3.5 4A1.5 1.5 0 015 2.5h10A1.5 1.5 0 0116.5 4v12A1.5 1.5 0 0115 17.5H5A1.5 1.5 0 013.5 16V4zm3 1.5a.5.5 0 000 1h7a.5.5 0 000-1h-7zm0 3a.5.5 0 000 1h7a.5.5 0 000-1h-7zm0 3a.5.5 0 000 1h4a.5.5 0 000-1h-4z" />
                   </svg>
-                  Лаконичный интерфейс
+                  {t('home.hero.features.laconicInterface')}
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                   <svg
@@ -214,7 +225,7 @@ export default function Home(): ReactElement {
                   >
                     <path d="M11.3 1.05a.75.75 0 01.7.47l2.1 5.22h3.15a.75.75 0 01.53 1.28l-4.63 4.64 1.74 5.21a.75.75 0 01-1.14.85L10 16.93l-4.75 2.79a.75.75 0 01-1.14-.85l1.74-5.21L1.22 8.02A.75.75 0 011.75 6.74H4.9l2.1-5.22a.75.75 0 01.7-.47h3.6z" />
                   </svg>
-                  Быстрая работа
+                  {t('home.hero.features.fastWork')}
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                   <svg
@@ -225,7 +236,7 @@ export default function Home(): ReactElement {
                   >
                     <path d="M10 2a6 6 0 016 6v2.5c0 3.59-2.53 6.86-6 7.5-3.47-.64-6-3.91-6-7.5V8a6 6 0 016-6zm0 6a2.5 2.5 0 00-2.5 2.5v.5a2.5 2.5 0 105 0v-.5A2.5 2.5 0 0010 8z" />
                   </svg>
-                  Приватность по умолчанию
+                  {t('home.hero.features.privacyByDefault')}
                 </div>
               </div>
             </div>
@@ -316,10 +327,8 @@ export default function Home(): ReactElement {
       {/* Features */}
       <section id="features" className="max-w-7xl mx-auto px-4 py-16">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Почему PeaklyGo</h2>
-          <p className="mt-4 text-gray-700 dark:text-gray-300">
-            Мы убрали всё лишнее, оставив инструменты, которые действительно помогают двигаться к результату.
-          </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">{t('home.features.title')}</h2>
+          <p className="mt-4 text-gray-700 dark:text-gray-300">{t('home.features.subtitle')}</p>
         </div>
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">{features.map(renderFeature)}</div>
       </section>
@@ -328,8 +337,10 @@ export default function Home(): ReactElement {
       <section id="how" className="bg-white/60 dark:bg-gray-900/60 border-y border-gray-200 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 py-16">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Как это работает</h2>
-            <p className="mt-4 text-gray-700 dark:text-gray-300">Три шага — от идеи до результата.</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+              {t('home.howItWorks.title')}
+            </h2>
+            <p className="mt-4 text-gray-700 dark:text-gray-300">{t('home.howItWorks.subtitle')}</p>
           </div>
           <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">{steps.map(renderStep)}</div>
         </div>
@@ -338,8 +349,10 @@ export default function Home(): ReactElement {
       {/* Testimonials */}
       <section id="testimonials" className="max-w-7xl mx-auto px-4 py-16">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Отзывы</h2>
-          <p className="mt-4 text-gray-700 dark:text-gray-300">Что говорят пользователи о PeaklyGo.</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+            {t('home.testimonials.title')}
+          </h2>
+          <p className="mt-4 text-gray-700 dark:text-gray-300">{t('home.testimonials.subtitle')}</p>
         </div>
         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           {testimonials.map(renderTestimonial)}
@@ -349,36 +362,36 @@ export default function Home(): ReactElement {
       {/* FAQ */}
       <section id="faq" className="bg-white/60 dark:bg-gray-900/60 border-y border-gray-200 dark:border-gray-800">
         <div className="max-w-4xl mx-auto px-4 py-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center">FAQ</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center">
+            {t('home.faq.title')}
+          </h2>
           <div className="mt-8 space-y-4">
             <details className="group rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
               <summary className="cursor-pointer list-none flex items-center justify-between">
-                <span className="text-base font-semibold text-gray-900 dark:text-white">PeaklyGo платный?</span>
+                <span className="text-base font-semibold text-gray-900 dark:text-white">
+                  {t('home.faq.q1.question')}
+                </span>
                 <span className="text-gray-500 group-open:rotate-180 transition-transform">▾</span>
               </summary>
-              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-                Базовый функционал — бесплатно. Премиум — по желанию, позже.
-              </p>
+              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{t('home.faq.q1.answer')}</p>
             </details>
             <details className="group rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
               <summary className="cursor-pointer list-none flex items-center justify-between">
                 <span className="text-base font-semibold text-gray-900 dark:text-white">
-                  Можно вести приватные цели?
+                  {t('home.faq.q2.question')}
                 </span>
                 <span className="text-gray-500 group-open:rotate-180 transition-transform">▾</span>
               </summary>
-              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-                Да. По умолчанию цели приватные. Публикация — опциональна.
-              </p>
+              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{t('home.faq.q2.answer')}</p>
             </details>
             <details className="group rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
               <summary className="cursor-pointer list-none flex items-center justify-between">
-                <span className="text-base font-semibold text-gray-900 dark:text-white">Как делиться прогрессом?</span>
+                <span className="text-base font-semibold text-gray-900 dark:text-white">
+                  {t('home.faq.q3.question')}
+                </span>
                 <span className="text-gray-500 group-open:rotate-180 transition-transform">▾</span>
               </summary>
-              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-                Опубликуйте цель и отправьте ссылку. Можно ограничить видимость.
-              </p>
+              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{t('home.faq.q3.answer')}</p>
             </details>
           </div>
         </div>
@@ -386,28 +399,26 @@ export default function Home(): ReactElement {
 
       {/* CTA */}
       <section className="max-w-5xl mx-auto px-4 py-16 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">Готовы начать?</h2>
-        <p className="mt-4 text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-          Сделайте первый шаг — создайте цель сейчас. Через неделю вы увидите реальный прогресс.
-        </p>
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">{t('home.cta.title')}</h2>
+        <p className="mt-4 text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">{t('home.cta.subtitle')}</p>
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
           <LinkWithProgress
             href="/auth/register"
             className="px-6 py-3 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors"
           >
-            Создать цель
+            {t('home.cta.createGoal')}
           </LinkWithProgress>
           <LinkWithProgress
             href="/auth/login"
             className="px-6 py-3 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
-            Уже есть аккаунт
+            {t('home.cta.alreadyHaveAccount')}
           </LinkWithProgress>
         </div>
       </section>
 
       <footer className="border-t border-gray-200 dark:border-gray-800 py-8 text-center text-sm text-gray-600 dark:text-gray-400">
-        © {new Date().getFullYear()} PeaklyGo. Все права защищены.
+        © {new Date().getFullYear()} PeaklyGo. {t('home.footer.copyright')}
       </footer>
     </main>
   );

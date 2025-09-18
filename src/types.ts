@@ -40,13 +40,17 @@ export enum ActivityType {
   CompletedGoal = 'completedGoal',
 }
 
-export const ActivityTypeLabels: Record<ActivityType, string> = {
-  [ActivityType.ProgressEntry]: 'Написал сообщение в блог',
-  [ActivityType.MarkStep]: 'Выполнил шаг',
-  [ActivityType.UnmarkStep]: 'Снял выполнение шага',
-  [ActivityType.UpdatedDeadline]: 'Изменил дедлайн',
-  [ActivityType.EditedGoal]: 'Отредактировал цель',
-  [ActivityType.CompletedGoal]: 'Завершил цель',
+export const getActivityTypeLabel = (activityType: ActivityType, t: (key: string) => string): string => {
+  const labelKeys: Record<ActivityType, string> = {
+    [ActivityType.ProgressEntry]: 'activities.progressEntry',
+    [ActivityType.MarkStep]: 'activities.markStep',
+    [ActivityType.UnmarkStep]: 'activities.unmarkStep',
+    [ActivityType.UpdatedDeadline]: 'activities.updatedDeadline',
+    [ActivityType.EditedGoal]: 'activities.editedGoal',
+    [ActivityType.CompletedGoal]: 'activities.completedGoal',
+  };
+
+  return t(labelKeys[activityType]);
 };
 
 export const ActivityTypeColors: Record<ActivityType, { light: string; dark: string }> = {

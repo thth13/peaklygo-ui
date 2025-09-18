@@ -2,13 +2,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
 import Link from '@/components/Link';
 import { LeftSidebar } from '@/components/layout/sidebar';
-import { ActivityTypeLabels, ActivityTypeColors, Goal } from '@/types';
+import { getActivityTypeLabel, ActivityTypeColors, Goal } from '@/types';
 import { getGoal } from '@/lib/api/goal';
 import { formatDate } from '@/lib/utils';
 import { GoalProgress } from '@/components/goal/GoalProgress';
 import { cookies } from 'next/headers';
 import { GoalActions } from '@/components/goal/GoalActions';
 import { ProgressBlogProvider } from '@/context/ProgressBlogContext';
+import { getTranslations, getLocale } from 'next-intl/server';
 
 interface GoalPageProps {
   params: Promise<{ id: string }>;
@@ -16,6 +17,8 @@ interface GoalPageProps {
 
 export default async function GoalPage({ params }: GoalPageProps) {
   const { id } = await params;
+  const t = await getTranslations();
+  const locale = await getLocale();
 
   const cookieStore = await cookies();
   const currentUserId = cookieStore.get('userId')?.value;
@@ -25,15 +28,13 @@ export default async function GoalPage({ params }: GoalPageProps) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Цель не найдена</h1>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
-            Возможно, цель была удалена или вы не имеете к ней доступа
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('goals.notFound')}</h1>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">{t('goals.notFoundDescription')}</p>
           <Link
             href="/profile"
             className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
           >
-            Вернуться к целям
+            {t('goals.backToGoals')}
           </Link>
         </div>
       </div>
@@ -64,13 +65,13 @@ export default async function GoalPage({ params }: GoalPageProps) {
   const getPrivacyLabel = () => {
     switch (goal.privacy) {
       case 'private':
-        return 'Приватная';
+        return t('goals.privacy.private');
       case 'friends':
-        return 'Для друзей';
+        return t('goals.privacy.friends');
       case 'public':
-        return 'Публичная';
+        return t('goals.privacy.public');
       default:
-        return 'Публичная';
+        return t('goals.privacy.public');
     }
   };
 
@@ -109,7 +110,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
                     className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center space-x-2 transition-colors"
                   >
                     <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4" />
-                    <span className="text-sm">Назад к целям</span>
+                    <span className="text-sm">{t('navigation.backToGoals')}</span>
                   </Link>
                 </div>
                 {currentUserId === goal.userId && (
@@ -119,7 +120,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
                       className="flex items-center space-x-2 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
                       <FontAwesomeIcon icon={faEdit} className="w-4 h-4" />
-                      <span>Редактировать</span>
+                      <span>{t('common.edit')}</span>
                     </Link>
                   </div>
                 )}
@@ -134,9 +135,11 @@ export default async function GoalPage({ params }: GoalPageProps) {
                     {goal.category}
                   </span>
                   <span className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-medium">
-                    {goal.isCompleted ? 'Завершено' : 'В процессе'}
+                    {goal.isCompleted ? t('goals.status.completed') : t('goals.status.inProgress')}
                   </span>
-                  <span className="text-gray-500 dark:text-gray-400 text-sm">Создано {formatDate(goal.startDate)}</span>
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">
+                    {t('goals.created')} {formatDate(goal.startDate, locale)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -148,37 +151,39 @@ export default async function GoalPage({ params }: GoalPageProps) {
         {/* Правая боковая панель */}
         <div className="w-full lg:w-1/4 px-0 lg:pl-6">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 lg:p-6 mb-6 transition-colors">
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Статистика</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('goals.statistics')}</h3>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-300">Ценность цели</span>
-                <span className="font-medium text-blue-600 dark:text-blue-400">{goal.value} баллов</span>
+                <span className="text-gray-600 dark:text-gray-300">{t('goals.goalValue')}</span>
+                <span className="font-medium text-blue-600 dark:text-blue-400">
+                  {goal.value} {t('goals.points')}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-300">Дней прошло</span>
+                <span className="text-gray-600 dark:text-gray-300">{t('goals.daysPassed')}</span>
                 <span className="font-medium text-gray-900 dark:text-gray-100">{daysPassed}</span>
               </div>
               {goal.endDate && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-300">Дней осталось</span>
+                  <span className="text-gray-600 dark:text-gray-300">{t('goals.daysLeft')}</span>
                   <span className="font-medium text-gray-900 dark:text-gray-100">{daysLeft}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-300">Этапов завершено</span>
+                <span className="text-gray-600 dark:text-gray-300">{t('goals.stepsCompleted')}</span>
                 <span className="font-medium text-gray-900 dark:text-gray-100">
                   {completedSteps} из {goal.steps.length}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-300">Приватность</span>
+                <span className="text-gray-600 dark:text-gray-300">{t('goals.privacy.label')}</span>
                 <span className={`px-2 py-1 rounded text-sm ${getPrivacyColor()}`}>{getPrivacyLabel()}</span>
               </div>
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 lg:p-6 mb-6 transition-colors">
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Последняя активность</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('goals.lastActivity')}</h3>
             <div className="space-y-3">
               {goal.activity?.slice(-5).map((item, index) => {
                 const colors = ActivityTypeColors[item.activityType];
@@ -187,9 +192,9 @@ export default async function GoalPage({ params }: GoalPageProps) {
                     <div className={`w-2 h-2 ${colors.light} ${colors.dark} rounded-full mt-2`}></div>
                     <div>
                       <p className="text-sm text-gray-900 dark:text-gray-100">
-                        {ActivityTypeLabels[item.activityType]}
+                        {getActivityTypeLabel(item.activityType, (key: string) => t(key))}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{formatDate(item.date)}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{formatDate(item.date, locale)}</p>
                     </div>
                   </div>
                 );

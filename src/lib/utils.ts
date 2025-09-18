@@ -1,19 +1,24 @@
-export function formatDate(date: Date | string): string {
+export function formatDate(date: Date | string, locale: string = 'ru-RU'): string {
   const d = typeof date === 'string' ? new Date(date) : date;
-  return d
-    .toLocaleDateString('ru-RU', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    })
-    .replace(/\sг\.$/, '');
+  const formatted = d.toLocaleDateString(locale, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
+  // Убираем "г." только для русской локали
+  if (locale === 'ru-RU') {
+    return formatted.replace(/\sг\.$/, '');
+  }
+
+  return formatted;
 }
 
 export const cn = (...classes: (string | undefined | false)[]): string => {
   return classes.filter(Boolean).join(' ');
 };
 
-export const formatTimeAgo = (date: Date): string => {
+export const formatTimeAgo = (date: Date, t: (key: string, values?: any) => string): string => {
   const now = new Date();
   const entryDate = new Date(date);
 
@@ -22,11 +27,12 @@ export const formatTimeAgo = (date: Date): string => {
 
   const diffInDays = Math.floor((todayStart.getTime() - entryDayStart.getTime()) / (1000 * 60 * 60 * 24));
 
-  if (diffInDays === 0) return 'сегодня';
-  if (diffInDays === 1) return 'вчера';
-  if (diffInDays < 7) return `${diffInDays} дня назад`;
-  if (diffInDays < 14) return '1 неделя назад';
-  return `${Math.floor(diffInDays / 7)} недели назад`;
+  if (diffInDays === 0) return t('today');
+  if (diffInDays === 1) return t('yesterday');
+  if (diffInDays < 7) return t('daysAgo', { days: diffInDays });
+  if (diffInDays < 14) return t('oneWeekAgo');
+  const weeks = Math.floor(diffInDays / 7);
+  return t('weeksAgo', { weeks });
 };
 
 export const getDayColor = (day: number): string => {

@@ -2,6 +2,7 @@ import { IMAGE_URL } from '@/constants';
 import { UserProfile } from '@/types';
 import { faPenToSquare, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useTranslations } from 'next-intl';
 import LinkWithProgress from '../../Link';
 import Image from 'next/image';
 
@@ -12,6 +13,8 @@ interface ProfileHeaderProps {
 }
 
 export function ProfileHeader({ profile, isMyProfile, userId }: ProfileHeaderProps) {
+  const t = useTranslations('sidebar');
+
   return (
     <div className="relative flex items-center space-x-4 mb-4">
       <div className="h-16 w-16 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
@@ -30,7 +33,7 @@ export function ProfileHeader({ profile, isMyProfile, userId }: ProfileHeaderPro
         )}
       </div>
       <div>
-        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">{profile?.name || 'Пользователь'}</h2>
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">{profile?.name || t('user')}</h2>
         <p className="text-gray-500 dark:text-gray-400">
           @
           {typeof profile?.user === 'object'

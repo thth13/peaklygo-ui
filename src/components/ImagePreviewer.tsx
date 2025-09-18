@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 interface ImagePreviewerProps {
   handleInputChange: (field: string, value: any) => void;
   image: File | null;
@@ -13,6 +14,7 @@ interface ImagePreviewerProps {
 export const ImagePreviewer = ({ handleInputChange, image, existingImageUrl }: ImagePreviewerProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
+  const t = useTranslations('image');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -47,7 +49,7 @@ export const ImagePreviewer = ({ handleInputChange, image, existingImageUrl }: I
 
   return (
     <div>
-      <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Фото цели</label>
+      <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">{t('goalPhoto')}</label>
       <div
         className={`mt-1 flex justify-center items-center ${
           displayImageUrl ? '' : 'px-6 pt-5 pb-6'
@@ -100,11 +102,11 @@ export const ImagePreviewer = ({ handleInputChange, image, existingImageUrl }: I
             <FontAwesomeIcon icon={faCloudArrowUp} className="mx-auto text-gray-400 dark:text-gray-500 text-4xl" />
             <div className="flex text-sm text-gray-600 dark:text-gray-300">
               <span className="relative cursor-pointer bg-white dark:bg-gray-600 rounded-md font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 px-1">
-                Загрузить фото
+                {t('uploadPhoto')}
               </span>
-              <p className="pl-1">или перетащите сюда</p>
+              <p className="pl-1">{t('dragOrDrop')}</p>
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF до 10MB</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">{t('supportedFormats')}</p>
             {image && <p className="text-sm text-green-600 dark:text-green-400 font-medium">{image.name}</p>}
           </div>
         )}

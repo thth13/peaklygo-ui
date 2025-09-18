@@ -1,6 +1,7 @@
 'use client';
 import { useState, useContext, ChangeEvent, FormEvent } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { useTranslations } from 'next-intl';
 import { AuthContext } from '@/context/AuthContext';
 import { GOOGLE_CLIENT_ID } from '@/constants';
 import GoogleLoginButton from '@/components/GoogleLoginButton';
@@ -27,6 +28,8 @@ interface AuthFormProps {
 export default function AuthForm({ isLoginProp }: AuthFormProps) {
   const [isLogin, setIsLogin] = useState<boolean>(isLoginProp);
   const auth = useContext(AuthContext);
+  const t = useTranslations('auth');
+  const tCommon = useTranslations('common');
 
   const { authUser, googleLogin } = auth;
 
@@ -39,6 +42,27 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
 
+  const mapServerErrorsToFields = (serverErrors: Record<string, string>): ValidationErrors => {
+    const mappedErrors: ValidationErrors = {};
+
+    Object.entries(serverErrors).forEach(([field, errorCode]) => {
+      const translatedMessage = t(`errors.${errorCode}`);
+
+      // Мапим серверные поля на поля формы
+      if (field === 'identifier') {
+        mappedErrors.email = translatedMessage;
+      } else if (field === 'refreshToken') {
+        mappedErrors.server = translatedMessage;
+      } else if (field === 'verification') {
+        mappedErrors.server = translatedMessage;
+      } else {
+        mappedErrors[field as keyof ValidationErrors] = translatedMessage;
+      }
+    });
+
+    return mappedErrors;
+  };
+
   const validateForm = (): boolean => {
     const newErrors: ValidationErrors = {};
 
@@ -48,27 +72,27 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
       const isUsername = formData.email.length >= 3 && !formData.email.includes('@');
 
       if (!isEmail && !isUsername) {
-        newErrors.email = 'Please enter a valid email or username (min 3 characters)';
+        newErrors.email = t('validation.emailOrUsernameRequired');
       }
     } else {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
-        newErrors.email = 'Please enter a valid email';
+        newErrors.email = t('validation.validEmailRequired');
       }
 
       if (formData.username.length < 3) {
-        newErrors.username = 'Username must be at least 3 characters';
+        newErrors.username = t('validation.usernameMinLength');
       } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
-        newErrors.username = 'Username can only contain letters, numbers, and underscores';
+        newErrors.username = t('validation.usernameInvalidChars');
       }
     }
 
     if (formData.password.length < 5) {
-      newErrors.password = 'Password must be at least 5 characters';
+      newErrors.password = t('validation.passwordMinLength');
     }
 
     if (!isLogin && formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = t('validation.passwordsNotMatch');
     }
 
     setErrors(newErrors);
@@ -98,8 +122,9 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
       await authUser(email, password, isLogin, username);
     } catch (error: any) {
       const serverErrors = error.response.data;
+      const mappedErrors = mapServerErrorsToFields(serverErrors);
 
-      setErrors(serverErrors);
+      setErrors(mappedErrors);
       setLoading(false);
     }
   };
@@ -121,7 +146,7 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                 }`}
                 onClick={() => setIsLogin(true)}
               >
-                Login
+                {t('login')}
               </button>
               <button
                 className={`flex-1 py-4 text-center font-medium border-b-2 transition-colors ${
@@ -131,7 +156,7 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                 }`}
                 onClick={() => setIsLogin(false)}
               >
-                Register
+                {t('register')}
               </button>
             </div>
 
@@ -139,16 +164,16 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
               <form onSubmit={handleSubmit}>
                 <div className="mb-8 text-center">
                   <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2 transition-colors">
-                    {isLogin ? 'Welcome Back!' : 'Create Account'}
+                    {isLogin ? t('welcomeBack') : t('createAccount')}
                   </h2>
                   <p className="text-gray-600 dark:text-gray-300 transition-colors">
-                    {isLogin ? 'Continue your reading journey' : 'Start your reading journey today'}
+                    {isLogin ? t('continueJourney') : t('startJourney')}
                   </p>
                 </div>
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">
-                      {isLogin ? 'Email or Username' : 'Email'}
+                      {isLogin ? t('emailOrUsername') : t('email')}
                     </label>
                     <input
                       type={isLogin ? 'text' : 'email'}
@@ -166,7 +191,7 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                   {!isLogin && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">
-                        Username
+                        {t('username')}
                       </label>
                       <input
                         type="text"
@@ -184,7 +209,7 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                   )}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">
-                      Password
+                      {t('password')}
                     </label>
                     <input
                       type="password"
@@ -202,7 +227,7 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                   {!isLogin && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors">
-                        Confirm Password
+                        {t('confirmPassword')}
                       </label>
                       <input
                         type="password"
@@ -236,7 +261,7 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                     className="w-full bg-blue-600 dark:bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium"
                     disabled={loading}
                   >
-                    {loading ? 'Loading...' : isLogin ? 'Sign In' : 'Create Account'}
+                    {loading ? tCommon('loading') : isLogin ? t('signIn') : t('createAccount')}
                   </button>
                 </div>
                 <div className="mt-8">
@@ -246,7 +271,7 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                     </div>
                     <div className="relative flex justify-center text-sm">
                       <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors">
-                        Or continue with
+                        {t('or')}
                       </span>
                     </div>
                   </div>

@@ -12,6 +12,7 @@ import Link from '@/components/Link';
 import { archiveGoal } from '@/lib/api/goal';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface GoalCardProps {
   goal: Goal;
@@ -20,6 +21,8 @@ interface GoalCardProps {
 }
 
 export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardProps) => {
+  const t = useTranslations('goals');
+  const locale = useLocale();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isArchiving, setIsArchiving] = useState<boolean>(false);
@@ -54,7 +57,7 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
 
     try {
       await archiveGoal(goal._id);
-      toast.success('Цель успешно архивирована');
+      toast.success(t('archivedSuccess'));
 
       // Удаляем цель из списка если есть callback
       if (onGoalArchived) {
@@ -64,7 +67,7 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
         router.refresh();
       }
     } catch (error) {
-      toast.error('Ошибка архивирования цели');
+      toast.error(t('archiveError'));
       console.error('Error archiving goal:', error);
     } finally {
       setIsArchiving(false);
@@ -97,7 +100,7 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
                   : 'bg-primary-100/90 dark:bg-primary-900/70 text-primary-700 dark:text-primary-300'
               }`}
             >
-              {goal.isCompleted ? 'Достигнуто' : 'В процессе'}
+              {goal.isCompleted ? t('achieved') : t('inProgress')}
             </span>
           </div>
           {/* Menu button */}
@@ -121,14 +124,14 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
                       onClick={handleEdit}
                       className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
-                      Редактировать цель
+                      {t('edit')}
                     </button>
                     <button
                       onClick={handleArchive}
                       disabled={isArchiving}
                       className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-60"
                     >
-                      Архивировать цель
+                      {t('archiveGoal')}
                     </button>
                   </div>
                 )}
@@ -154,7 +157,7 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
                       : 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300'
                   }`}
                 >
-                  {goal.isCompleted ? 'Достигнуто' : 'В процессе'}
+                  {goal.isCompleted ? t('achieved') : t('inProgress')}
                 </span>
                 {!isArchived && (
                   <div className="relative" ref={menuRef}>
@@ -175,14 +178,14 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
                           onClick={handleEdit}
                           className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
-                          Редактировать цель
+                          {t('edit')}
                         </button>
                         <button
                           onClick={handleArchive}
                           disabled={isArchiving}
                           className="w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-60"
                         >
-                          Архивировать цель
+                          {t('archiveGoal')}
                         </button>
                       </div>
                     )}
@@ -191,20 +194,22 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
               </div>
             )}
           </div>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">Создано {formatDate(goal.startDate)}</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
+            {t('created')} {formatDate(goal.startDate, locale)}
+          </p>
         </div>
 
         {goal.description && <p className="text-gray-600 dark:text-gray-300 mb-4">{goal.description}</p>}
 
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Прогресс</span>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('progress')}</span>
             <span
               className={`text-sm font-medium ${
                 goal.progress === 100 ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'
               }`}
             >
-              {goal.progress === 100 ? 'Завершено!' : `${goal.progress}%`}
+              {goal.progress === 100 ? t('completed') + '!' : `${goal.progress}%`}
             </span>
           </div>
           <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full">
@@ -221,13 +226,17 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
           {goal.endDate && (
             <div className="flex items-center">
               <FontAwesomeIcon icon={faCalendarRegular} className="w-4 mr-2" />
-              <span>Дедлайн: {formatDate(goal.endDate)}</span>
+              <span>
+                {t('deadline')}: {formatDate(goal.endDate, locale)}
+              </span>
             </div>
           )}
 
           <div className="flex items-center">
             <FontAwesomeIcon icon={faCoins} className="w-4 mr-2" />
-            <span>Ценность: {goal.value} баллов</span>
+            <span>
+              {t('value')}: {goal.value} {t('points')}
+            </span>
           </div>
         </div>
       </div>

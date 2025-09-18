@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 
 interface AvatarUploaderProps {
   onAvatarChange: (file: File | null) => void;
@@ -12,6 +13,7 @@ interface AvatarUploaderProps {
 }
 
 export const AvatarUploader: React.FC<AvatarUploaderProps> = ({ onAvatarChange, existingAvatarUrl }) => {
+  const t = useTranslations('profile.avatarUploader');
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -23,12 +25,12 @@ export const AvatarUploader: React.FC<AvatarUploaderProps> = ({ onAvatarChange, 
     const isUnderLimit = file.size <= 5 * 1024 * 1024; // 5MB
 
     if (!isImage) {
-      alert('Пожалуйста, выберите файл изображения');
+      alert(t('pleaseSelectImage'));
       return;
     }
 
     if (!isUnderLimit) {
-      alert('Размер файла не должен превышать 5MB');
+      alert(t('fileSizeLimit'));
       return;
     }
 
@@ -65,7 +67,7 @@ export const AvatarUploader: React.FC<AvatarUploaderProps> = ({ onAvatarChange, 
 
   return (
     <div className="flex flex-col items-center">
-      <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">Фото профиля</label>
+      <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">{t('profilePhoto')}</label>
 
       <div className="flex flex-col items-center space-y-4">
         {/* Avatar Preview */}
@@ -103,7 +105,7 @@ export const AvatarUploader: React.FC<AvatarUploaderProps> = ({ onAvatarChange, 
           onClick={() => fileInputRef.current?.click()}
           className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
         >
-          Загрузить фото
+          {t('uploadPhoto')}
         </button>
 
         {/* Delete Button */}
@@ -113,7 +115,7 @@ export const AvatarUploader: React.FC<AvatarUploaderProps> = ({ onAvatarChange, 
             onClick={handleRemoveAvatar}
             className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm transition-colors"
           >
-            Удалить фото
+            {t('removePhoto')}
           </button>
         )}
 
@@ -137,13 +139,11 @@ export const AvatarUploader: React.FC<AvatarUploaderProps> = ({ onAvatarChange, 
           }}
         >
           <div className="h-full flex items-center justify-center text-center">
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Перетащите изображение сюда или нажмите для выбора
-            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t('dragDropText')}</p>
           </div>
         </div>
 
-        <p className="text-xs text-gray-500 dark:text-gray-400 text-center">PNG, JPG, GIF до 5MB</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 text-center">{t('supportedFormats')}</p>
       </div>
 
       <input ref={fileInputRef} type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />

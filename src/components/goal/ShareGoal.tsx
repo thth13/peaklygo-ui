@@ -7,6 +7,7 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { Goal } from '@/types';
+import { useTranslations } from 'next-intl';
 
 interface ShareGoalProps {
   isShareModalOpen: boolean;
@@ -15,6 +16,7 @@ interface ShareGoalProps {
 }
 
 export const ShareGoal = ({ isShareModalOpen, setIsShareModalOpen, goal }: ShareGoalProps) => {
+  const t = useTranslations();
   const [isCopying, setIsCopying] = useState(false);
   const [shareMessage, setShareMessage] = useState('');
   const [notifyFollowers, setNotifyFollowers] = useState(false);
@@ -23,9 +25,9 @@ export const ShareGoal = ({ isShareModalOpen, setIsShareModalOpen, goal }: Share
     setIsCopying(true);
     try {
       await navigator.clipboard.writeText(getGoalUrl());
-      toast.success('Ссылка скопирована!');
+      toast.success(t('share.linkCopied'));
     } catch (error) {
-      toast.error('Ошибка копирования ссылки');
+      toast.error(t('share.copyError'));
       console.error('Error copying link:', error);
     } finally {
       setIsCopying(false);
@@ -99,7 +101,7 @@ export const ShareGoal = ({ isShareModalOpen, setIsShareModalOpen, goal }: Share
               </label>
               <textarea
                 className="w-full min-h-[80px] border border-gray-300 dark:border-gray-600 rounded-lg p-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Поделитесь своими мыслями о цели..."
+                placeholder={t('share.messagePlaceholder')}
                 value={shareMessage}
                 onChange={(e) => setShareMessage(e.target.value)}
                 maxLength={500}

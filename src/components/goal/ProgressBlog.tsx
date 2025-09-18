@@ -10,6 +10,7 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import Underline from '@tiptap/extension-underline';
+import { useTranslations } from 'next-intl';
 import './tiptap-editor.css';
 
 export const ProgressBlog = () => {
@@ -29,13 +30,14 @@ export const ProgressBlog = () => {
   } = useProgressBlogContext();
 
   const [showNewEntryForm, setShowNewEntryForm] = useState(false);
+  const t = useTranslations();
 
   const editor = useEditor({
     extensions: [
       StarterKit,
       Underline,
       Placeholder.configure({
-        placeholder: 'Расскажите о своем прогрессе...',
+        placeholder: t('goals.blog.tellProgress'),
       }),
     ],
     content: '',
@@ -75,9 +77,9 @@ export const ProgressBlog = () => {
   if (isLoading) {
     return (
       <div className="mt-6">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6">Блог прогресса</h3>
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6">{t('blog.title')}</h3>
         <div className="text-center py-8">
-          <p className="text-gray-500 dark:text-gray-400">Загружаем записи...</p>
+          <p className="text-gray-500 dark:text-gray-400">{t('blog.loading')}</p>
         </div>
       </div>
     );
@@ -86,13 +88,13 @@ export const ProgressBlog = () => {
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Блог прогресса</h3>
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('blog.title')}</h3>
         <button
           onClick={() => setShowNewEntryForm(true)}
           className="flex items-center space-x-2 px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm transition-colors"
         >
           <FontAwesomeIcon icon={faPlus} className="w-4 h-4" />
-          <span>Новая запись</span>
+          <span>{t('blog.newEntry')}</span>
         </button>
       </div>
 
@@ -116,7 +118,7 @@ export const ProgressBlog = () => {
                 type="submit"
                 className="px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm transition-colors"
               >
-                Опубликовать
+                {t('blog.publish')}
               </button>
               <button
                 type="button"
@@ -126,7 +128,7 @@ export const ProgressBlog = () => {
                 }}
                 className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg text-sm transition-colors"
               >
-                Отмена
+                {t('common.cancel')}
               </button>
             </div>
           </form>
@@ -150,12 +152,12 @@ export const ProgressBlog = () => {
 
       {blogEntries.length === 0 && (
         <div className="text-center py-8">
-          <p className="text-gray-500 dark:text-gray-400 mb-4">Пока нет записей в блоге прогресса</p>
+          <p className="text-gray-500 dark:text-gray-400 mb-4">{t('blog.noEntries')}</p>
           <button
             onClick={() => setShowNewEntryForm(true)}
             className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
           >
-            Создать первую запись
+            {t('blog.createFirst')}
           </button>
         </div>
       )}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { getProfile, editProfile } from '@/lib/api/profile';
 import { UserProfile } from '@/types';
@@ -19,6 +20,8 @@ const ProfileEditPage: React.FC = () => {
   const params = useParams();
   const profileId = params.id as string;
   const { profile: currentUserProfile } = useUserProfile();
+  const t = useTranslations('profile');
+  const tCommon = useTranslations('common');
 
   const [isLoading, setIsLoading] = useState(true);
   const [profileData, setProfileData] = useState<UserProfile | null>(null);
@@ -30,7 +33,7 @@ const ProfileEditPage: React.FC = () => {
         const data = await getProfile(profileId);
         setProfileData(data);
       } catch (err: any) {
-        setError('Ошибка загрузки профиля');
+        setError(t('error.loadingError'));
         console.error('Error loading profile:', err);
       } finally {
         setIsLoading(false);
@@ -40,7 +43,7 @@ const ProfileEditPage: React.FC = () => {
     if (profileId) {
       loadProfileData();
     }
-  }, [profileId]);
+  }, [profileId, t]);
 
   useEffect(() => {
     // Check if current user can edit this profile
@@ -96,12 +99,12 @@ const ProfileEditPage: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto mt-6 px-4">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">{error || 'Профиль не найден'}</h1>
+          <h1 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">{error || t('notFound.title')}</h1>
           <button
             onClick={() => router.back()}
             className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
           >
-            Назад
+            {tCommon('back')}
           </button>
         </div>
       </div>
@@ -118,10 +121,10 @@ const ProfileEditPage: React.FC = () => {
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Редактирование профиля
+          {tCommon('back')}
         </button>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">Редактирование профиля</h1>
-        <p className="text-gray-600 dark:text-gray-400">Обновите свою информацию и настройки профиля</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('editTitle')}</h1>
+        <p className="text-gray-600 dark:text-gray-400">{t('editDescription')}</p>
       </div>
 
       <ProfileEditForm

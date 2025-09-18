@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { updateStepStatus, updateStepText, createStep, completeGoal } from '@/lib/api/goal';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 
 interface StepsProps {
   steps: Step[];
@@ -27,6 +28,8 @@ export const GoalSteps = (props: StepsProps) => {
     onProgressUpdate,
     onGoalComplete,
   } = props;
+
+  const t = useTranslations();
 
   // Локальное состояние для шагов
   const [steps, setSteps] = useState<Step[]>(initialSteps);
@@ -89,10 +92,10 @@ export const GoalSteps = (props: StepsProps) => {
       onProgressUpdate?.(newProgress);
 
       // Показываем уведомление
-      toast.success(newStatus ? 'Этап выполнен!' : 'Этап отмечен как невыполненный', { duration: 2000 });
+      toast.success(newStatus ? t('steps.completed') : t('steps.markedIncomplete'), { duration: 2000 });
     } catch (error) {
       console.error('Failed to update step status:', error);
-      toast.error('Не удалось обновить статус этапа');
+      toast.error(t('steps.updateFailed'));
     } finally {
       // Убираем состояние загрузки
       setLoadingSteps((prev) => {
@@ -105,7 +108,7 @@ export const GoalSteps = (props: StepsProps) => {
 
   const handleAddStep = async () => {
     if (!newStepText.trim()) {
-      toast.error('Введите название этапа');
+      toast.error(t('steps.enterName'));
       return;
     }
 
@@ -138,10 +141,10 @@ export const GoalSteps = (props: StepsProps) => {
       setNewStepText('');
       setShowAddForm(false);
 
-      toast.success('Этап добавлен!');
+      toast.success(t('steps.completed'));
     } catch (error) {
       console.error('Failed to create step:', error);
-      toast.error('Не удалось добавить этап');
+      toast.error(t('steps.addFailed'));
     } finally {
       setIsCreatingStep(false);
     }
@@ -190,18 +193,18 @@ export const GoalSteps = (props: StepsProps) => {
 
   const handleCompleteGoal = async () => {
     if (!allStepsCompleted) {
-      toast.error('Сначала завершите все этапы!');
+      toast.error(t('steps.completeAllFirst'));
       return;
     }
 
     setIsCompletingGoal(true);
     try {
       await completeGoal(goalId);
-      toast.success('Цель завершена! 🎉');
+      toast.success(t('goals.completed'));
       onGoalComplete?.();
     } catch (error) {
       console.error('Failed to complete goal:', error);
-      toast.error('Не удалось завершить цель');
+      toast.error(t('steps.completeFailed'));
     } finally {
       setIsCompletingGoal(false);
     }
@@ -219,7 +222,7 @@ export const GoalSteps = (props: StepsProps) => {
 
   const handleSaveEdit = async () => {
     if (!editingStepId || !editingStepText.trim()) {
-      toast.error('Введите название этапа');
+      toast.error(t('steps.enterName'));
       return;
     }
 
@@ -242,10 +245,10 @@ export const GoalSteps = (props: StepsProps) => {
       setEditingStepId(null);
       setEditingStepText('');
 
-      toast.success('Этап обновлен!');
+      toast.success(t('steps.completed'));
     } catch (error) {
       console.error('Failed to update step text:', error);
-      toast.error('Не удалось обновить этап');
+      toast.error(t('steps.updateTextFailed'));
     } finally {
       setIsUpdatingStep(false);
     }
@@ -289,7 +292,7 @@ export const GoalSteps = (props: StepsProps) => {
     <div>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-          Этапы выполнения ({steps.filter((s) => s.isCompleted).length}/{steps.length})
+          {t('steps.title')} ({steps.filter((s) => s.isCompleted).length}/{steps.length})
         </h3>
         <div className="flex items-center space-x-3">
           {isOwner && allStepsCompleted && (
@@ -332,7 +335,7 @@ export const GoalSteps = (props: StepsProps) => {
               type="text"
               value={newStepText}
               onChange={(e) => setNewStepText(e.target.value)}
-              placeholder="Введите название этапа..."
+              placeholder={t('steps.enterName')}
               className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               disabled={isCreatingStep}
               onKeyDown={(e) => {
@@ -355,7 +358,7 @@ export const GoalSteps = (props: StepsProps) => {
                   Создание...
                 </>
               ) : (
-                'Добавить'
+                t('steps.add')
               )}
             </button>
             <button
@@ -388,7 +391,7 @@ export const GoalSteps = (props: StepsProps) => {
                   className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${styles.circle} ${
                     isLoading || isDeleting ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
-                  title={step.isCompleted ? 'Отметить как невыполненный' : 'Отметить как выполненный'}
+                  title={step.isCompleted ? t('steps.markIncomplete') : t('steps.markComplete')}
                 >
                   {isLoading ? (
                     <FontAwesomeIcon icon={faSpinner} className="w-3 h-3 animate-spin" />
@@ -441,7 +444,11 @@ export const GoalSteps = (props: StepsProps) => {
                   <>
                     <h4 className={`font-medium transition-colors ${styles.title}`}>{step.text}</h4>
                     <p className={`text-sm transition-colors ${styles.description}`}>
-                      {step.isCompleted ? 'Завершено' : status === 'current' ? 'В процессе' : 'Ожидает выполнения'}
+                      {step.isCompleted
+                        ? t('steps.stepCompleted')
+                        : status === 'current'
+                        ? t('steps.inProgress')
+                        : t('steps.pending')}
                     </p>
                   </>
                 )}
@@ -453,7 +460,7 @@ export const GoalSteps = (props: StepsProps) => {
                     onClick={() => handleStartEdit(step)}
                     disabled={isLoading || isDeleting}
                     className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    title="Редактировать этап"
+                    title={t('steps.edit')}
                   >
                     <FontAwesomeIcon icon={faEdit} className="w-3 h-3" />
                   </button>

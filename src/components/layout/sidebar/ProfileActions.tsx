@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 import LinkWithProgress from '../../Link';
 
 interface ProfileActionsProps {
@@ -8,6 +9,8 @@ interface ProfileActionsProps {
 }
 
 export function ProfileActions({ isMyProfile }: ProfileActionsProps) {
+  const t = useTranslations('sidebar');
+
   return (
     <div className="space-y-3">
       {isMyProfile && (
@@ -16,7 +19,7 @@ export function ProfileActions({ isMyProfile }: ProfileActionsProps) {
           className="w-full bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-600 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition-all text-sm"
         >
           <FontAwesomeIcon icon={faPlus} className="w-4 mr-2 text-base" />
-          <span>Добавить цель</span>
+          <span>{t('addGoal')}</span>
         </LinkWithProgress>
       )}
     </div>

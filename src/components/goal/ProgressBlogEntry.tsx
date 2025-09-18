@@ -11,6 +11,7 @@ import Link from 'next/link';
 import DOMPurify from 'dompurify';
 import './progress-blog-entry.css';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 interface ProgressBlogActions {
   onToggleLike: (entryId: string) => void;
@@ -48,6 +49,8 @@ export const ProgressBlogEntry = ({
   });
 
   const { userId } = useContext(AuthContext);
+  const t = useTranslations();
+  const tTimeAgo = useTranslations('timeAgo');
 
   // Функция для безопасного рендеринга HTML
   const sanitizeHTML = (html: string) => {
@@ -62,7 +65,7 @@ export const ProgressBlogEntry = ({
       <div className="flex-shrink-0">
         <div className="bg-blue-500 text-white rounded-lg w-14 h-14 flex flex-col items-center justify-center text-center">
           <div className="text-lg font-bold leading-none">{entry.day}</div>
-          <div className="text-xs font-medium uppercase tracking-wide leading-none">ДЕНЬ</div>
+          <div className="text-xs font-medium uppercase tracking-wide leading-none">{t('common.day')}</div>
         </div>
       </div>
 
@@ -95,10 +98,12 @@ export const ProgressBlogEntry = ({
               className="flex items-center space-x-1 text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             >
               <FontAwesomeIcon icon={faComment} className="w-4 h-4" />
-              <span>{entry.commentCount} комментариев</span>
+              <span>
+                {entry.commentCount} {t('common.comments')}
+              </span>
             </button>
           </div>
-          <span className="text-gray-500 dark:text-gray-400">{formatTimeAgo(entry.createdAt)}</span>
+          <span className="text-gray-500 dark:text-gray-400">{formatTimeAgo(entry.createdAt, tTimeAgo)}</span>
         </div>
 
         {/* Секция комментариев */}
@@ -111,7 +116,7 @@ export const ProgressBlogEntry = ({
             {/* Список комментариев */}
             {commentLoading ? (
               <div className="text-center py-4">
-                <p className="text-gray-500 dark:text-gray-400 text-sm">Загружаем комментарии...</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">{t('comments.loading')}</p>
               </div>
             ) : entryComments.length > 0 ? (
               <div className="space-y-3">
@@ -135,10 +140,10 @@ export const ProgressBlogEntry = ({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
                         <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                          {comment.profile?.name || 'Неизвестный пользователь'}
+                          {comment.profile?.name || t('comments.unknownUser')}
                         </span>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {formatTimeAgo(comment.createdAt)}
+                          {formatTimeAgo(comment.createdAt, tTimeAgo)}
                         </span>
                       </div>
                       <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{comment.content}</p>
@@ -148,14 +153,14 @@ export const ProgressBlogEntry = ({
               </div>
             ) : (
               <div className="text-center py-4">
-                <p className="text-gray-500 dark:text-gray-400 text-sm">Пока нет комментариев</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">{t('comments.noComments')}</p>
               </div>
             )}
             <div className="mt-3">
               {userId ? (
                 <div className="flex space-x-2">
                   <textarea
-                    placeholder="Написать комментарий..."
+                    placeholder={t('comments.writeComment')}
                     value={commentText}
                     onChange={(e) => actions.onCommentTextChange(entry._id, e.target.value)}
                     rows={1}
@@ -170,22 +175,20 @@ export const ProgressBlogEntry = ({
                 </div>
               ) : (
                 <div className="text-center py-3 px-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-                    Для написания комментариев необходимо войти в аккаунт
-                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{t('auth.needAccountLogin')}</p>
                   <div className="flex justify-center space-x-3 text-sm">
                     <Link
                       href="/auth/login"
                       className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
                     >
-                      Войти
+                      {t('auth.signIn')}
                     </Link>
-                    <span className="text-gray-400">или</span>
+                    <span className="text-gray-400">{t('common.or')}</span>
                     <Link
                       href="/auth/register"
                       className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
                     >
-                      Зарегистрироваться
+                      {t('auth.signUp')}
                     </Link>
                   </div>
                 </div>

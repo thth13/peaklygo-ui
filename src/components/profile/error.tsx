@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import LinkWithProgress from '@/components/Link';
 import { LeftSidebar } from '@/components/layout/sidebar';
+import { useTranslations } from 'next-intl';
 
 interface ErrorPageProps {
   error: Error & { digest?: string };
@@ -10,6 +11,8 @@ interface ErrorPageProps {
 }
 
 export default function ProfileError({ error, reset }: ErrorPageProps) {
+  const t = useTranslations('profile');
+
   useEffect(() => {
     console.error('Profile page error:', error);
   }, [error]);
@@ -35,11 +38,9 @@ export default function ProfileError({ error, reset }: ErrorPageProps) {
             </svg>
           </div>
 
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Ошибка загрузки профиля</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('error.loadingError')}</h2>
 
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Произошла ошибка при загрузке данных профиля. Попробуйте обновить страницу или вернуться позже.
-          </p>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">{t('error.errorDescription')}</p>
 
           {error.message && (
             <p className="text-sm text-red-600 dark:text-red-400 mb-6 font-mono bg-red-50 dark:bg-red-950 p-3 rounded border">
@@ -52,14 +53,14 @@ export default function ProfileError({ error, reset }: ErrorPageProps) {
               onClick={reset}
               className="px-6 py-3 bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-600 text-white rounded-lg font-medium transition-colors"
             >
-              Попробовать снова
+              {t('error.tryAgain')}
             </button>
 
             <LinkWithProgress
               href="/"
               className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg font-medium transition-colors"
             >
-              Вернуться на главную
+              {t('error.backToHome')}
             </LinkWithProgress>
           </div>
         </div>
@@ -67,12 +68,12 @@ export default function ProfileError({ error, reset }: ErrorPageProps) {
 
       <div className="w-1/5 pl-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Что можно сделать?</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('error.whatCanDo')}</h3>
           <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-            <li>• Обновить страницу</li>
-            <li>• Проверить подключение к интернету</li>
-            <li>• Попробовать зайти позже</li>
-            <li>• Обратиться в поддержку</li>
+            <li>• {t('error.refreshPage')}</li>
+            <li>• {t('error.checkConnection')}</li>
+            <li>• {t('error.tryLater')}</li>
+            <li>• {t('error.contactSupport')}</li>
           </ul>
         </div>
       </div>

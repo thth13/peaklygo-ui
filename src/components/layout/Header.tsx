@@ -11,13 +11,15 @@ import { IMAGE_URL } from '@/constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { LanguageSwitcher } from '../LanguageSwitcher';
+import { useTranslations } from 'next-intl';
 
 export const Header = () => {
   const pathname = usePathname();
   const { profile, isLoading } = useUserProfile();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const t = useTranslations('header');
 
-  if (pathname === '/auth/login' || pathname === '/auth/register') return null;
+  if (pathname === '/' || pathname === '/auth/login' || pathname === '/auth/register') return null;
 
   return (
     <>
@@ -40,7 +42,7 @@ export const Header = () => {
               <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" aria-hidden />
             ) : profile ? (
               <button
-                aria-label="Open profile menu"
+                aria-label={t('profileMenu')}
                 aria-expanded={sidebarOpen}
                 onClick={() => setSidebarOpen(true)}
                 className="h-8 w-8 rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -64,7 +66,7 @@ export const Header = () => {
                 href="/auth/login"
                 className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-primary-600 bg-primary-50 hover:bg-primary-100"
               >
-                Регистрация
+                {t('register')}
               </a>
             )}
             <LanguageSwitcher />

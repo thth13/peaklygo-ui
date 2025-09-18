@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
 interface ArchiveGoalModalProps {
   isOpen: boolean;
@@ -10,6 +11,8 @@ interface ArchiveGoalModalProps {
 }
 
 export const ArchiveGoalModal: React.FC<ArchiveGoalModalProps> = ({ isOpen, isArchiving, onClose, onConfirm }) => {
+  const t = useTranslations('goals');
+
   if (!isOpen) return null;
 
   return (
@@ -22,10 +25,8 @@ export const ArchiveGoalModal: React.FC<ArchiveGoalModalProps> = ({ isOpen, isAr
         >
           ×
         </button>
-        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Архивирование цели</h2>
-        <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Вы уверены, что хотите архивировать эту цель? Архивированная цель будет скрыта из основного списка.
-        </p>
+        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">{t('archiveTitle')}</h2>
+        <p className="text-gray-600 dark:text-gray-300 mb-6">{t('archiveConfirm')}</p>
         <div className="flex justify-end gap-3">
           <button
             type="button"
@@ -33,7 +34,7 @@ export const ArchiveGoalModal: React.FC<ArchiveGoalModalProps> = ({ isOpen, isAr
             onClick={onClose}
             disabled={isArchiving}
           >
-            Отмена
+            {t('cancel', { ns: 'common' })}
           </button>
           <button
             type="button"
@@ -41,7 +42,7 @@ export const ArchiveGoalModal: React.FC<ArchiveGoalModalProps> = ({ isOpen, isAr
             onClick={onConfirm}
             disabled={isArchiving}
           >
-            {isArchiving ? 'Архивируем...' : 'Архивировать'}
+            {isArchiving ? t('archiving') : t('archiveGoal')}
           </button>
         </div>
       </div>

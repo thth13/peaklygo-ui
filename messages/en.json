@@ -1,4 +1,19 @@
 {
+  "timeAgo": {
+    "today": "today",
+    "yesterday": "yesterday",
+    "daysAgo": "{days} days ago",
+    "oneWeekAgo": "1 week ago",
+    "weeksAgo": "{weeks} weeks ago"
+  },
+  "activities": {
+    "progressEntry": "Wrote a blog post",
+    "markStep": "Completed step",
+    "unmarkStep": "Uncompleted step",
+    "updatedDeadline": "Updated deadline",
+    "editedGoal": "Edited goal",
+    "completedGoal": "Completed goal"
+  },
   "common": {
     "welcome": "Welcome",
     "loading": "Loading...",
@@ -14,50 +29,447 @@
     "close": "Close",
     "confirm": "Confirm",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "day": "DAY",
+    "days": "days",
+    "completed": "completed",
+    "progress": "progress",
+    "comments": "comments",
+    "comment": "comment",
+    "or": "or"
   },
   "auth": {
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
     "email": "Email",
+    "emailOrUsername": "Email or Username",
+    "username": "Username",
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "forgotPassword": "Forgot Password?",
     "rememberMe": "Remember Me",
-    "signInWithGoogle": "Sign in with Google"
+    "signInWithGoogle": "Sign in with Google",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "createAccount": "Create Account",
+    "welcomeBack": "Welcome Back!",
+    "continueJourney": "Continue your goal journey",
+    "startJourney": "Start your goal journey today",
+    "needAccountLogin": "You need to sign in to write comments",
+    "alreadyHaveAccount": "Already have an account",
+    "or": "or",
+    "validation": {
+      "emailOrUsernameRequired": "Please enter a valid email or username (min 3 characters)",
+      "validEmailRequired": "Please enter a valid email",
+      "usernameMinLength": "Username must be at least 3 characters",
+      "usernameInvalidChars": "Username can only contain letters, numbers, and underscores",
+      "passwordMinLength": "Password must be at least 5 characters",
+      "passwordsNotMatch": "Passwords do not match"
+    },
+    "errors": {
+      "EMAIL_NOT_UNIQUE": "User with this email already exists",
+      "USERNAME_NOT_UNIQUE": "Username is already taken",
+      "WRONG_CREDENTIALS": "Incorrect email/username or password",
+      "EMAIL_NOT_FOUND": "User with this email not found",
+      "USER_NOT_FOUND": "User not found",
+      "INVALID_VERIFICATION_TOKEN": "Invalid verification token",
+      "INVALID_RESET_REQUEST": "Invalid password reset request"
+    }
   },
   "navigation": {
     "home": "Home",
     "profile": "Profile",
     "goals": "Goals",
     "settings": "Settings",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "backToGoals": "Back to goals"
   },
   "goals": {
     "title": "Goals",
     "create": "Create Goal",
+    "createGoal": "Create Goal",
+    "createNew": "Creating new goal",
+    "editGoal": "Editing goal",
     "edit": "Edit Goal",
     "delete": "Delete Goal",
     "archive": "Archive",
+    "archiveGoal": "Archive goal",
+    "archiving": "Archiving...",
+    "archiveTitle": "Archive goal",
+    "archiveConfirm": "Are you sure you want to archive this goal? Archived goal will be hidden from the main list.",
     "progress": "Progress",
     "steps": "Steps",
     "share": "Share",
+    "shareGoal": "Share goal",
     "description": "Description",
     "deadline": "Deadline",
     "category": "Category",
-    "status": "Status"
+    "goalName": "Goal name",
+    "goalNamePlaceholder": "For example, Run a half marathon",
+    "goalNameHelper": "Formulate specific and measurable goals",
+    "descriptionPlaceholder": "I've long dreamed of becoming more resilient and testing myself...",
+    "descriptionHelper": "Describe why this goal is important to you and what it will give",
+    "timeframe": "Timeframe",
+    "startDate": "Start date",
+    "endDate": "Deadline",
+    "noDeadline": "No deadline",
+    "privacyLevel": "Privacy level",
+    "goalValue": "Goal value",
+    "rewardForCompletion": "Reward for completion",
+    "rewardPlaceholder": "For example: New sneakers",
+    "consequenceOfFailure": "Consequence of failure",
+    "consequencePlaceholder": "For example: Charity donation",
+    "valueLow": "Low",
+    "valueHigh": "High",
+    "valueHelper": "The harder the goal, the more points you'll get for achieving it",
+    "motivationTitle": "Daily motivation",
+    "motivationQuote": "Every morning you have two choices: continue sleeping with a dream or wake up and start achieving it.",
+    "tipsTitle": "Tips",
+    "tip1": "Formulate goals specifically and measurably",
+    "tip2": "Break big goals into small steps",
+    "tip3": "Set realistic deadlines",
+    "createDescription": "Create a goal that will motivate you to achieve results",
+    "editDescription": "Update your goal data",
+    "loading": "Loading goal...",
+    "creating": "Creating...",
+    "saving": "Saving...",
+    "saveChanges": "Save changes",
+    "actions": "Actions",
+    "writeToBlog": "Write to blog",
+    "newBlogEntry": "New blog entry",
+    "shareProgress": "Share your progress...",
+    "status": {
+      "completed": "Completed",
+      "inProgress": "In progress"
+    },
+    "achieved": "Achieved",
+    "inProgress": "In progress",
+    "archivedSuccess": "Goal successfully archived",
+    "archiveError": "Error archiving goal",
+    "blogCreateError": "Error creating entry",
+    "notFound": "Goal not found",
+    "notFoundDescription": "The goal may have been deleted or you don't have access to it",
+    "backToGoals": "Back to goals",
+    "goalDescription": "Goal description",
+    "noDescription": "No description provided",
+    "notSpecified": "Not specified",
+    "overallProgress": "Overall progress",
+    "reward": "Reward for completion",
+    "consequence": "Consequence of failure",
+    "statistics": "Statistics",
+    "points": "points",
+    "daysPassed": "Days passed",
+    "daysLeft": "Days left",
+    "stepsCompleted": "Steps completed",
+    "privacy": {
+      "label": "Privacy",
+      "private": "Private",
+      "privateDescription": "Only you can see",
+      "friends": "Friends only",
+      "friendsDescription": "Only your friends can see",
+      "public": "Public",
+      "publicDescription": "All users can see and support"
+    },
+    "categories": {
+      "health": "Health",
+      "finance": "Finance",
+      "development": "Self-development",
+      "work": "Work",
+      "education": "Education",
+      "relationships": "Relationships",
+      "sport": "Sport",
+      "custom": "Custom category",
+      "customPlaceholder": "Enter your category"
+    },
+    "lastActivity": "Last activity",
+    "created": "Created",
+    "deadlinePassed": "Deadline passed",
+    "daysToDeadline": "days to deadline",
+    "daysAfterDeadline": "days ago",
+    "completed": "Goal completed! 🎉",
+    "value": "Value"
   },
   "profile": {
     "title": "Profile",
     "edit": "Edit Profile",
+    "editTitle": "Edit Profile",
+    "editDescription": "Update your information and profile settings",
     "avatar": "Avatar",
     "name": "Name",
-    "bio": "Bio",
+    "fullName": "Full name",
+    "username": "Username",
+    "bio": "About",
     "location": "Location",
     "website": "Website",
     "joinedDate": "Joined",
-    "stats": "Statistics",
-    "achievements": "Achievements"
+    "stats": "Statistics", 
+    "achievements": "Achievements",
+    "fullNamePlaceholder": "Alex Ivanov",
+    "usernamePlaceholder": "alexivanov",
+    "bioPlaceholder": "Tell us about yourself, your interests and goals...",
+    "saving": "Saving...",
+    "saveChanges": "Save changes",
+    "validation": {
+      "fullNameRequired": "Full name is required",
+      "fullNameTooLong": "Full name must not exceed 255 characters",
+      "usernameRequired": "Username is required",
+      "usernameTooLong": "Username must not exceed 50 characters",
+      "usernameInvalid": "Username can only contain letters, numbers, and underscores",
+      "bioTooLong": "Description must not exceed 1024 characters"
+    },
+    "noGoals": "No goals yet",
+    "archived": "Archived Goals",
+    "archivedEmpty": "You don't have any archived goals yet",
+    "archivedUserGoals": "User's Archived Goals",
+    "archivedDescription": "Your completed and archived goals",
+    "archivedUserDescription": "User's completed and archived goals",
+    "toActiveGoals": "To Active Goals",
+    "userArchivedEmpty": "This user doesn't have any archived goals yet",
+    "archivedEmptyDescription": "Archived goals will appear here after completion or archiving",
+    "myGoals": "My Goals",
+    "userGoals": "User's Goals",
+    "manageGoalsDescription": "Manage your goals and track progress",
+    "userGoalsDescription": "User's goals and achievements",
+    "newGoal": "New Goal",
+    "userNoGoals": "This user doesn't have any goals yet",
+    "createFirstGoal": "Create first goal",
+    "avatarUploader": {
+      "profilePhoto": "Profile Photo",
+      "uploadPhoto": "Upload Photo",
+      "removePhoto": "Remove Photo",
+      "pleaseSelectImage": "Please select an image file",
+      "fileSizeLimit": "File size must not exceed 5MB",
+      "dragDropText": "Drag image here or click to select",
+      "supportedFormats": "PNG, JPG, GIF up to 5MB"
+    },
+    "error": {
+      "loadingError": "Profile Loading Error",
+      "errorDescription": "An error occurred while loading profile data. Try refreshing the page or come back later.",
+      "tryAgain": "Try Again",
+      "backToHome": "Back to Home",
+      "whatCanDo": "What can you do?",
+      "refreshPage": "Refresh page",
+      "checkConnection": "Check internet connection",
+      "tryLater": "Try again later",
+      "contactSupport": "Contact support"
+    },
+    "notFound": {
+      "title": "Profile Not Found",
+      "description": "User with this ID does not exist or has been deleted.",
+      "backToHome": "Back to Home",
+      "register": "Register",
+      "possibleReasons": "Possible Reasons",
+      "wrongId": "Wrong user ID",
+      "deletedAccount": "User deleted account", 
+      "blockedProfile": "Profile blocked",
+      "linkError": "Error in link"
+    }
+  },
+  "home": {
+    "hero": {
+      "badge": "Launch goals faster — focus on results",
+      "title": "Make progress visible. Achieve goals consciously.",
+      "subtitle": "PeaklyGo is where your goals turn into clear plans and understandable progress stories. No complexity, no noise — just moving forward.",
+      "startFree": "Start for free",
+      "signIn": "Sign In",
+      "features": {
+        "noAds": "No ads",
+        "laconicInterface": "Laconic interface",
+        "fastWork": "Fast work",
+        "privacyByDefault": "Privacy by default"
+      }
+    },
+    "features": {
+      "title": "Why PeaklyGo",
+      "subtitle": "We removed everything unnecessary, leaving tools that really help move towards results.",
+      "goalsUnderControl": {
+        "title": "Goals under control",
+        "description": "Create SMART goals, break them into steps and track progress without unnecessary routine."
+      },
+      "visibleProgress": {
+        "title": "Visible progress",
+        "description": "Progress feed turns the path into a story. Share and inspire others."
+      },
+      "focusOnImportant": {
+        "title": "Focus on important",
+        "description": "Minimal clicks, maximum meaning. Interface that doesn't distract."
+      },
+      "synchronization": {
+        "title": "Synchronization",
+        "description": "Mobile and desktop experience without compromises. Everything works fast."
+      },
+      "privacyByDefault": {
+        "title": "Privacy by default",
+        "description": "Publicity — at your discretion. You control access to goals."
+      },
+      "flexibility": {
+        "title": "Flexibility",
+        "description": "Suitable for personal projects, learning, sports and teamwork."
+      }
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "subtitle": "Three steps — from idea to result.",
+      "step1": {
+        "title": "Formulate goal",
+        "description": "Describe the result and deadline. Add key metrics for measurability."
+      },
+      "step2": {
+        "title": "Break into steps",
+        "description": "Create a clear plan: stages, checkpoints and progress posts."
+      },
+      "step3": {
+        "title": "Achieve and share",
+        "description": "Mark progress, get feedback and close goals."
+      }
+    },
+    "testimonials": {
+      "title": "Testimonials",
+      "subtitle": "What users say about PeaklyGo.",
+      "user1": {
+        "quote": "With PeaklyGo I really saw for the first time how I move towards goals, not just write plans.",
+        "name": "Alex",
+        "role": "Product Manager"
+      },
+      "user2": {
+        "quote": "Perfect for learning projects: progress is transparent, motivation is not lost.",
+        "name": "Maria",
+        "role": "Student"
+      },
+      "user3": {
+        "quote": "The team started achieving results faster: fewer meetings, more movement.",
+        "name": "Dmitry",
+        "role": "Team Lead"
+      }
+    },
+    "faq": {
+      "title": "FAQ",
+      "q1": {
+        "question": "Is PeaklyGo paid?",
+        "answer": "Basic functionality is free. Premium — optionally, later."
+      },
+      "q2": {
+        "question": "Can I keep private goals?",
+        "answer": "Yes. Goals are private by default. Publication is optional."
+      },
+      "q3": {
+        "question": "How to share progress?",
+        "answer": "Publish the goal and send a link. You can limit visibility."
+      }
+    },
+    "cta": {
+      "title": "Ready to start?",
+      "subtitle": "Take the first step — create a goal now. In a week you will see real progress.",
+      "createGoal": "Create goal",
+      "alreadyHaveAccount": "Already have an account"
+    },
+    "footer": {
+      "copyright": "All rights reserved."
+    }
+  },
+  "comments": {
+    "loading": "Loading comments...",
+    "noComments": "No comments yet",
+    "writeComment": "Write a comment...",
+    "unknownUser": "Unknown user"
+  },
+  "steps": {
+    "title": "Steps",
+    "completed": "Step completed!",
+    "markedIncomplete": "Step marked as incomplete",
+    "updateFailed": "Failed to update step status",
+    "enterName": "Enter step name",
+    "addFailed": "Failed to add step",
+    "completeFailed": "Failed to complete goal",
+    "updateTextFailed": "Failed to update step",
+    "add": "Add",
+    "addStep": "Add step",
+    "markIncomplete": "Mark as incomplete",
+    "markComplete": "Mark as complete",
+    "stepCompleted": "Completed",
+    "inProgress": "In progress",
+    "pending": "Pending",
+    "edit": "Edit step",
+    "completeAllFirst": "Complete all steps first!",
+    "subgoalsAndSteps": "Subgoals and Steps"
+  },
+  "blog": {
+    "title": "Progress Blog",
+    "loading": "Loading entries...",
+    "newEntry": "New entry",
+    "tellProgress": "Tell about your progress...",
+    "publish": "Publish",
+    "noEntries": "No progress blog entries yet",
+    "createFirst": "Create first entry"
+  },
+  "share": {
+    "title": "Share Goal",
+    "linkCopied": "Link copied!",
+    "copyError": "Error copying link",
+    "messagePlaceholder": "Share your thoughts about the goal...",
+    "addMessage": "Add message",
+    "shareIn": "Share in:",
+    "copyLink": "Or copy link",
+    "notifyFollowers": "Notify my followers",
+    "done": "Done",
+    "alreadyCompleted": "Already completed",
+    "completed": "completed"
+  },
+  "image": {
+    "goalPhoto": "Goal Photo",
+    "uploadPhoto": "Upload photo",
+    "dragOrDrop": "or drag and drop here",
+    "supportedFormats": "PNG, JPG, GIF up to 10MB"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "header": {
+    "register": "Register",
+    "profileMenu": "Open profile menu"
+  },
+  "rating": {
+    "title": "Rating",
+    "levels": {
+      "novice": "Novice",
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold", 
+      "platinum": "Platinum",
+      "diamond": "Diamond",
+      "master": "Master",
+      "legend": "Legend"
+    }
+  },
+  "sidebar": {
+    "achieved": "Achieved",
+    "inProgress": "In progress",
+    "tasks": "Tasks",
+    "goToProfile": "Go to profile",
+    "editProfile": "Edit profile",
+    "createGoal": "Create goal",
+    "logout": "Logout",
+    "myGoals": "My goals",
+    "archivedGoals": "Archived goals",
+    "menu": "Menu",
+    "user": "User",
+    "retry": "Try again",
+    "profileLoadingError": "Profile loading error",
+    "addGoal": "Add goal",
+    "error": {
+      "dataLoadingError": "Data loading error"
+    }
+  },
+  "rightSidebar": {
+    "title": "Statistics",
+    "thisMonth": "This month",
+    "goals": "goals",
+    "active": "Active",
+    "completed": "Completed",
+    "closedTasks": "Closed tasks",
+    "blogPosts": "Blog posts",
+    "rating": "Rating"
   }
 }
