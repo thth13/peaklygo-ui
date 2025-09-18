@@ -10,9 +10,48 @@ import { cookies } from 'next/headers';
 import { GoalActions } from '@/components/goal/GoalActions';
 import { ProgressBlogProvider } from '@/context/ProgressBlogContext';
 import { getTranslations, getLocale } from 'next-intl/server';
+import type { Metadata } from 'next';
+import { IMAGE_URL } from '@/constants';
 
 interface GoalPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+
+  try {
+    const goal = await getGoal(id);
+
+    const title = `${goal.goalName} — Goal on PeaklyGo`;
+    const description = goal.description?.trim()?.slice(0, 200) || 'View goal details and track progress on PeaklyGo.';
+
+    const imageUrl = goal.image ? (goal.image.startsWith('http') ? goal.image : `${IMAGE_URL}/${goal.image}`) : null;
+
+    return {
+      title,
+      description,
+      alternates: { canonical: `/goal/${id}` },
+      openGraph: {
+        title,
+        description,
+        url: `/goal/${id}`,
+        type: 'article',
+        images: imageUrl ? [{ url: imageUrl, alt: `${goal.goalName} image` }] : undefined,
+      },
+      twitter: {
+        title,
+        description,
+        images: imageUrl ? [imageUrl] : undefined,
+      },
+    };
+  } catch {
+    return {
+      title: 'Goal — PeaklyGo',
+      description: 'View goal details and progress on PeaklyGo.',
+      alternates: { canonical: `/goal/${id}` },
+    };
+  }
 }
 
 export default async function GoalPage({ params }: GoalPageProps) {

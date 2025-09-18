@@ -1,10 +1,12 @@
 import { cookies } from 'next/headers';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
+import { getLocale } from 'next-intl/server';
 
 import { getGoals } from '@/lib/api/goal';
 import { getProfileStats, getProfile } from '@/lib/api/profile';
-import { GOALS_PER_PAGE } from '@/constants';
+import { GOALS_PER_PAGE, IMAGE_URL } from '@/constants';
 import { RightSidebar } from '@/components/layout/RightSidebar';
 import { RightSidebarSkeleton } from '@/components/layout/RightSidebarSkeleton';
 import { LeftSidebar } from '@/components/layout/sidebar';
@@ -16,6 +18,57 @@ import { Goal, ProfileStats, PaginatedGoalsResponse, UserProfile } from '@/types
 type ProfilePageProps = {
   params: Promise<{ id: string }>;
 };
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+
+  try {
+    const profile = await getProfile(id);
+
+    const username =
+      typeof profile?.user === 'object'
+        ? profile.user.username
+        : profile?.name?.toLowerCase().replace(/\s+/g, '') || 'user';
+
+    const title = `${profile.name} — Profile on PeaklyGo`;
+    const description =
+      profile.description?.trim()?.slice(0, 200) || `See goals, progress and achievements of @${username} on PeaklyGo.`;
+
+    const avatarUrl = profile.avatar
+      ? profile.avatar.startsWith('http')
+        ? profile.avatar
+        : `${IMAGE_URL}/${profile.avatar}`
+      : null;
+
+    return {
+      title,
+      description,
+      alternates: {
+        canonical: `/profile/${id}`,
+      },
+      openGraph: {
+        title,
+        description,
+        url: `/profile/${id}`,
+        type: 'profile',
+        images: avatarUrl ? [{ url: avatarUrl, alt: `${profile.name} avatar` }] : undefined, // Используем fallback из layout
+      },
+      twitter: {
+        title,
+        description,
+        images: avatarUrl ? [avatarUrl] : undefined, // Используем fallback из layout
+      },
+    };
+  } catch {
+    return {
+      title: 'Profile — PeaklyGo',
+      description: 'Explore goals and progress on PeaklyGo.',
+      alternates: {
+        canonical: `/profile/${id}`,
+      },
+    };
+  }
+}
 
 export default async function Profile({ params }: ProfilePageProps) {
   const { id } = await params;
