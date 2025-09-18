@@ -121,10 +121,15 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
     try {
       await authUser(email, password, isLogin, username);
     } catch (error: any) {
-      const serverErrors = error.response.data;
-      const mappedErrors = mapServerErrorsToFields(serverErrors);
-
-      setErrors(mappedErrors);
+      if (error?.response?.data) {
+        const serverErrors = error.response.data as Record<string, string> | string;
+        const normalized =
+          typeof serverErrors === 'string' ? { server: serverErrors } : (serverErrors as Record<string, string>);
+        const mappedErrors = mapServerErrorsToFields(normalized);
+        setErrors(mappedErrors);
+      } else {
+        setErrors({ server: 'Network error. Please try again.' });
+      }
       setLoading(false);
     }
   };
@@ -144,7 +149,10 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                     ? 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 border-blue-600 dark:border-blue-400'
                     : 'text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 border-transparent'
                 }`}
-                onClick={() => setIsLogin(true)}
+                onClick={() => {
+                  setIsLogin(true);
+                  setErrors({});
+                }}
               >
                 {t('login')}
               </button>
@@ -154,7 +162,10 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                     ? 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 border-blue-600 dark:border-blue-400'
                     : 'text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 border-transparent'
                 }`}
-                onClick={() => setIsLogin(false)}
+                onClick={() => {
+                  setIsLogin(false);
+                  setErrors({});
+                }}
               >
                 {t('register')}
               </button>
