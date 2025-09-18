@@ -19,12 +19,13 @@ interface GoalPageProps {
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
+  const t = await getTranslations();
 
   try {
     const goal = await getGoal(id);
 
-    const title = `${goal.goalName} — Goal on PeaklyGo`;
-    const description = goal.description?.trim()?.slice(0, 200) || 'View goal details and track progress on PeaklyGo.';
+    const title = `${goal.goalName} — ${t('goals.pageTitle')} | PeaklyGo`;
+    const description = goal.description?.trim()?.slice(0, 200) || t('goals.meta.fallbackDescription');
 
     const imageUrl = goal.image ? (goal.image.startsWith('http') ? goal.image : `${IMAGE_URL}/${goal.image}`) : null;
 
@@ -47,8 +48,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     };
   } catch {
     return {
-      title: 'Goal — PeaklyGo',
-      description: 'View goal details and progress on PeaklyGo.',
+      title: `${t('goals.pageTitle')} — PeaklyGo`,
+      description: t('goals.meta.fallbackDescription'),
       alternates: { canonical: `/goal/${id}` },
     };
   }

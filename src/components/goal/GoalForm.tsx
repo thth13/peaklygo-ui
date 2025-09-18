@@ -19,9 +19,13 @@ import {
   faLightbulb,
   faCheck,
 } from '@fortawesome/free-solid-svg-icons';
-import { ImagePreviewer } from '@/components/ImagePreviewer';
-import { Steps } from '@/components/Steps';
 import { PrivacyStatus } from '@/types';
+import { ImagePreviewer } from '@/components/ImagePreviewer';
+import dynamic from 'next/dynamic';
+
+const Steps = dynamic(() => import('@/components/Steps').then((m) => m.Steps), {
+  ssr: false,
+});
 
 interface Step {
   id: string;

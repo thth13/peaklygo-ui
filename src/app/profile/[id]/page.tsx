@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 
 import { getGoals } from '@/lib/api/goal';
 import { getProfileStats, getProfile } from '@/lib/api/profile';
@@ -21,6 +22,7 @@ type ProfilePageProps = {
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
+  const t = await getTranslations();
 
   try {
     const profile = await getProfile(id);
@@ -30,9 +32,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         ? profile.user.username
         : profile?.name?.toLowerCase().replace(/\s+/g, '') || 'user';
 
-    const title = `${profile.name} — Profile on PeaklyGo`;
+    const title = `${profile.name} — ${t('profile.title')} | PeaklyGo`;
     const description =
-      profile.description?.trim()?.slice(0, 200) || `See goals, progress and achievements of @${username} on PeaklyGo.`;
+      profile.description?.trim()?.slice(0, 200) || t('profile.meta.defaultDescription', { username });
 
     const avatarUrl = profile.avatar
       ? profile.avatar.startsWith('http')
@@ -51,18 +53,18 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
         description,
         url: `/profile/${id}`,
         type: 'profile',
-        images: avatarUrl ? [{ url: avatarUrl, alt: `${profile.name} avatar` }] : undefined, // Используем fallback из layout
+        images: avatarUrl ? [{ url: avatarUrl, alt: `${profile.name} avatar` }] : undefined,
       },
       twitter: {
         title,
         description,
-        images: avatarUrl ? [avatarUrl] : undefined, // Используем fallback из layout
+        images: avatarUrl ? [avatarUrl] : undefined,
       },
     };
   } catch {
     return {
-      title: 'Profile — PeaklyGo',
-      description: 'Explore goals and progress on PeaklyGo.',
+      title: `${t('profile.title')} — PeaklyGo`,
+      description: t('profile.meta.fallbackDescription'),
       alternates: {
         canonical: `/profile/${id}`,
       },

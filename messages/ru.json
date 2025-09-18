@@ -87,6 +87,10 @@
   },
   "goals": {
     "title": "Цели",
+    "pageTitle": "Цель",
+    "meta": {
+      "fallbackDescription": "Просматривайте детали цели и прогресс на PeaklyGo."
+    },
     "create": "Создать цель",
     "createGoal": "Создать цель",
     "createNew": "Создание новой цели",
@@ -195,6 +199,10 @@
   },
   "profile": {
     "title": "Профиль",
+    "meta": {
+      "defaultDescription": "Смотрите цели, прогресс и достижения @{username} на PeaklyGo.",
+      "fallbackDescription": "Исследуйте цели и прогресс на PeaklyGo."
+    },
     "edit": "Редактировать профиль",
     "editTitle": "Редактирование профиля",
     "editDescription": "Обновите свою информацию и настройки профиля",

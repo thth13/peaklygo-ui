@@ -87,6 +87,10 @@
   },
   "goals": {
     "title": "Goals",
+    "pageTitle": "Goal",
+    "meta": {
+      "fallbackDescription": "View goal details and progress on PeaklyGo."
+    },
     "create": "Create Goal",
     "createGoal": "Create Goal",
     "createNew": "Creating new goal",
@@ -195,6 +199,10 @@
   },
   "profile": {
     "title": "Profile",
+    "meta": {
+      "defaultDescription": "See goals, progress and achievements of @{username} on PeaklyGo.",
+      "fallbackDescription": "Explore goals and progress on PeaklyGo."
+    },
     "edit": "Edit Profile",
     "editTitle": "Edit Profile",
     "editDescription": "Update your information and profile settings",
