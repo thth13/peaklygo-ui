@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '../context/AuthContext';
 import ProgressBar from './ProgressBar';
 import './globals.css';
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import { UserProfileProvider } from '@/context/UserProfileContext';
 import { Header } from '@/components/layout/Header';
 import { Suspense } from 'react';
