@@ -12,7 +12,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import { useTranslations } from 'next-intl';
 import './tiptap-editor.css';
 
-export const ProgressBlog = () => {
+export const ProgressBlog = ({ isOwner = false }: { isOwner?: boolean }) => {
   const {
     blogEntries,
     isLoading,
@@ -87,16 +87,18 @@ export const ProgressBlog = () => {
     <div className="mt-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{t('blog.title')}</h3>
-        <button
-          onClick={() => setShowNewEntryForm(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm transition-colors"
-        >
-          <FontAwesomeIcon icon={faPlus} className="w-4 h-4" />
-          <span>{t('blog.newEntry')}</span>
-        </button>
+        {isOwner && (
+          <button
+            onClick={() => setShowNewEntryForm(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm transition-colors"
+          >
+            <FontAwesomeIcon icon={faPlus} className="w-4 h-4" />
+            <span>{t('blog.newEntry')}</span>
+          </button>
+        )}
       </div>
 
-      {showNewEntryForm && (
+      {showNewEntryForm && isOwner && (
         <div className="mb-6 p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700">
           <form onSubmit={handleSubmitEntry} className="space-y-4">
             <div>
@@ -151,12 +153,14 @@ export const ProgressBlog = () => {
       {blogEntries.length === 0 && (
         <div className="text-center py-8">
           <p className="text-gray-500 dark:text-gray-400 mb-4">{t('blog.noEntries')}</p>
-          <button
-            onClick={() => setShowNewEntryForm(true)}
-            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
-          >
-            {t('blog.createFirst')}
-          </button>
+          {isOwner && (
+            <button
+              onClick={() => setShowNewEntryForm(true)}
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+            >
+              {t('blog.createFirst')}
+            </button>
+          )}
         </div>
       )}
     </div>

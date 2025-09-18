@@ -153,7 +153,7 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
           />
         )}
 
-        <ProgressBlog />
+        <ProgressBlog isOwner={currentUserId === goal.userId} />
       </div>
     </>
   );
