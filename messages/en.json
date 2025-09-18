@@ -139,6 +139,9 @@
     "writeToBlog": "Write to blog",
     "newBlogEntry": "New blog entry",
     "shareProgress": "Share your progress...",
+    "blog": {
+      "tellProgress": "Tell about your progress..."
+    },
     "status": {
       "completed": "Completed",
       "inProgress": "In progress"

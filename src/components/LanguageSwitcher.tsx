@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 
 export function LanguageSwitcher() {
   const [isPending, startTransition] = useTransition();
-  const [currentLocale, setCurrentLocale] = useState(
-    typeof window !== 'undefined'
-      ? document.cookie.replace(/(?:(?:^|.*;\s*)locale\s*=\s*([^;]*).*$)|^.*$/, '$1') || 'en'
-      : 'en',
-  );
+  const [currentLocale, setCurrentLocale] = useState('en');
+
+  useEffect(() => {
+    const localeFromCookie = document.cookie.replace(/(?:(?:^|.*;\s*)locale\s*=\s*([^;]*).*$)|^.*$/, '$1') || 'en';
+    setCurrentLocale(localeFromCookie);
+  }, []);
 
   const changeLanguage = (locale: string) => {
     startTransition(() => {

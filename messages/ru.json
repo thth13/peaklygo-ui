@@ -139,6 +139,9 @@
     "writeToBlog": "Записать в блог",
     "newBlogEntry": "Новая запись в блог",
     "shareProgress": "Поделитесь своим прогрессом...",
+    "blog": {
+      "tellProgress": "Расскажите о своем прогрессе..."
+    },
     "status": {
       "completed": "Завершена",
       "inProgress": "В процессе"

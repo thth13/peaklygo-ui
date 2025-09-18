@@ -9,7 +9,6 @@ import { EditorToolbar } from './EditorToolbar';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
-import Underline from '@tiptap/extension-underline';
 import { useTranslations } from 'next-intl';
 import './tiptap-editor.css';
 
@@ -35,7 +34,6 @@ export const ProgressBlog = () => {
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Underline,
       Placeholder.configure({
         placeholder: t('goals.blog.tellProgress'),
       }),
