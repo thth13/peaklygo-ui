@@ -5,7 +5,6 @@ import ProgressBar from './ProgressBar';
 import './globals.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { UserProfileProvider } from '@/context/UserProfileContext';
-import { ClientProviders } from './ClientProviders';
 import { Header } from '@/components/layout/Header';
 import VersionLink from '@/components/VersionLink';
 import { Suspense } from 'react';
@@ -88,15 +87,13 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <UserProfileProvider>
-              <ClientProviders>
-                <Header />
-                <Suspense fallback={null}>
-                  <ProgressBar />
-                </Suspense>
-                {children}
-                <VersionLink />
-                <Toaster position="top-right" />
-              </ClientProviders>
+              <Header />
+              <Suspense fallback={null}>
+                <ProgressBar />
+              </Suspense>
+              {children}
+              <VersionLink />
+              <Toaster position="top-right" />
             </UserProfileProvider>
           </AuthProvider>
         </NextIntlClientProvider>
