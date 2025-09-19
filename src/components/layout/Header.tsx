@@ -27,7 +27,12 @@ export const Header = () => {
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center">
             <LinkWithProgress href="/">
-              <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400 cursor-pointer">PeaklyGo</h1>
+              <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400 cursor-pointer flex items-baseline gap-2">
+                <span>PeaklyGo</span>
+                <span className="text-[0.55rem] leading-none px-1 py-0.5 rounded bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 font-semibold tracking-wide">
+                  beta
+                </span>
+              </h1>
             </LinkWithProgress>
           </div>
           <div className="flex items-center space-x-4">

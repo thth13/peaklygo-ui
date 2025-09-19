@@ -1,7 +1,7 @@
 import AuthForm from '@/components/AuthForm';
-import dynamic from 'next/dynamic';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+import PageEvent from '@/components/analytics/PageEvent';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('authMeta');
@@ -10,8 +10,6 @@ export async function generateMetadata(): Promise<Metadata> {
     description: t('loginDescription'),
   };
 }
-
-const PageEvent = dynamic(() => import('@/components/analytics/PageEvent'), { ssr: false });
 
 export default function LoginPage() {
   return (

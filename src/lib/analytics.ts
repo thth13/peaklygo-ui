@@ -6,8 +6,8 @@ export interface GAEventParams {
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
-    // keep dataLayer compatible with any existing declaration
-    dataLayer?: Object[]; // GA pushes plain objects
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
+    dataLayer?: Object[]; // GA pushes plain objects; upstream may declare
   }
 }
 

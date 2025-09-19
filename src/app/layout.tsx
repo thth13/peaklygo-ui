@@ -7,6 +7,7 @@ import './globals.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { UserProfileProvider } from '@/context/UserProfileContext';
 import { Header } from '@/components/layout/Header';
+import VersionLink from '@/components/VersionLink';
 import { Suspense } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getLocale, getTranslations } from 'next-intl/server';
@@ -76,6 +77,7 @@ export default async function RootLayout({
                 <ProgressBar />
               </Suspense>
               {children}
+              <VersionLink />
               <Toaster position="top-right" />
             </UserProfileProvider>
           </AuthProvider>
