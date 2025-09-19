@@ -510,4 +510,11 @@
       "self improvement app"
     ]
   }
+  ,
+  "authMeta": {
+    "loginTitle": "Sign In — PeaklyGo",
+    "loginDescription": "Sign in to PeaklyGo to track your goals and progress.",
+    "registerTitle": "Create Account — PeaklyGo",
+    "registerDescription": "Create a PeaklyGo account and start achieving goals consciously."
+  }
 }

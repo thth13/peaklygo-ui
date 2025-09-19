@@ -510,4 +510,11 @@
       "приложение саморазвития"
     ]
   }
+  ,
+  "authMeta": {
+    "loginTitle": "Войти — PeaklyGo",
+    "loginDescription": "Войдите в PeaklyGo, чтобы отслеживать свои цели и прогресс.",
+    "registerTitle": "Регистрация — PeaklyGo",
+    "registerDescription": "Создайте аккаунт PeaklyGo и начните осознанно достигать целей."
+  }
 }

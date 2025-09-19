@@ -510,4 +510,11 @@
       "आत्म सुधार ऐप"
     ]
   }
+  ,
+  "authMeta": {
+    "loginTitle": "लॉग इन — PeaklyGo",
+    "loginDescription": "अपने लक्ष्यों और प्रगति को ट्रैक करने के लिए PeaklyGo पर लॉग इन करें।",
+    "registerTitle": "अकाउंट बनाएँ — PeaklyGo",
+    "registerDescription": "PeaklyGo अकाउंट बनाएँ और लक्ष्यों को सचेत रूप से प्राप्त करना शुरू करें।"
+  }
 }

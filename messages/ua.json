@@ -510,4 +510,11 @@
       "додаток саморозвитку"
     ]
   }
+  ,
+  "authMeta": {
+    "loginTitle": "Увійти — PeaklyGo",
+    "loginDescription": "Увійдіть до PeaklyGo, щоб відстежувати свої цілі та прогрес.",
+    "registerTitle": "Реєстрація — PeaklyGo",
+    "registerDescription": "Створіть акаунт PeaklyGo і почніть усвідомлено досягати цілей."
+  }
 }

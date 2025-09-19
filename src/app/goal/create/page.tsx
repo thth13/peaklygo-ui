@@ -1,6 +1,8 @@
 'use client';
 
 import React from 'react';
+import dynamic from 'next/dynamic';
+const PageEvent = dynamic(() => import('@/components/analytics/PageEvent'), { ssr: false });
 import { GoalForm, GoalFormData } from '@/components/goal/GoalForm';
 import { createGoal } from '@/lib/api/goal';
 import { useUserProfile } from '@/context/UserProfileContext';
@@ -45,6 +47,7 @@ const GoalCreationPage: React.FC = () => {
 
   return (
     <main className="max-w-7xl mx-auto mt-6 px-4 flex">
+      <PageEvent name="goal_create_page_open" params={{ location: 'goal/create' }} />
       <GoalForm mode="create" onSubmit={handleSubmit} />
     </main>
   );

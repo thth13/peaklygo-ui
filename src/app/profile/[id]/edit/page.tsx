@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+const PageEvent = dynamic(() => import('@/components/analytics/PageEvent'), { ssr: false });
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useUserProfile } from '@/context/UserProfileContext';
@@ -113,6 +115,7 @@ const ProfileEditPage: React.FC = () => {
 
   return (
     <main className="max-w-4xl mx-auto mt-6 px-4">
+      <PageEvent name="profile_edit_page_open" params={{ location: 'profile/edit', profileId }} />
       <div className="mb-8">
         <button
           onClick={() => router.back()}

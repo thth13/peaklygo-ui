@@ -1,5 +1,6 @@
 'use client';
 import { useState, useContext, ChangeEvent, FormEvent } from 'react';
+import { trackEvent } from '@/lib/analytics';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useTranslations } from 'next-intl';
 import { AuthContext } from '@/context/AuthContext';
@@ -120,6 +121,11 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
 
     try {
       await authUser(email, password, isLogin, username);
+      if (!isLogin) {
+        trackEvent('register_success', { method: 'credentials' });
+      } else {
+        trackEvent('login_success', { method: 'credentials' });
+      }
     } catch (error: any) {
       if (error?.response?.data) {
         const serverErrors = error.response.data as Record<string, string> | string;
