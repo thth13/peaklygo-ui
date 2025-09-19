@@ -1,7 +1,6 @@
 import { getRequestConfig } from 'next-intl/server';
 import { cookies, headers } from 'next/headers';
-
-const locales = ['en', 'ua', 'ru'] as const;
+import { LOCALES, Locale } from '../constants';
 
 // Function to get user's device locale from Accept-Language header
 const getDeviceLocaleFromHeaders = (acceptLanguage: string | null): string => {
@@ -11,7 +10,7 @@ const getDeviceLocaleFromHeaders = (acceptLanguage: string | null): string => {
   const languages = acceptLanguage
     .split(',')
     .map((lang) => lang.split(';')[0].split('-')[0].trim().toLowerCase())
-    .filter((lang) => locales.includes(lang as any));
+    .filter((lang) => LOCALES.includes(lang as Locale));
 
   return languages[0] || 'en';
 };
@@ -27,7 +26,7 @@ export default getRequestConfig(async () => {
     getDeviceLocaleFromHeaders(headersList.get('accept-language'));
 
   // Validate locale
-  if (!locales.includes(locale as any)) {
+  if (!LOCALES.includes(locale as Locale)) {
     locale = 'en';
   }
 

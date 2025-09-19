@@ -1,6 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-
-const locales = ['en', 'ua', 'ru'] as const;
+import { LOCALES, Locale } from './constants';
 
 // Function to get user's device locale from Accept-Language header
 const getDeviceLocaleFromHeaders = (acceptLanguage: string | null): string => {
@@ -10,7 +9,7 @@ const getDeviceLocaleFromHeaders = (acceptLanguage: string | null): string => {
   const languages = acceptLanguage
     .split(',')
     .map((lang) => lang.split(';')[0].split('-')[0].trim().toLowerCase())
-    .filter((lang) => locales.includes(lang as any));
+    .filter((lang) => LOCALES.includes(lang as Locale));
 
   return languages[0] || 'en';
 };

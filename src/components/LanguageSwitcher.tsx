@@ -23,6 +23,7 @@ export function LanguageSwitcher() {
     { code: 'en', label: 'English' },
     { code: 'ru', label: 'Русский' },
     { code: 'ua', label: 'Українська' },
+    { code: 'hi', label: 'हिंदी' },
   ];
 
   return (

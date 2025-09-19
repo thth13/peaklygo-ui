@@ -2,7 +2,8 @@ export { default as Link } from 'next/link';
 export { redirect } from 'next/navigation';
 export { usePathname, useRouter } from 'next/navigation';
 
-export const locales = ['en', 'ua', 'ru'] as const;
+import { LOCALES } from '../constants';
+export const locales = LOCALES;
 
 // Function to get user's device locale
 export const getDeviceLocale = (): string => {
