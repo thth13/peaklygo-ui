@@ -1,16 +1,17 @@
 import type { Metadata } from 'next';
-import { GoogleAnalytics } from '@next/third-parties/google';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '../context/AuthContext';
 import ProgressBar from './ProgressBar';
 import './globals.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { UserProfileProvider } from '@/context/UserProfileContext';
+import { ClientProviders } from './ClientProviders';
 import { Header } from '@/components/layout/Header';
 import VersionLink from '@/components/VersionLink';
 import { Suspense } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getLocale, getTranslations } from 'next-intl/server';
+import Script from 'next/script';
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -67,18 +68,35 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
+      <head>
+        {/* Google tag (gtag.js) */}
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-2T8QM142RE" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-2T8QM142RE');
+            gtag('config', 'AW-11075064387');
+            gtag('event', 'conversion', {
+              'send_to': 'AW-11075064387/OpNVCNuN-IgYEMOkgKEp'
+            });
+          `}
+        </Script>
+      </head>
       <body className="bg-gray-50 dark:bg-gray-900 font-sans transition-colors">
-        <GoogleAnalytics gaId="G-2T8QM142RE" />
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <UserProfileProvider>
-              <Header />
-              <Suspense fallback={null}>
-                <ProgressBar />
-              </Suspense>
-              {children}
-              <VersionLink />
-              <Toaster position="top-right" />
+              <ClientProviders>
+                <Header />
+                <Suspense fallback={null}>
+                  <ProgressBar />
+                </Suspense>
+                {children}
+                <VersionLink />
+                <Toaster position="top-right" />
+              </ClientProviders>
             </UserProfileProvider>
           </AuthProvider>
         </NextIntlClientProvider>
