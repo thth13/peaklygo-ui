@@ -12,6 +12,7 @@ import DOMPurify from 'dompurify';
 import './progress-blog-entry.css';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { IMAGE_URL } from '@/constants';
 
 interface ProgressBlogActions {
   onToggleLike: (entryId: string) => void;
@@ -123,25 +124,32 @@ export const ProgressBlogEntry = ({
                 {entryComments.map((comment) => (
                   <div key={comment._id} className="flex space-x-3">
                     <div className="flex-shrink-0">
-                      {comment.profile?.avatar ? (
-                        <Image
-                          src={comment.profile.avatar}
-                          alt={comment.profile.name}
-                          className="w-8 h-8 rounded-full"
-                        />
-                      ) : (
-                        <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
-                          <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
-                            {comment.profile?.name?.charAt(0).toUpperCase() || 'U'}
-                          </span>
-                        </div>
-                      )}
+                      <Link href={`/profile/${comment.profile.user}`}>
+                        {comment.profile?.avatar ? (
+                          <Image
+                            src={`${IMAGE_URL}/${comment.profile.avatar}`}
+                            alt={comment.profile.name}
+                            width={32}
+                            height={32}
+                            className="w-8 h-8 rounded-full hover:opacity-80 transition-opacity"
+                          />
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center hover:opacity-80 transition-opacity">
+                            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                              {comment.profile?.name?.charAt(0).toUpperCase() || 'U'}
+                            </span>
+                          </div>
+                        )}
+                      </Link>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
-                        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        <Link
+                          href={`/profile/${comment.profile.user}`}
+                          className="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        >
                           {comment.profile?.name || t('comments.unknownUser')}
-                        </span>
+                        </Link>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
                           {formatTimeAgo(comment.createdAt, tTimeAgo)}
                         </span>

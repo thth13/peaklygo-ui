@@ -127,6 +127,7 @@ export interface Comment {
     _id: string;
     name: string;
     avatar?: string;
+    user: string;
   };
 }
 
