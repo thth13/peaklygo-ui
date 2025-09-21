@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import { googleLoginUser, loginUser, registerUser } from '../lib/api';
 import { api } from '../lib/clientAxios';
 import { CodeResponse } from '@react-oauth/google';
+import { trackEvent } from '@/lib/analytics';
 
 interface AuthContextType {
   userId: string;
@@ -37,6 +38,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const googleLogin = async (codeResponse: CodeResponse) => {
     try {
       const data = await googleLoginUser(codeResponse);
+      trackEvent('register_success', { method: 'credentials' });
       signIn(data);
     } catch (err) {
       throw err;
