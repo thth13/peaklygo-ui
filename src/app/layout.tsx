@@ -6,7 +6,6 @@ import './globals.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { UserProfileProvider } from '@/context/UserProfileContext';
 import { Header } from '@/components/layout/Header';
-import VersionLink from '@/components/VersionLink';
 import { CongratulationsModalClient } from '@/components/CongratulationsModalClient';
 import { OnboardingProvider } from '@/context/OnboardingContext';
 import { Suspense } from 'react';
