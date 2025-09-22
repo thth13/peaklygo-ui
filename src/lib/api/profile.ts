@@ -40,3 +40,13 @@ export const getProfileStats = async (id: string, apiInstance?: AxiosInstance): 
     throw err;
   }
 };
+
+export const markTutorialCompleted = async (): Promise<boolean> => {
+  try {
+    await api.post(`${API_URL}/user/tutorial-completed`);
+
+    return true;
+  } catch (err: any) {
+    throw err;
+  }
+};

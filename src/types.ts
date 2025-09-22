@@ -7,17 +7,23 @@ export interface ImageLinks {
   extraLarge?: string;
 }
 
+interface User {
+  _id: string;
+  username: string;
+  isPro: boolean;
+  tutorialCompleted: boolean;
+}
+
 export interface UserProfile {
   _id: string;
   name: string;
   avatar: string;
   description: string;
   views: number;
-  user: { username: string; _id: string };
+  user: User;
   following: string[];
   followers: string[];
   rating: number;
-  isPro?: boolean;
 }
 
 export enum PrivacyStatus {

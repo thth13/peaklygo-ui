@@ -169,7 +169,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 font-sans min-h-screen transition-colors">
-      <main className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <main className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8" data-tour="goal-form">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors">
           <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-6">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
@@ -474,6 +474,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                     </button>
                   )}
                   <button
+                    data-tour="save-goal"
                     type="submit"
                     disabled={isSubmitting}
                     className="bg-blue-600 dark:bg-blue-500 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"

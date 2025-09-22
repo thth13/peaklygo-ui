@@ -1,4 +1,10 @@
 {
+  "congratulations": {
+    "title": "You took the first step toward a new version of yourself!",
+    "description": "Registration is just the beginning. Now it's the perfect time to set your first goal and watch a dream turn into a plan. 🚀",
+    "createFirstGoal": "Start",
+    "startTutorial": "Take quick tutorial"
+  },
   "timeAgo": {
     "today": "today",
     "yesterday": "yesterday",
@@ -27,6 +33,8 @@
     "previous": "Previous",
     "submit": "Submit",
     "close": "Close",
+    "skip": "Skip",
+    "finish": "Finish",
     "confirm": "Confirm",
     "yes": "Yes",
     "no": "No",
@@ -516,5 +524,11 @@
     "loginDescription": "Sign in to PeaklyGo to track your goals and progress.",
     "registerTitle": "Create Account — PeaklyGo",
     "registerDescription": "Create a PeaklyGo account and start achieving goals consciously."
+  },
+  "onboarding": {
+    "createGoalStep": "Create your first goal: click this button",
+    "goalFormStep": "Fill out the goal form",
+    "saveGoalStep": "Save the goal by clicking this button",
+    "saveTitle": "Save goal"
   }
 }

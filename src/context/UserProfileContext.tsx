@@ -10,6 +10,7 @@ interface UserProfileContextType {
   isLoading: boolean;
   error: string | null;
   refetchProfile: () => Promise<void>;
+  setTutorialCompleted: () => void;
 }
 
 export const UserProfileContext = createContext<UserProfileContextType>({
@@ -17,6 +18,7 @@ export const UserProfileContext = createContext<UserProfileContextType>({
   isLoading: true,
   error: null,
   refetchProfile: async () => {},
+  setTutorialCompleted: () => {},
 });
 
 export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -65,6 +67,9 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
         isLoading,
         error,
         refetchProfile,
+        setTutorialCompleted: () => {
+          setProfile((prev) => (prev ? { ...prev, user: { ...prev.user, tutorialCompleted: true } } : prev));
+        },
       }}
     >
       {children}
