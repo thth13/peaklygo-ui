@@ -1,6 +1,6 @@
 import { IMAGE_URL } from '@/constants';
 import { UserProfile } from '@/types';
-import { faPenToSquare, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faUser, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTranslations } from 'next-intl';
 import LinkWithProgress from '../../Link';
@@ -33,7 +33,14 @@ export function ProfileHeader({ profile, isMyProfile, userId }: ProfileHeaderPro
         )}
       </div>
       <div>
-        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">{profile?.name || t('user')}</h2>
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+          {profile?.name || t('user')}
+          {profile?.isPro && (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-400 text-white shadow-sm uppercase tracking-wide">
+              <FontAwesomeIcon icon={faStar} className="h-3 w-3" /> PRO
+            </span>
+          )}
+        </h2>
         <p className="text-gray-500 dark:text-gray-400">
           @
           {typeof profile?.user === 'object'

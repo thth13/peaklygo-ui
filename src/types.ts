@@ -17,6 +17,7 @@ export interface UserProfile {
   following: string[];
   followers: string[];
   rating: number;
+  isPro?: boolean;
 }
 
 export enum PrivacyStatus {
