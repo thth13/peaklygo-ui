@@ -95,7 +95,7 @@ export default async function RootLayout({
                   <ProgressBar />
                 </Suspense>
                 {children}
-                <VersionLink />
+                {/* <VersionLink /> */}
                 <Toaster position="top-right" />
                 <CongratulationsModalClient />
               </OnboardingProvider>

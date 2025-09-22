@@ -4,6 +4,7 @@ import pkg from '../../package.json';
 export default function VersionLink() {
   const version = pkg.version;
   if (!version) return null;
+
   return (
     <div className="fixed bottom-2 right-2 z-[60] pointer-events-none select-none">
       <Link
