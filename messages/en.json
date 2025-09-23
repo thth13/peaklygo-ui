@@ -479,7 +479,8 @@
     "addGoal": "Add goal",
     "error": {
       "dataLoadingError": "Data loading error"
-    }
+    },
+  "pricing": "PeaklyGo Pro"
   },
   "rightSidebar": {
     "title": "Statistics",
@@ -530,5 +531,109 @@
     "goalFormStep": "Fill out the goal form",
     "saveGoalStep": "Save the goal by clicking this button",
     "saveTitle": "Save goal"
+  },
+  "pricing": {
+    "metaTitle": "Pricing — PeaklyGo Pro",
+    "metaDescription": "Compare PeaklyGo plans: Free, Pro Monthly and Annual. Choose the best way to achieve your goals faster.",
+    "hero": {
+      "badge": "Save 20% annual",
+      "title": "PeaklyGo Pro",
+      "subtitle": "Reach goals faster with advanced features"
+    },
+    "plans": {
+      "basic": {
+        "name": "Basic",
+        "price": "Free",
+        "period": "Forever",
+        "current": "Current plan"
+      },
+      "monthly": {
+        "name": "Monthly",
+        "price": "$5",
+        "period": "per month",
+        "popular": "Most popular",
+        "cta": "Choose Monthly"
+      },
+      "annual": {
+        "name": "Annual",
+        "price": "$50",
+        "period": "per year",
+        "note": "~$4 / month",
+        "cta": "Choose Annual"
+      }
+    },
+    "features": {
+      "upTo5Goals": "Up to 5 goals",
+      "unlimitedGoals": "Unlimited goals",
+      "basicAnalytics": "Basic analytics",
+      "advancedAnalytics": "Advanced analytics",
+      "joinChallenges": "Participate in challenges",
+      "createChallenges": "Create challenges",
+      "prioritySupport": "Priority support",
+      "dataExport": "Data export"
+    },
+    "comparison": {
+      "title": "Feature comparison",
+      "feature": "Feature",
+      "basic": "Basic",
+      "monthly": "Monthly",
+      "annual": "Annual",
+      "rows": {
+        "goals": "Number of goals",
+        "analytics": "Detailed analytics",
+        "challenges": "Create challenges",
+        "support": "Priority support",
+        "export": "Data export"
+      }
+    },
+    "testimonials": {
+      "title": "Why upgrade",
+      "t1": {
+        "name": "Maria",
+        "quote": "Pro helped me structure 15 goals in 3 months. Analytics shows progress very clearly."
+      },
+      "t2": {
+        "name": "Alex",
+        "quote": "Annual plan motivates to stay consistent — I see long‑term trend, not just weekly spikes."
+      }
+    },
+    "disclaimer": "Prices in USD. Taxes may apply depending on your region.",
+    "auth": {
+      "register": "Start free",
+      "login": "Sign in"
+    },
+    "earlyBird": {
+      "label": "First 100 users free"
+    },
+    "modal": {
+      "proActivatedTitle": "Pro Activated!",
+      "annualActivatedTitle": "Annual Plan Activated!",
+      "description": "You now have access to all advanced features",
+      "congrats": "Congratulations!",
+      "close": "Got it"
+    },
+    "proBenefits": {
+      "unlimitedGoals": "Unlimited goals without restrictions",
+      "proBadge": "PRO badge in profile",
+      "prioritySupport": "Priority support",
+      "advancedStats": "Advanced statistics",
+      "aiAssistant": "AI assistant",
+      "groupChallenges": "Create group goals and challenges",
+      "futureLabel": "coming soon"
+    },
+    "premiumStatus": {
+      "title": "You are Pro!",
+      "subtitle": "Your premium subscription is active.",
+      "badge": "ACTIVE PRO",
+      "currentPlan": "Current plan:",
+      "monthly": "Monthly",
+      "annual": "Annual",
+      "expires": "Expires {date}",
+      "manage": "Manage subscription",
+      "yourBenefits": "Your benefits",
+      "timeLeftDays": "{count} days left",
+      "timeLeftHours": "{count} hours left",
+      "expiresLabel": "Premium expires: {date}"
+    }
   }
 }

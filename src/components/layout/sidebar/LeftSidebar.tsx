@@ -10,7 +10,7 @@ import { LeftSidebarContent } from './LeftSidebarContent';
 import { LeftSidebarSkeleton } from './LeftSidebarSkeleton';
 import { LeftSidebarError } from './LeftSidebarError';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBullseye, faArchive } from '@fortawesome/free-solid-svg-icons';
+import { faBullseye, faArchive, faCrown } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'next-intl';
 import LinkWithProgress from '@/components/Link';
 
@@ -31,14 +31,11 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
   const actualUserId = userId || myUserId;
   const isMyProfile = !!myUserId && myUserId === actualUserId;
 
-  const isActivePage = (path: string) => {
-    if (path === `/profile/${myUserId}` && pathname === `/profile/${myUserId}`) {
-      return true;
-    }
-    if (path === `/profile/${myUserId}/archive` && pathname === `/profile/${myUserId}/archive`) {
-      return true;
-    }
-    return false;
+  const isActivePage = (target: string, opts: { exact?: boolean } = {}) => {
+    if (!pathname || !target) return false;
+    const { exact = false } = opts;
+    if (exact) return pathname === target; // strict
+    return pathname === target || pathname.startsWith(target + '/');
   };
 
   useEffect(() => {
@@ -108,7 +105,7 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
                   <LinkWithProgress
                     href={`/profile/${myUserId}`}
                     className={`flex items-center py-2 px-3 rounded-md font-medium cursor-pointer text-sm transition-colors ${
-                      isActivePage(`/profile/${myUserId}`)
+                      isActivePage(`/profile/${myUserId}`, { exact: true })
                         ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 hover:bg-primary-100 dark:hover:bg-primary-800'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                     }`}
@@ -128,6 +125,19 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
                   >
                     <FontAwesomeIcon icon={faArchive} className="w-4 mr-3 text-base" />
                     <span>{t('archivedGoals')}</span>
+                  </LinkWithProgress>
+                </li>
+                <li>
+                  <LinkWithProgress
+                    href="/pricing"
+                    className={`flex items-center py-2 px-3 rounded-md font-medium cursor-pointer text-sm transition-colors ${
+                      isActivePage(`/pricing`, { exact: true })
+                        ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 hover:bg-primary-100 dark:hover:bg-primary-800'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={faCrown} className="w-4 mr-3 text-base" />
+                    <span>{t('pricing')}</span>
                   </LinkWithProgress>
                 </li>
               </>

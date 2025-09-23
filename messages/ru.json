@@ -479,7 +479,8 @@
     "addGoal": "Добавить цель",
     "error": {
       "dataLoadingError": "Ошибка загрузки данных"
-    }
+    },
+  "pricing": "PeaklyGo Pro"
   },
   "rightSidebar": {
     "title": "Статистика",
@@ -530,5 +531,109 @@
     "goalFormStep": "Заполните форму цели",
     "saveGoalStep": "Сохраните цель, нажав эту кнопку",
     "saveTitle": "Сохранение цели"
+  },
+  "pricing": {
+    "metaTitle": "Тарифы — PeaklyGo Pro",
+    "metaDescription": "Сравните тарифы PeaklyGo: Бесплатный, Pro и Годовой. Выберите лучший способ достигать цели быстрее.",
+    "hero": {
+      "badge": "Экономия 20% годовой",
+      "title": "PeaklyGo Pro",
+      "subtitle": "Достигайте целей быстрее с расширенными возможностями"
+    },
+    "plans": {
+      "basic": {
+        "name": "Базовый",
+        "price": "Бесплатно",
+        "period": "Навсегда",
+        "current": "Текущий тариф"
+      },
+      "monthly": {
+        "name": "Месячный",
+        "price": "$5",
+        "period": "в месяц",
+        "popular": "Популярно",
+        "cta": "Выбрать месячный"
+      },
+      "annual": {
+        "name": "Годовой",
+        "price": "$50",
+        "period": "в год",
+        "note": "~$5 / месяц",
+        "cta": "Выбрать Годовой"
+      }
+    },
+    "features": {
+      "upTo5Goals": "До 5 целей",
+      "unlimitedGoals": "Неограниченно целей",
+      "basicAnalytics": "Базовая аналитика",
+      "advancedAnalytics": "Расширенная аналитика",
+      "joinChallenges": "Участие в челленджах",
+      "createChallenges": "Создание челленджей",
+      "prioritySupport": "Приоритетная поддержка",
+      "dataExport": "Экспорт данных"
+    },
+    "comparison": {
+      "title": "Сравнение возможностей",
+      "feature": "Функция",
+      "basic": "Базовый",
+      "monthly": "Месячный",
+      "annual": "Годовой",
+      "rows": {
+        "goals": "Количество целей",
+        "analytics": "Детальная аналитика",
+        "challenges": "Создание челленджей",
+        "support": "Приоритетная поддержка",
+        "export": "Экспорт данных"
+      }
+    },
+    "testimonials": {
+      "title": "Почему переходят",
+      "t1": {
+        "name": "Мария",
+        "quote": "Pro помог структурировать 15 целей за 3 месяца. Аналитика показывает прогресс очень наглядно."
+      },
+      "t2": {
+        "name": "Алексей",
+        "quote": "Годовой тариф мотивирует держать стабильность — вижу долгосрочный тренд, а не только недельные всплески."
+      }
+    },
+    "disclaimer": "Цены в долларах США. Налоги могут применяться в зависимости от региона.",
+    "auth": {
+      "register": "Начать бесплатно",
+      "login": "Войти"
+    },
+    "earlyBird": {
+      "label": "Первые 100 пользователей бесплатно"
+    },
+    "modal": {
+      "proActivatedTitle": "Pro активирован!",
+      "annualActivatedTitle": "Годовой тариф активирован!",
+      "description": "Теперь у вас доступ ко всем расширенным функциям",
+      "congrats": "Поздравляем!",
+      "close": "Понятно"
+    },
+    "proBenefits": {
+      "unlimitedGoals": "Безлимитное количество целей без ограничений",
+      "proBadge": "PRO-бейдж в профиле",
+      "prioritySupport": "Приоритетная поддержка",
+      "advancedStats": "Продвинутая статистика",
+      "aiAssistant": "AI-ассистент",
+      "groupChallenges": "Создание групповых целей и челленджей",
+      "futureLabel": "скоро"
+    },
+    "premiumStatus": {
+      "title": "У тебя Pro!",
+      "subtitle": "Твоя подписка активна.",
+      "badge": "ACTIVE PRO",
+      "currentPlan": "Текущий план:",
+      "monthly": "Месячный",
+      "annual": "Годовой",
+      "expires": "Истекает {date}",
+      "manage": "Управлять подпиской",
+      "yourBenefits": "Твои преимущества",
+      "timeLeftDays": "Осталось {count} дн.",
+      "timeLeftHours": "Осталось {count} ч.",
+      "expiresLabel": "Премиум истекает: {date}"
+    }
   }
 }

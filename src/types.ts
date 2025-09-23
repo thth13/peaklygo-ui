@@ -7,11 +7,17 @@ export interface ImageLinks {
   extraLarge?: string;
 }
 
+export type PremiumType = 'monthly' | 'year';
+
+export type PlanType = 'monthly' | 'annual';
+
 interface User {
   _id: string;
   username: string;
   isPro: boolean;
   tutorialCompleted: boolean;
+  proExpires?: string;
+  proType?: 'monthly' | 'year';
 }
 
 export interface UserProfile {

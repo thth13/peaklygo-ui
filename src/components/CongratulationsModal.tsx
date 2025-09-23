@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { useUserProfile } from '@/context/UserProfileContext';
+import { generateConfettiPieces, confettiStyles } from '@/lib/confetti';
 
 interface CongratulationsModalProps {
   isOpen: boolean;
@@ -20,16 +21,7 @@ export const CongratulationsModal = ({ isOpen, onClose }: CongratulationsModalPr
   }, []);
 
   const confettiPieces = useMemo(() => {
-    return Array.from({ length: 40 }).map((_, i) => {
-      const size = Math.random() * 6 + 6; // 6-12px
-      const left = Math.random() * 100; // vw percent
-      const delay = Math.random() * 2; // 0-2s
-      const duration = 4 + Math.random() * 3; // 4-7s
-      const hue = Math.floor(Math.random() * 360);
-      const rotate = Math.random() * 360;
-      const shape = Math.random();
-      return { id: i, size, left, delay, duration, hue, rotate, shape };
-    });
+    return generateConfettiPieces({ count: 40 });
   }, [prefersReducedMotion]);
 
   const handleStartAndClose = useCallback(() => {
@@ -121,13 +113,7 @@ export const CongratulationsModal = ({ isOpen, onClose }: CongratulationsModalPr
       </div>
 
       {/* Keyframes (scoped) */}
-      <style>{`
-        @keyframes confetti-fall {
-          0% { transform: translate3d(0, -10%, 0) rotate(0deg); opacity: 0; }
-          10% { opacity: 1; }
-          100% { transform: translate3d(0, 110vh, 0) rotate(720deg); opacity: 0; }
-        }
-      `}</style>
+      <style>{confettiStyles}</style>
     </div>
   );
 };
