@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { getProfile, getProfileStats } from '@/lib/api/profile';
@@ -9,7 +10,7 @@ import { LeftSidebarContent } from './LeftSidebarContent';
 import { LeftSidebarSkeleton } from './LeftSidebarSkeleton';
 import { LeftSidebarError } from './LeftSidebarError';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBullseye, faArchive } from '@fortawesome/free-solid-svg-icons';
+import { faBullseye, faArchive, faCrown } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'next-intl';
 import LinkWithProgress from '@/components/Link';
 
@@ -26,10 +27,18 @@ const OverlaySidebar = ({ userId, onClose }: OverlaySidebarProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
+  const pathname = usePathname();
 
   const myUserId = Cookies.get('userId');
   const actualUserId = userId || myUserId;
   const isMyProfile = !!myUserId && myUserId === actualUserId;
+
+  const isActivePage = (target: string, opts: { exact?: boolean } = {}) => {
+    if (!pathname || !target) return false;
+    const { exact = false } = opts;
+    if (exact) return pathname === target; // strict
+    return pathname === target || pathname.startsWith(target + '/');
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -118,24 +127,68 @@ const OverlaySidebar = ({ userId, onClose }: OverlaySidebarProps) => {
         <div id="navigation-menu" className="transition-colors">
           <nav>
             <ul className="space-y-1">
-              <li>
-                <LinkWithProgress
-                  href={`/profile/${actualUserId || myUserId || ''}`}
-                  className="flex items-center py-2 px-3 rounded-md text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 font-medium cursor-pointer text-sm transition-colors hover:bg-primary-100 dark:hover:bg-primary-800"
-                >
-                  <FontAwesomeIcon icon={faBullseye} className="w-4 mr-3 text-base" />
-                  <span>{t('myGoals')}</span>
-                </LinkWithProgress>
-              </li>
-              <li>
-                <LinkWithProgress
-                  href={`/profile/${actualUserId || myUserId || ''}/archive`}
-                  className="flex items-center py-2 px-3 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium cursor-pointer text-sm transition-colors"
-                >
-                  <FontAwesomeIcon icon={faArchive} className="w-4 mr-3 text-base" />
-                  <span>{t('archivedGoals')}</span>
-                </LinkWithProgress>
-              </li>
+              {myUserId ? (
+                <>
+                  <li>
+                    <LinkWithProgress
+                      href={`/profile/${myUserId}`}
+                      onClick={startClose}
+                      className={`flex items-center py-2 px-3 rounded-md font-medium cursor-pointer text-sm transition-colors ${
+                        isActivePage(`/profile/${myUserId}`, { exact: true })
+                          ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 hover:bg-primary-100 dark:hover:bg-primary-800'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                      }`}
+                    >
+                      <FontAwesomeIcon icon={faBullseye} className="w-4 mr-3 text-base" />
+                      <span>{t('myGoals')}</span>
+                    </LinkWithProgress>
+                  </li>
+                  <li>
+                    <LinkWithProgress
+                      href={`/profile/${myUserId}/archive`}
+                      onClick={startClose}
+                      className={`flex items-center py-2 px-3 rounded-md font-medium cursor-pointer text-sm transition-colors ${
+                        isActivePage(`/profile/${myUserId}/archive`)
+                          ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 hover:bg-primary-100 dark:hover:bg-primary-800'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                      }`}
+                    >
+                      <FontAwesomeIcon icon={faArchive} className="w-4 mr-3 text-base" />
+                      <span>{t('archivedGoals')}</span>
+                    </LinkWithProgress>
+                  </li>
+                  <li>
+                    <LinkWithProgress
+                      href="/pricing"
+                      onClick={startClose}
+                      className={`flex items-center py-2 px-3 rounded-md font-medium cursor-pointer text-sm transition-colors ${
+                        isActivePage(`/pricing`, { exact: true })
+                          ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 hover:bg-primary-100 dark:hover:bg-primary-800'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                      }`}
+                    >
+                      <FontAwesomeIcon icon={faCrown} className="w-4 mr-3 text-base" />
+                      <span>{t('pricing')}</span>
+                    </LinkWithProgress>
+                  </li>
+                </>
+              ) : (
+                // Показываем скелетон навигации пока userId загружается
+                <>
+                  <li>
+                    <div className="flex items-center py-2 px-3 rounded-md animate-pulse">
+                      <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded mr-3"></div>
+                      <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-20"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="flex items-center py-2 px-3 rounded-md animate-pulse">
+                      <div className="w-4 h-4 bg-gray-300 dark:bg-gray-600 rounded mr-3"></div>
+                      <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-24"></div>
+                    </div>
+                  </li>
+                </>
+              )}
             </ul>
           </nav>
         </div>

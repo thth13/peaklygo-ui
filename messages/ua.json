@@ -475,10 +475,11 @@
     "menu": "Меню",
     "user": "Користувач",
     "retry": "Спробувати знову",
-    "profileLoadingError": "Помилка завантаження профілю",
     "addGoal": "Додати ціль",
     "error": {
-      "dataLoadingError": "Помилка завантаження даних"
+      "dataLoadingError": "Помилка завантаження даних",
+      "profileLoadingError": "Помилка завантаження профілю",
+      "tryAgain": "Спробувати знову"
     },
     "pricing": "PeaklyGo Pro"
   },

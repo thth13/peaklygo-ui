@@ -11,15 +11,17 @@ type Props = {
   className?: string;
   passHref?: boolean;
   legacyBehavior?: boolean;
+  onClick?: () => void;
 };
 
-export default function LinkWithProgress({ href, children, className, passHref, legacyBehavior }: Props) {
+export default function LinkWithProgress({ href, children, className, passHref, legacyBehavior, onClick }: Props) {
   const pathname = usePathname();
 
   const handleClick = () => {
     if (pathname !== href) {
       NProgress.start();
     }
+    onClick?.();
   };
 
   useEffect(() => {

@@ -475,10 +475,11 @@
     "menu": "Menu",
     "user": "User",
     "retry": "Try again",
-    "profileLoadingError": "Profile loading error",
     "addGoal": "Add goal",
     "error": {
-      "dataLoadingError": "Data loading error"
+      "dataLoadingError": "Data loading error",
+      "profileLoadingError": "Profile loading error",
+      "tryAgain": "Try again"
     },
   "pricing": "PeaklyGo Pro"
   },
