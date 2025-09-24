@@ -99,6 +99,112 @@
     "meta": {
       "fallbackDescription": "View goal details and progress on PeaklyGo."
     },
+    "wizard": {
+      "steps": {
+        "basics": "Basics",
+        "steps": "Steps",
+        "timing": "Timing",
+        "design": "Design",
+        "finish": "Finish"
+      },
+      "stepDescriptions": {
+        "basicInfo": "Basic information",
+        "planningSteps": "Planning steps",
+        "timingMotivation": "Timing and motivation",
+        "photoCategory": "Photo and category",
+        "privacyComplexity": "Privacy and complexity"
+      },
+      "titles": {
+        "createNewGoal": "Creating new goal",
+        "breakIntoSteps": "Break goal into steps",
+        "setDeadlines": "Set deadlines",
+        "giveGoalImage": "Give goal an image",
+        "finalSettings": "Final settings"
+      },
+      "descriptions": {
+        "createStart": "This is where your journey begins. Formulate what you want to achieve — clearly and specifically. When a goal takes on words, it stops being just a thought and becomes the first step toward real action.",
+        "breakIntoSteps": "Big goals are achieved with small steps. Divide your goal into concrete actions that will lead you to success. Each step is a small victory on the path to a big dream.",
+        "setTiming": "Define time frames and motivation. Clear deadlines make the goal real, while rewards and consequences motivate action.",
+        "giveImage": "You can add an image and choose a category. Visualization is a powerful tool: it makes the result tangible and closer. When a goal has an image, it's easier to imagine and strive for daily.",
+        "finalStep": "Last step! Configure additional parameters of your goal. You can create a challenge, invite friends, or just complete creation. Your goal is almost ready to launch!"
+      },
+      "fields": {
+        "goalName": "Goal name",
+        "goalNameRequired": "Goal name *",
+        "goalNamePlaceholder": "For example, Run a half marathon",
+        "goalNameHelper": "Be specific!",
+        "whyThisGoal": "Why this goal?",
+        "descriptionPlaceholder": "I've long dreamed of becoming more resilient and testing myself...",
+        "descriptionHelper": "Describe motivation and reasons.",
+        "timeframe": "Timeframe",
+        "startDate": "Start date",
+        "deadline": "Deadline",
+        "noDeadline": "No strict deadline",
+        "rewardForSuccess": "Reward for success",
+        "rewardPlaceholder": "Buy myself new sneakers",
+        "rewardHelper": "What will you reward yourself with when you achieve the goal?",
+        "consequenceForFailure": "Consequence for failure",
+        "consequencePlaceholder": "Donate $100 to charity",
+        "consequenceHelper": "What will happen if you don't achieve the goal?",
+        "goalImportance": "Goal importance",
+        "goalImportanceRequired": "Goal importance *",
+        "rateFrom0To100": "Rate from 0 to 100 points",
+        "privacyLevel": "Privacy level",
+        "privacyLevelRequired": "Privacy level *",
+        "categoryHelper": "Helps find like-minded people"
+      },
+      "buttons": {
+        "continue": "Continue",
+        "skipStep": "Skip this step",
+        "back": "Back",
+        "createGoal": "Create goal",
+        "creating": "Creating..."
+      },
+      "tips": {
+        "canSkip": "Can skip",
+        "canSkipDescription": "You can add steps later while working on the goal. The main thing is to start!",
+        "planningTips": "Planning tips",
+        "makeStepsSpecific": "Make steps specific and measurable",
+        "startWithSimple": "Start with the simplest actions",
+        "stepsShouldBring": "Each step should bring you closer to the goal",
+        "dontFearDetails": "Don't be afraid to add details"
+      },
+      "quotes": {
+        "thousandMilesJourney": "\"A journey of a thousand miles begins with a single step\"",
+        "bigJourneyStep": "\"A big journey begins with a small step\"",
+        "timeIsLife": "\"Time is what life is made of\"",
+        "dreamWithoutImage": "\"A dream without an image is just a wish. A dream with an image is a plan\"",
+        "perfectionAchieved": "\"Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away\""
+      },
+      "authors": {
+        "laoTzu": "Lao Tzu",
+        "confucius": "Confucius",
+        "benjaminFranklin": "Benjamin Franklin",
+        "folkWisdom": "Folk wisdom",
+        "saintExupery": "Antoine de Saint-Exupéry"
+      },
+      "importance": {
+        "minimal": "Minimal importance",
+        "low": "Low importance",
+        "belowAverage": "Below average",
+        "average": "Average importance",
+        "aboveAverage": "Above average",
+        "high": "High importance",
+        "critical": "Critically important"
+      },
+      "privacy": {
+        "private": "Private",
+        "privateDescription": "Only you can see this goal",
+        "friends": "For friends",
+        "friendsDescription": "Only your subscribers can see",
+        "public": "Public",
+        "publicDescription": "All users can see"
+      },
+      "notifications": {
+        "goalCreated": "Goal created!",
+        "goalCreationError": "Error creating goal"
+      }
+    },
     "create": "Create Goal",
     "createGoal": "Create Goal",
     "createNew": "Creating new goal",
@@ -187,6 +293,7 @@
       "publicDescription": "All users can see and support"
     },
     "categories": {
+      "selectCategory": "Select category",
       "health": "Health",
       "finance": "Finance",
       "development": "Self-development",
