@@ -554,7 +554,8 @@
   },
   "header": {
     "register": "Register",
-    "profileMenu": "Open profile menu"
+    "profileMenu": "Open profile menu",
+    "logout": "Logout"
   },
   "rating": {
     "title": "Rating",

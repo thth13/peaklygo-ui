@@ -5,21 +5,44 @@ import LinkWithProgress from '../Link';
 import ThemeToggle from '../ThemeToggle';
 import Image from 'next/image';
 import { useUserProfile } from '@/context/UserProfileContext';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import OverlaySidebar from './sidebar/OverlaySidebar';
 import { IMAGE_URL } from '@/constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { LanguageSwitcher } from '../LanguageSwitcher';
 import { useTranslations } from 'next-intl';
+import { AuthContext } from '@/context/AuthContext';
 
 export const Header = () => {
   const pathname = usePathname();
   const { profile, isLoading } = useUserProfile();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { logout } = useContext(AuthContext);
   const t = useTranslations('header');
 
-  if (pathname === '/' || pathname === '/auth/login' || pathname === '/auth/register') return null;
+  if (pathname === '/auth/login' || pathname === '/auth/register') return null;
+
+  // Show different header for homepage
+  if (pathname === '/') {
+    return (
+      <header className="bg-white shadow-sm py-4 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
+          <div className="flex items-center">
+            <h1 className="text-2xl font-bold text-primary-600">GoalHub</h1>
+          </div>
+          <div className="flex items-center space-x-6">
+            <span className="text-gray-600 hover:text-primary-600 font-medium cursor-pointer">Как это работает</span>
+            <span className="text-gray-600 hover:text-primary-600 font-medium cursor-pointer">Сообщество</span>
+            <span className="text-gray-600 hover:text-primary-600 font-medium cursor-pointer">О нас</span>
+            <button className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg font-medium">
+              Войти
+            </button>
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <>
@@ -46,26 +69,35 @@ export const Header = () => {
             {isLoading ? (
               <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" aria-hidden />
             ) : profile ? (
-              <button
-                aria-label={t('profileMenu')}
-                aria-expanded={sidebarOpen}
-                onClick={() => setSidebarOpen(true)}
-                className="h-8 w-8 rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary-500"
-              >
-                {profile.avatar ? (
-                  <Image
-                    src={`${IMAGE_URL}/${profile.avatar}`}
-                    alt="Profile"
-                    width={32}
-                    height={32}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="h-8 w-8 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full flex items-center justify-center">
-                    <FontAwesomeIcon icon={faUser} className="text-white text-xl" />
-                  </div>
-                )}
-              </button>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={logout}
+                  className="p-2 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  title={t('logout')}
+                >
+                  <FontAwesomeIcon icon={faSignOutAlt} className="w-4 h-4" />
+                </button>
+                <button
+                  aria-label={t('profileMenu')}
+                  aria-expanded={sidebarOpen}
+                  onClick={() => setSidebarOpen(true)}
+                  className="h-8 w-8 rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary-500"
+                >
+                  {profile.avatar ? (
+                    <Image
+                      src={`${IMAGE_URL}/${profile.avatar}`}
+                      alt="Profile"
+                      width={32}
+                      height={32}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="h-8 w-8 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full flex items-center justify-center">
+                      <FontAwesomeIcon icon={faUser} className="text-white text-xl" />
+                    </div>
+                  )}
+                </button>
+              </div>
             ) : (
               <a
                 href="/auth/login"

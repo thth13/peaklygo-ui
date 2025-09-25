@@ -554,7 +554,8 @@
   },
   "header": {
     "register": "Реєстрація",
-    "profileMenu": "Відкрити меню профілю"
+    "profileMenu": "Відкрити меню профілю",
+    "logout": "Вийти"
   },
   "rating": {
     "title": "Рейтинг",

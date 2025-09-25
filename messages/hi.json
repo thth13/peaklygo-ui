@@ -554,7 +554,8 @@
   },
   "header": {
     "register": "पंजीकरण करें",
-    "profileMenu": "प्रोफ़ाइल मेनू खोलें"
+    "profileMenu": "प्रोफ़ाइल मेनू खोलें",
+    "logout": "लॉग आउट"
   },
   "rating": {
     "title": "रेटिंग",
