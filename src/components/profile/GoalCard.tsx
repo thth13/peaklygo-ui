@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useStopPropagation } from '@/hooks/useStopPropagation';
@@ -13,6 +13,7 @@ import { archiveGoal } from '@/lib/api/goal';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { useTranslations, useLocale } from 'next-intl';
+import { AuthContext } from '@/context/AuthContext';
 
 interface GoalCardProps {
   goal: Goal;
@@ -28,6 +29,9 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
   const [isArchiving, setIsArchiving] = useState<boolean>(false);
   const { stopPropagation } = useStopPropagation();
   const menuRef = useRef<HTMLDivElement>(null);
+  const { userId } = useContext(AuthContext);
+
+  const isOwner = userId === goal.userId;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -59,11 +63,9 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
       await archiveGoal(goal._id);
       toast.success(t('archivedSuccess'));
 
-      // Удаляем цель из списка если есть callback
       if (onGoalArchived) {
         onGoalArchived(goal._id);
       } else {
-        // Откат к старому поведению
         router.refresh();
       }
     } catch (error) {
@@ -103,8 +105,9 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
               {goal.isCompleted ? t('achieved') : t('inProgress')}
             </span>
           </div>
+
           {/* Menu button */}
-          {!isArchived && (
+          {!isArchived && isOwner && (
             <div className="absolute top-2 right-2">
               <div className="relative" ref={menuRef}>
                 <button
@@ -159,7 +162,7 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
                 >
                   {goal.isCompleted ? t('achieved') : t('inProgress')}
                 </span>
-                {!isArchived && (
+                {!isArchived && isOwner && (
                   <div className="relative" ref={menuRef}>
                     <button
                       onClick={stopPropagation(() => setIsMenuOpen(!isMenuOpen))}
