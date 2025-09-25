@@ -5,6 +5,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { generateConfettiPieces, confettiStyles } from '@/lib/confetti';
+import { markTutorialCompleted } from '@/lib/api/profile';
 
 interface CongratulationsModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ interface CongratulationsModalProps {
 
 export const CongratulationsModal = ({ isOpen, onClose }: CongratulationsModalProps) => {
   const t = useTranslations('congratulations');
+  const { setTutorialCompleted } = useUserProfile();
 
   // Prepare confetti pieces first (hook must run every render in same order)
   const prefersReducedMotion = useMemo(() => {
@@ -25,8 +27,10 @@ export const CongratulationsModal = ({ isOpen, onClose }: CongratulationsModalPr
   }, [prefersReducedMotion]);
 
   const handleStartAndClose = useCallback(() => {
-    const evt = new CustomEvent('start-onboarding-tour');
-    window.dispatchEvent(evt);
+    markTutorialCompleted().catch(() => {});
+    setTutorialCompleted();
+    // const evt = new CustomEvent('start-onboarding-tour');
+    // window.dispatchEvent(evt);
     onClose();
   }, [onClose]);
 
@@ -119,7 +123,7 @@ export const CongratulationsModal = ({ isOpen, onClose }: CongratulationsModalPr
 };
 
 export const useCongratulationsModal = () => {
-  const { profile, isLoading } = useUserProfile();
+  const { profile, isLoading, setTutorialCompleted } = useUserProfile();
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -141,5 +145,6 @@ export const useCongratulationsModal = () => {
   return {
     isOpen,
     onClose: () => setIsOpen(false),
+    setTutorialCompleted,
   };
 };

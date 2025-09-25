@@ -7,7 +7,6 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import { UserProfileProvider } from '@/context/UserProfileContext';
 import { Header } from '@/components/layout/Header';
 import { CongratulationsModalClient } from '@/components/CongratulationsModalClient';
-import { OnboardingProvider } from '@/context/OnboardingContext';
 import { Suspense } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getLocale, getTranslations } from 'next-intl/server';
@@ -88,16 +87,14 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <UserProfileProvider>
-              <OnboardingProvider>
-                <Header />
-                <Suspense fallback={null}>
-                  <ProgressBar />
-                </Suspense>
-                {children}
-                {/* <VersionLink /> */}
-                <Toaster position="top-right" />
-                <CongratulationsModalClient />
-              </OnboardingProvider>
+              <Header />
+              <Suspense fallback={null}>
+                <ProgressBar />
+              </Suspense>
+              {children}
+              {/* <VersionLink /> */}
+              <Toaster position="top-right" />
+              <CongratulationsModalClient />
             </UserProfileProvider>
           </AuthProvider>
         </NextIntlClientProvider>
