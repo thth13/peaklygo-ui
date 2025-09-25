@@ -29,7 +29,7 @@ export const Header = () => {
       <header className="bg-white shadow-sm py-4 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center">
-            <h1 className="text-xl sm:text-2xl font-bold text-primary-600">GoalHub</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-primary-600">PeaklyGo</h1>
           </div>
           <div className="flex items-center space-x-2 sm:space-x-6">
             <LanguageSwitcher />

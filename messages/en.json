@@ -408,7 +408,7 @@
     },
     "mainHero": {
       "title": "Achieve your goals together with",
-      "brandName": "GoalHub",
+      "brandName": "PeaklyGo",
       "subtitle": "Plan, track, and share your goals. Get support from the community.",
       "createGoal": "Create your goal",
       "register": "Register"
@@ -465,7 +465,7 @@
       },
       "step2": {
         "title": "2. Share with the world",
-        "description": "Share your goal with friends or the GoalHub community to get support."
+        "description": "Share your goal with friends or the PeaklyGo community to get support."
       },
       "step3": {
         "title": "3. Achieve success",
@@ -508,7 +508,7 @@
     },
     "cta": {
       "title": "Ready to start your journey to success?",
-      "subtitle": "Join thousands of people already achieving their goals with GoalHub",
+      "subtitle": "Join thousands of people already achieving their goals with PeaklyGo",
       "createGoal": "Create your first goal",
       "alreadyHaveAccount": "Already have an account"
     },
