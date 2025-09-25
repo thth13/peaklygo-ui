@@ -17,7 +17,7 @@ interface ProfileContentProps {
 
 export function ProfileContent({ goalsData, isMyProfile, onPageChange, onGoalArchived }: ProfileContentProps) {
   const t = useTranslations('profile');
-  const { viewMode, setViewMode } = useViewMode();
+  const { viewMode, setViewMode, isLoading } = useViewMode();
   const isPaginated = !Array.isArray(goalsData);
   const goals = isPaginated ? goalsData.goals : goalsData;
   const paginationData = isPaginated ? goalsData : null;
@@ -85,6 +85,14 @@ export function ProfileContent({ goalsData, isMyProfile, onPageChange, onGoalArc
               {t('createFirstGoal')}
             </LinkWithProgress>
           )}
+        </div>
+      ) : isLoading ? (
+        <div className="space-y-6">
+          <div className="animate-pulse space-y-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-gray-200 dark:bg-gray-700 h-32 rounded-lg"></div>
+            ))}
+          </div>
         </div>
       ) : (
         <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 gap-6' : 'space-y-6'}>
