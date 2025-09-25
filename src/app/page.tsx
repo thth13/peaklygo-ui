@@ -1,425 +1,242 @@
 import type { ReactElement } from 'react';
 import Image from 'next/image';
-import LinkWithProgress from '@/components/Link';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faHeart,
+  faComment,
+  faPlus,
+  faBullseye,
+  faShareNodes,
+  faTrophy,
+  faRocket,
+} from '@fortawesome/free-solid-svg-icons';
+import { Activity, LandingGoal, PrivacyStatus, Step } from '@/types';
+import { getLandingGoals } from '@/lib/api';
+import { createServerApi } from '@/lib/serverAxios';
+import { IMAGE_URL } from '@/constants';
+import { GoalCard } from '@/components/GoalCard';
 
-interface Feature {
-  title: string;
-  description: string;
-  iconSrc: string;
-}
+// const defaultGoals: Goal[] = [
+//   {
+//     id: 'community-goal-1',
+//     avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg',
+//     name: 'Мария Петрова',
+//     username: '@mariapetrova',
+//     liked: false,
+//     image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/af2f25f7db-773eabf02112443687ad.png',
+//     title: 'Заниматься йогой каждый день',
+//     description: '30-дневный челлендж ежедневной йоги для улучшения гибкости и внутреннего покоя',
+//     progress: 22,
+//     total: 30,
+//     progressLabel: '22/30 дней',
+//     likes: 24,
+//     comments: 8,
+//     status: 'В процессе',
+//     statusColor: 'bg-primary-100 text-primary-700',
+//   },
+//   {
+//     id: 'community-goal-2',
+//     avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg',
+//     name: 'Алексей Иванов',
+//     username: '@alexivanov',
+//     liked: true,
+//     image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/d6ae9d3ce5-63a04e6ca7bd7129af2b.png',
+//     title: 'Прочитать 50 книг в году',
+//     description: 'Читаю по одной книге в неделю для саморазвития и расширения кругозора',
+//     progress: 42,
+//     total: 50,
+//     progressLabel: '42/50 книг',
+//     likes: 67,
+//     comments: 15,
+//     status: 'Почти готово',
+//     statusColor: 'bg-green-100 text-green-700',
+//   },
+//   {
+//     id: 'community-goal-3',
+//     avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg',
+//     name: 'Анна Смирнова',
+//     username: '@annasmirnova',
+//     liked: false,
+//     image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/60a72d35f1-3e0aebc6a70641abb726.png',
+//     title: 'Пробежать марафон',
+//     description: 'Готовлюсь к первому марафону. Тренируюсь 5 раз в неделю по специальной программе',
+//     progress: 12,
+//     total: 16,
+//     progressLabel: '12/16 недель',
+//     likes: 89,
+//     comments: 23,
+//     status: 'В процессе',
+//     statusColor: 'bg-primary-100 text-primary-700',
+//   },
+//   {
+//     id: 'community-goal-4',
+//     avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg',
+//     name: 'Дмитрий Козлов',
+//     username: '@dmitrykozlov',
+//     liked: false,
+//     image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/2fec96aab4-a29bd5583b5e45e60170.png',
+//     title: 'Научиться играть на гитаре',
+//     description: 'Изучаю основы игры на гитаре. Цель - сыграть любимую песню к концу года',
+//     progress: 6,
+//     total: 10,
+//     progressLabel: '6/10 песен',
+//     likes: 34,
+//     comments: 12,
+//     status: 'В процессе',
+//     statusColor: 'bg-primary-100 text-primary-700',
+//   },
+//   {
+//     id: 'community-goal-5',
+//     avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg',
+//     name: 'Елена Волкова',
+//     username: '@elenavolkova',
+//     liked: true,
+//     image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/a474425304-678fb9dce70a9131395b.png',
+//     title: 'Здоровое питание 90 дней',
+//     description: 'Перехожу на здоровое питание. Готовлю дома, исключаю фастфуд и сладкое',
+//     progress: 67,
+//     total: 90,
+//     progressLabel: '67/90 дней',
+//     likes: 45,
+//     comments: 18,
+//     status: 'Почти готово',
+//     statusColor: 'bg-green-100 text-green-700',
+//   },
+//   {
+//     id: 'community-goal-6',
+//     avatar: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-9.jpg',
+//     name: 'Сергей Орлов',
+//     username: '@sergeyorlov',
+//     liked: false,
+//     image: 'https://storage.googleapis.com/uxpilot-auth.appspot.com/aded8f0d0c-c4d35f31e26062520433.png',
+//     title: 'Изучить программирование',
+//     description: 'Изучаю Python для смены карьеры. Цель - создать первое веб-приложение',
+//     progress: 8,
+//     total: 12,
+//     progressLabel: '8/12 модулей',
+//     likes: 78,
+//     comments: 31,
+//     status: 'В процессе',
+//     statusColor: 'bg-primary-100 text-primary-700',
+//   },
+// ];
 
-interface Step {
-  title: string;
-  description: string;
-}
+export default async function Home(): Promise<ReactElement> {
+  const serverApi = await createServerApi();
+  const goals = await getLandingGoals(serverApi);
 
-interface Testimonial {
-  quote: string;
-  author: string;
-  role: string;
-  avatar: string;
-}
-
-function getFeatures(t: any): readonly Feature[] {
-  return [
-    {
-      title: t('home.features.goalsUnderControl.title'),
-      description: t('home.features.goalsUnderControl.description'),
-      iconSrc: '/window.svg',
-    },
-    {
-      title: t('home.features.visibleProgress.title'),
-      description: t('home.features.visibleProgress.description'),
-      iconSrc: '/file.svg',
-    },
-    {
-      title: t('home.features.focusOnImportant.title'),
-      description: t('home.features.focusOnImportant.description'),
-      iconSrc: '/globe.svg',
-    },
-    {
-      title: t('home.features.synchronization.title'),
-      description: t('home.features.synchronization.description'),
-      iconSrc: '/next.svg',
-    },
-    {
-      title: t('home.features.privacyByDefault.title'),
-      description: t('home.features.privacyByDefault.description'),
-      iconSrc: '/vercel.svg',
-    },
-    {
-      title: t('home.features.flexibility.title'),
-      description: t('home.features.flexibility.description'),
-      iconSrc: '/globe.svg',
-    },
-  ];
-}
-
-function getSteps(t: any): readonly Step[] {
-  return [
-    {
-      title: t('home.howItWorks.step1.title'),
-      description: t('home.howItWorks.step1.description'),
-    },
-    {
-      title: t('home.howItWorks.step2.title'),
-      description: t('home.howItWorks.step2.description'),
-    },
-    {
-      title: t('home.howItWorks.step3.title'),
-      description: t('home.howItWorks.step3.description'),
-    },
-  ];
-}
-
-function getTestimonials(t: any): readonly Testimonial[] {
-  return [
-    {
-      quote: t('home.testimonials.user1.quote'),
-      author: t('home.testimonials.user1.name'),
-      role: t('home.testimonials.user1.role'),
-      avatar: 'https://i.pravatar.cc/120?img=12',
-    },
-    {
-      quote: t('home.testimonials.user2.quote'),
-      author: t('home.testimonials.user2.name'),
-      role: t('home.testimonials.user2.role'),
-      avatar: 'https://i.pravatar.cc/120?img=32',
-    },
-    {
-      quote: t('home.testimonials.user3.quote'),
-      author: t('home.testimonials.user3.name'),
-      role: t('home.testimonials.user3.role'),
-      avatar: 'https://i.pravatar.cc/120?img=5',
-    },
-  ];
-}
-
-function renderFeature(feature: Feature): ReactElement {
-  return (
-    <div
-      key={feature.title}
-      className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/60 dark:bg-gray-900/60 backdrop-blur p-6 shadow-sm hover:shadow-md transition-shadow"
-    >
-      <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center ring-4 ring-primary-500/10 mb-4">
-        <Image src={feature.iconSrc} alt="Иконка" width={24} height={24} loading="lazy" />
-      </div>
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{feature.title}</h3>
-      <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{feature.description}</p>
-    </div>
-  );
-}
-
-function renderStep(step: Step, index: number): ReactElement {
-  const stepNumber: number = index + 1;
-  return (
-    <div
-      key={step.title}
-      className="relative rounded-2xl p-6 border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
-    >
-      <div className="absolute -top-4 left-6 h-8 w-8 rounded-full bg-primary-600 text-white flex items-center justify-center text-sm font-bold shadow-lg">
-        {stepNumber}
-      </div>
-      <h4 className="mt-2 text-base font-semibold text-gray-900 dark:text-white">{step.title}</h4>
-      <p className="mt-2 text-gray-600 dark:text-gray-300 text-sm">{step.description}</p>
-    </div>
-  );
-}
-
-function renderTestimonial(item: Testimonial): ReactElement {
-  return (
-    <div
-      key={item.author}
-      className="h-full rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm"
-    >
-      <p className="text-gray-900 dark:text-white text-base leading-relaxed">“{item.quote}”</p>
-      <div className="mt-4 flex items-center gap-3">
-        <Image
-          src={item.avatar}
-          alt={item.author}
-          width={40}
-          height={40}
-          loading="lazy"
-          className="h-10 w-10 rounded-full object-cover"
-        />
-        <div>
-          <div className="text-sm font-semibold text-gray-900 dark:text-white">{item.author}</div>
-          <div className="text-xs text-gray-600 dark:text-gray-400">{item.role}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default function Home(): ReactElement {
-  const t = useTranslations();
-  const features = getFeatures(t);
-  const steps = getSteps(t);
-  const testimonials = getTestimonials(t);
+  const t = await getTranslations('home');
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-primary-50/60 to-transparent dark:from-primary-900/10">
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 opacity-30 blur-3xl" aria-hidden>
-          <div className="h-[40rem] w-[40rem] bg-primary-400/30 rounded-full absolute -top-32 -left-32" />
-          <div className="h-[40rem] w-[40rem] bg-primary-600/20 rounded-full absolute -bottom-32 -right-32" />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 pt-10 md:pt-16 pb-10 md:pb-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-            <div className="text-center md:text-left">
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-white/60 dark:bg-gray-900/60 px-3 py-1 text-xs text-primary-700 dark:text-primary-300 backdrop-blur">
-                <span className="h-2 w-2 rounded-full bg-primary-500 animate-pulse"></span>
-                {t('home.hero.badge')}
-              </div>
-              <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
-                {t('home.hero.title')}
-              </h1>
-              <p className="mt-6 text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-3xl">
-                {t('home.hero.subtitle')}
-              </p>
-              <div className="mt-8 flex flex-col sm:flex-row gap-4 md:justify-start justify-center">
-                <LinkWithProgress
-                  href="/auth/register"
-                  className="px-6 py-3 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors"
-                >
-                  {t('home.hero.startFree')}
-                </LinkWithProgress>
-                <LinkWithProgress
-                  href="/auth/login"
-                  className="px-6 py-3 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                >
-                  {t('home.hero.signIn')}
-                </LinkWithProgress>
-              </div>
-              <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6 opacity-80">
-                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                  <svg
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="h-4 w-4 text-primary-600 dark:text-primary-400"
-                    aria-hidden
-                  >
-                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.53-9.47a.75.75 0 00-1.06-1.06L9 10.94 7.53 9.47a.75.75 0 10-1.06 1.06l2 2a.75.75 0 001.06 0l4-4z" />
-                  </svg>
-                  {t('home.hero.features.noAds')}
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                  <svg
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="h-4 w-4 text-primary-600 dark:text-primary-400"
-                    aria-hidden
-                  >
-                    <path d="M3.5 4A1.5 1.5 0 015 2.5h10A1.5 1.5 0 0116.5 4v12A1.5 1.5 0 0115 17.5H5A1.5 1.5 0 013.5 16V4zm3 1.5a.5.5 0 000 1h7a.5.5 0 000-1h-7zm0 3a.5.5 0 000 1h7a.5.5 0 000-1h-7zm0 3a.5.5 0 000 1h4a.5.5 0 000-1h-4z" />
-                  </svg>
-                  {t('home.hero.features.laconicInterface')}
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                  <svg
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="h-4 w-4 text-primary-600 dark:text-primary-400"
-                    aria-hidden
-                  >
-                    <path d="M11.3 1.05a.75.75 0 01.7.47l2.1 5.22h3.15a.75.75 0 01.53 1.28l-4.63 4.64 1.74 5.21a.75.75 0 01-1.14.85L10 16.93l-4.75 2.79a.75.75 0 01-1.14-.85l1.74-5.21L1.22 8.02A.75.75 0 011.75 6.74H4.9l2.1-5.22a.75.75 0 01.7-.47h3.6z" />
-                  </svg>
-                  {t('home.hero.features.fastWork')}
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                  <svg
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="h-4 w-4 text-primary-600 dark:text-primary-400"
-                    aria-hidden
-                  >
-                    <path d="M10 2a6 6 0 016 6v2.5c0 3.59-2.53 6.86-6 7.5-3.47-.64-6-3.91-6-7.5V8a6 6 0 016-6zm0 6a2.5 2.5 0 00-2.5 2.5v.5a2.5 2.5 0 105 0v-.5A2.5 2.5 0 0010 8z" />
-                  </svg>
-                  {t('home.hero.features.privacyByDefault')}
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-primary-500/20 to-primary-700/20 rounded-3xl blur-2xl" />
-              <div className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/70 backdrop-blur p-5 md:p-6 shadow-2xl max-w-lg md:max-w-xl mx-auto">
-                <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
-                  <div className="flex items-center gap-1">
-                    <span className="h-2.5 w-2.5 rounded-full bg-red-400"></span>
-                    <span className="h-2.5 w-2.5 rounded-full bg-yellow-400"></span>
-                    <span className="h-2.5 w-2.5 rounded-full bg-green-400"></span>
-                  </div>
-                  <div className="mt-4">
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-semibold text-gray-900 dark:text-white">Weekly Progress</div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">72%</div>
-                    </div>
-                    <div className="mt-2 h-2 rounded-full bg-gray-200 dark:bg-gray-800">
-                      <div className="h-2 w-3/4 rounded-full bg-primary-600"></div>
-                    </div>
-                  </div>
-                  <div className="mt-4 grid grid-cols-2 gap-3">
-                    <div className="rounded-xl border border-gray-200 dark:border-gray-800 p-3">
-                      <div className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 text-white flex items-center justify-center text-xs font-bold">
-                          +3
-                        </div>
-                        <div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">Steps</div>
-                          <div className="text-sm font-semibold text-gray-900 dark:text-white">Completed</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="rounded-xl border border-gray-200 dark:border-gray-800 p-3">
-                      <div className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-fuchsia-500 to-purple-700 text-white flex items-center justify-center text-xs font-bold">
-                          2x
-                        </div>
-                        <div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">Focus</div>
-                          <div className="text-sm font-semibold text-gray-900 dark:text-white">Boost</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-4 rounded-xl border border-gray-200 dark:border-gray-800 p-3">
-                    <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                      <svg
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className="h-4 w-4 text-primary-600 dark:text-primary-400"
-                        aria-hidden
-                      >
-                        <path d="M16.704 5.29a1 1 0 010 1.414l-7.01 7.01a1 1 0 01-1.414 0L3.296 8.74A1 1 0 114.71 7.326l3.07 3.07 6.303-6.303a1 1 0 011.414 0z" />
-                      </svg>
-                      Define goal and deadline
-                    </div>
-                    <div className="mt-2 flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                      <svg
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className="h-4 w-4 text-primary-600 dark:text-primary-400"
-                        aria-hidden
-                      >
-                        <path d="M16.704 5.29a1 1 0 010 1.414l-7.01 7.01a1 1 0 01-1.414 0L3.296 8.74A1 1 0 114.71 7.326l3.07 3.07 6.303-6.303a1 1 0 011.414 0z" />
-                      </svg>
-                      Split into steps
-                    </div>
-                    <div className="mt-2 flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-                      <svg
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className="h-4 w-4 text-primary-600 dark:text-primary-400"
-                        aria-hidden
-                      >
-                        <path d="M16.704 5.29a1 1 0 010 1.414l-7.01 7.01a1 1 0 01-1.414 0L3.296 8.74A1 1 0 114.71 7.326l3.07 3.07 6.303-6.303a1 1 0 011.414 0z" />
-                      </svg>
-                      Track progress
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <div className="bg-white font-sans">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-primary-50 to-blue-50 py-8 sm:py-12 min-h-[280px] sm:h-[320px] flex items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
+            {t('mainHero.title')} <span className="text-primary-600">{t('mainHero.brandName')}</span>
+          </h1>
+          <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
+            {t('mainHero.subtitle')}
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 px-4">
+            <a
+              href="/goal/create"
+              className="w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center"
+            >
+              <FontAwesomeIcon icon={faPlus} className="mr-2" />
+              {t('mainHero.createGoal')}
+            </a>
+            <a
+              href="/auth/register"
+              className="w-full sm:w-auto bg-white hover:bg-gray-50 text-primary-600 px-6 py-3 rounded-lg font-semibold border border-primary-200 text-center"
+            >
+              {t('mainHero.register')}
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section id="features" className="max-w-7xl mx-auto px-4 py-16">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">{t('home.features.title')}</h2>
-          <p className="mt-4 text-gray-700 dark:text-gray-300">{t('home.features.subtitle')}</p>
+      {/* Popular Goals */}
+      <section id="community-goals" className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">{t('communityGoals.title')}</h2>
+            <p className="text-lg text-gray-600">{t('communityGoals.subtitle')}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {goals.map((goal: LandingGoal) => (
+              <GoalCard key={goal._id} goal={goal} />
+            ))}
+          </div>
+
+          {/* <div className="text-center mt-12">
+            <button className="bg-primary-600 hover:bg-primary-700 text-white px-8 py-3 rounded-lg text-lg font-semibold">
+              Посмотреть все цели
+            </button>
+          </div> */}
         </div>
-        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">{features.map(renderFeature)}</div>
       </section>
 
       {/* How it works */}
-      <section id="how" className="bg-white/60 dark:bg-gray-900/60 border-y border-gray-200 dark:border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 py-16">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-              {t('home.howItWorks.title')}
-            </h2>
-            <p className="mt-4 text-gray-700 dark:text-gray-300">{t('home.howItWorks.subtitle')}</p>
+      <section id="how-it-works" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900">{t('howItWorks.title')}</h2>
+            <p className="text-lg text-gray-600 mt-2">{t('howItWorks.subtitle')}</p>
           </div>
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">{steps.map(renderStep)}</div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section id="testimonials" className="max-w-7xl mx-auto px-4 py-16">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-            {t('home.testimonials.title')}
-          </h2>
-          <p className="mt-4 text-gray-700 dark:text-gray-300">{t('home.testimonials.subtitle')}</p>
-        </div>
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-          {testimonials.map(renderTestimonial)}
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section id="faq" className="bg-white/60 dark:bg-gray-900/60 border-y border-gray-200 dark:border-gray-800">
-        <div className="max-w-4xl mx-auto px-4 py-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white text-center">
-            {t('home.faq.title')}
-          </h2>
-          <div className="mt-8 space-y-4">
-            <details className="group rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
-              <summary className="cursor-pointer list-none flex items-center justify-between">
-                <span className="text-base font-semibold text-gray-900 dark:text-white">
-                  {t('home.faq.q1.question')}
-                </span>
-                <span className="text-gray-500 group-open:rotate-180 transition-transform">▾</span>
-              </summary>
-              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{t('home.faq.q1.answer')}</p>
-            </details>
-            <details className="group rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
-              <summary className="cursor-pointer list-none flex items-center justify-between">
-                <span className="text-base font-semibold text-gray-900 dark:text-white">
-                  {t('home.faq.q2.question')}
-                </span>
-                <span className="text-gray-500 group-open:rotate-180 transition-transform">▾</span>
-              </summary>
-              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{t('home.faq.q2.answer')}</p>
-            </details>
-            <details className="group rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5">
-              <summary className="cursor-pointer list-none flex items-center justify-between">
-                <span className="text-base font-semibold text-gray-900 dark:text-white">
-                  {t('home.faq.q3.question')}
-                </span>
-                <span className="text-gray-500 group-open:rotate-180 transition-transform">▾</span>
-              </summary>
-              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{t('home.faq.q3.answer')}</p>
-            </details>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+            <div className="flex flex-col items-center">
+              <div className="bg-primary-100 text-primary-600 rounded-full h-20 w-20 flex items-center justify-center mb-4">
+                <FontAwesomeIcon icon={faBullseye} className="text-4xl" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">{t('howItWorks.step1.title')}</h3>
+              <p className="text-gray-600">{t('howItWorks.step1.description')}</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="bg-primary-100 text-primary-600 rounded-full h-20 w-20 flex items-center justify-center mb-4">
+                <FontAwesomeIcon icon={faShareNodes} className="text-4xl" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">{t('howItWorks.step2.title')}</h3>
+              <p className="text-gray-600">{t('howItWorks.step2.description')}</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="bg-primary-100 text-primary-600 rounded-full h-20 w-20 flex items-center justify-center mb-4">
+                <FontAwesomeIcon icon={faTrophy} className="text-4xl" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">{t('howItWorks.step3.title')}</h3>
+              <p className="text-gray-600">{t('howItWorks.step3.description')}</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="max-w-5xl mx-auto px-4 py-16 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">{t('home.cta.title')}</h2>
-        <p className="mt-4 text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">{t('home.cta.subtitle')}</p>
-        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-          <LinkWithProgress
-            href="/auth/register"
-            className="px-6 py-3 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors"
+      <section id="cta" className="bg-primary-600 py-16">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold text-white mb-4">{t('cta.title')}</h2>
+          <p className="text-xl text-primary-100 mb-8">{t('cta.subtitle')}</p>
+          <a
+            href="/goal/create"
+            className="bg-white hover:bg-gray-100 text-primary-600 px-10 py-4 rounded-lg text-lg font-bold inline-flex items-center"
           >
-            {t('home.cta.createGoal')}
-          </LinkWithProgress>
-          <LinkWithProgress
-            href="/auth/login"
-            className="px-6 py-3 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-          >
-            {t('home.cta.alreadyHaveAccount')}
-          </LinkWithProgress>
+            <FontAwesomeIcon icon={faRocket} className="mr-2" />
+            {t('cta.createGoal')}
+          </a>
         </div>
       </section>
 
-      <footer className="border-t border-gray-200 dark:border-gray-800 py-8 text-center text-sm text-gray-600 dark:text-gray-400">
-        © {new Date().getFullYear()} PeaklyGo. {t('home.footer.copyright')}
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className=" text-center text-gray-400">
+            <p>
+              © 2025 {t('mainHero.brandName')}. {t('footer.copyright')}
+            </p>
+          </div>
+        </div>
       </footer>
-    </main>
+    </div>
   );
 }

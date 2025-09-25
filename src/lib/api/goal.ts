@@ -1,7 +1,7 @@
 import { API_URL } from '@/constants';
 import api from '../clientAxios';
 import nProgress from 'nprogress';
-import { Goal, GetGoalsPaginationDto, PaginatedGoalsResponse } from '@/types';
+import { Goal, GetGoalsPaginationDto, PaginatedGoalsResponse, LandingGoal } from '@/types';
 import { AxiosInstance } from 'axios';
 
 export const createGoal = async (goal: FormData) => {
@@ -49,6 +49,17 @@ export const getGoals = async (
     const res = await client.get(url);
 
     return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const getLandingGoals = async (apiInstance?: AxiosInstance): Promise<LandingGoal[]> => {
+  try {
+    const client = apiInstance ?? api;
+    const res = await client.get(`${API_URL}/goals/landing`);
+
+    return res.data as LandingGoal[];
   } catch (err: any) {
     throw err;
   }

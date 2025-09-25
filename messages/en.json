@@ -406,6 +406,28 @@
         "privacyByDefault": "Privacy by default"
       }
     },
+    "mainHero": {
+      "title": "Achieve your goals together with",
+      "brandName": "GoalHub",
+      "subtitle": "Plan, track, and share your goals. Get support from the community.",
+      "createGoal": "Create your goal",
+      "register": "Register"
+    },
+    "communityGoals": {
+      "title": "Our community's goals",
+      "subtitle": "Get inspired by other members' goals and find like-minded people",
+      "noDescription": "No description",
+      "progress": "Progress",
+      "tasks": "tasks",
+      "user": "User",
+      "likes": "likes",
+      "comments": "comments"
+    },
+    "status": {
+      "completed": "Completed",
+      "almostDone": "Almost done",
+      "inProgress": "In progress"
+    },
     "features": {
       "title": "Why PeaklyGo",
       "subtitle": "We removed everything unnecessary, leaving tools that really help move towards results.",
@@ -435,19 +457,19 @@
       }
     },
     "howItWorks": {
-      "title": "How it works",
-      "subtitle": "Three steps — from idea to result.",
+      "title": "How does it work?",
+      "subtitle": "Just 3 simple steps to achieve your dream",
       "step1": {
-        "title": "Formulate goal",
-        "description": "Describe the result and deadline. Add key metrics for measurability."
+        "title": "1. Create a goal",
+        "description": "Describe your goal, set deadlines and define key milestones to track."
       },
       "step2": {
-        "title": "Break into steps",
-        "description": "Create a clear plan: stages, checkpoints and progress posts."
+        "title": "2. Share with the world",
+        "description": "Share your goal with friends or the GoalHub community to get support."
       },
       "step3": {
-        "title": "Achieve and share",
-        "description": "Mark progress, get feedback and close goals."
+        "title": "3. Achieve success",
+        "description": "Track your progress, get motivation and celebrate your achievements with us."
       }
     },
     "testimonials": {
@@ -485,9 +507,9 @@
       }
     },
     "cta": {
-      "title": "Ready to start?",
-      "subtitle": "Take the first step — create a goal now. In a week you will see real progress.",
-      "createGoal": "Create goal",
+      "title": "Ready to start your journey to success?",
+      "subtitle": "Join thousands of people already achieving their goals with GoalHub",
+      "createGoal": "Create your first goal",
       "alreadyHaveAccount": "Already have an account"
     },
     "footer": {
@@ -555,7 +577,10 @@
   "header": {
     "register": "Register",
     "profileMenu": "Open profile menu",
-    "logout": "Logout"
+    "logout": "Logout",
+    "howItWorks": "How it works",
+    "community": "Community",
+    "login": "Login"
   },
   "rating": {
     "title": "Rating",

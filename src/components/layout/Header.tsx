@@ -29,15 +29,25 @@ export const Header = () => {
       <header className="bg-white shadow-sm py-4 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-primary-600">GoalHub</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-primary-600">GoalHub</h1>
           </div>
-          <div className="flex items-center space-x-6">
-            <span className="text-gray-600 hover:text-primary-600 font-medium cursor-pointer">Как это работает</span>
-            <span className="text-gray-600 hover:text-primary-600 font-medium cursor-pointer">Сообщество</span>
-            <span className="text-gray-600 hover:text-primary-600 font-medium cursor-pointer">О нас</span>
-            <button className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-2 rounded-lg font-medium">
-              Войти
-            </button>
+          <div className="flex items-center space-x-2 sm:space-x-6">
+            <LanguageSwitcher />
+            <a
+              href="#how-it-works"
+              className="hidden sm:block text-gray-600 hover:text-primary-600 font-medium cursor-pointer"
+            >
+              {t('howItWorks')}
+            </a>
+            <a href="#cta" className="hidden sm:block text-gray-600 hover:text-primary-600 font-medium cursor-pointer">
+              {t('community')}
+            </a>
+            <LinkWithProgress
+              href="/auth/login"
+              className="bg-primary-600 hover:bg-primary-700 text-white px-3 py-2 sm:px-6 rounded-lg font-medium text-sm sm:text-base"
+            >
+              {t('login')}
+            </LinkWithProgress>
           </div>
         </div>
       </header>
@@ -100,7 +110,7 @@ export const Header = () => {
               </div>
             ) : (
               <a
-                href="/auth/login"
+                href="/auth/register"
                 className="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-primary-600 bg-primary-50 hover:bg-primary-100"
               >
                 {t('register')}

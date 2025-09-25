@@ -171,3 +171,34 @@ export interface PaginatedGoalsResponse {
   hasNextPage: boolean;
   hasPrevPage: boolean;
 }
+
+export interface LandingGoal {
+  _id: string;
+  goalName: string;
+  category: string;
+  description?: string;
+  startDate: Date;
+  endDate?: Date;
+  noDeadline?: boolean;
+  image?: string;
+  steps: Step[];
+  activity: Activity[];
+  reward?: string;
+  consequence?: string;
+  privacy: PrivacyStatus;
+  isCompleted: boolean;
+  isArchived: boolean;
+  value: number;
+  progress: number;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: {
+    _id: string;
+    username: string;
+    profile?: {
+      _id: string;
+      name: string;
+      avatar?: string;
+    };
+  };
+}
