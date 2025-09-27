@@ -8,15 +8,15 @@ export const PremiumStatus: React.FC = () => {
   const tb = useTranslations('pricing.proBenefits');
   const { profile } = useUserProfile();
 
-  const expiresAt = profile?.user.proExpires ? new Date(profile.user.proExpires) : null;
   const formattedExpiry = useMemo(() => {
+    const expiresAt = profile?.user.proExpires ? new Date(profile.user.proExpires) : null;
     if (!expiresAt) return null;
     return expiresAt.toLocaleDateString(undefined, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
     });
-  }, [expiresAt]);
+  }, [profile?.user.proExpires]);
 
   const benefits: { key: string; future?: boolean }[] = [
     { key: 'unlimitedGoals' },

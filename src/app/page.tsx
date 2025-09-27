@@ -1,20 +1,11 @@
 import type { ReactElement } from 'react';
-import Image from 'next/image';
+import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faHeart,
-  faComment,
-  faPlus,
-  faBullseye,
-  faShareNodes,
-  faTrophy,
-  faRocket,
-} from '@fortawesome/free-solid-svg-icons';
-import { Activity, LandingGoal, PrivacyStatus, Step } from '@/types';
+import { faPlus, faBullseye, faShareNodes, faTrophy, faRocket } from '@fortawesome/free-solid-svg-icons';
+import { LandingGoal } from '@/types';
 import { getLandingGoals } from '@/lib/api';
 import { createServerApi } from '@/lib/serverAxios';
-import { IMAGE_URL } from '@/constants';
 import { GoalCard } from '@/components/GoalCard';
 
 // const defaultGoals: Goal[] = [
@@ -140,19 +131,19 @@ export default async function Home(): Promise<ReactElement> {
             {t('mainHero.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 px-4">
-            <a
+            <Link
               href="/goal/create"
               className="w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center justify-center"
             >
               <FontAwesomeIcon icon={faPlus} className="mr-2" />
               {t('mainHero.createGoal')}
-            </a>
-            <a
+            </Link>
+            <Link
               href="/auth/register"
               className="w-full sm:w-auto bg-white hover:bg-gray-50 text-primary-600 px-6 py-3 rounded-lg font-semibold border border-primary-200 text-center"
             >
               {t('mainHero.register')}
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -217,13 +208,13 @@ export default async function Home(): Promise<ReactElement> {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">{t('cta.title')}</h2>
           <p className="text-xl text-primary-100 mb-8">{t('cta.subtitle')}</p>
-          <a
+          <Link
             href="/goal/create"
             className="bg-white hover:bg-gray-100 text-primary-600 px-10 py-4 rounded-lg text-lg font-bold inline-flex items-center"
           >
             <FontAwesomeIcon icon={faRocket} className="mr-2" />
             {t('cta.createGoal')}
-          </a>
+          </Link>
         </div>
       </section>
 

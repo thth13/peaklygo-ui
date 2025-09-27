@@ -17,14 +17,10 @@ export const CongratulationsModal = ({ isOpen, onClose }: CongratulationsModalPr
   const { setTutorialCompleted } = useUserProfile();
 
   // Prepare confetti pieces first (hook must run every render in same order)
-  const prefersReducedMotion = useMemo(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  }, []);
 
   const confettiPieces = useMemo(() => {
     return generateConfettiPieces({ count: 40 });
-  }, [prefersReducedMotion]);
+  }, []);
 
   const handleStartAndClose = useCallback(() => {
     markTutorialCompleted().catch(() => {});
@@ -32,7 +28,7 @@ export const CongratulationsModal = ({ isOpen, onClose }: CongratulationsModalPr
     // const evt = new CustomEvent('start-onboarding-tour');
     // window.dispatchEvent(evt);
     onClose();
-  }, [onClose]);
+  }, [onClose, setTutorialCompleted]);
 
   if (!isOpen) return null;
 

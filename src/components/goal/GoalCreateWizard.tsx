@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, FormEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -34,7 +34,6 @@ import Cookies from 'js-cookie';
 
 import { createGoal } from '@/lib/api/goal';
 import { useRouter } from 'next/navigation';
-import { useUserProfile } from '@/context/UserProfileContext';
 import { AuthContext } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { PrivacyStatus } from '@/types';
@@ -105,10 +104,8 @@ export const GoalCreateWizard: React.FC = () => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [noDeadline, setNoDeadline] = useState<boolean>(false);
   const router = useRouter();
-  const { profile } = useUserProfile();
   const reduceMotion = useReducedMotion();
   const [userId] = useState<string>(() => Cookies.get('userId') ?? '');
-  const isUserIdLockedRef = useRef<boolean>(Boolean(userId));
 
   // Auth context
   const { authUser, googleLogin } = useContext(AuthContext);

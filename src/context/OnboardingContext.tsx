@@ -70,14 +70,17 @@ export const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children
     setStepIndex(0);
   };
 
-  const advanceTo = (next: number) => {
-    if (next === 1 && pathname !== '/goal/create') {
-      setPendingIndex(next);
-      router.push('/goal/create');
-      return;
-    }
-    setStepIndex(next);
-  };
+  const advanceTo = useCallback(
+    (next: number) => {
+      if (next === 1 && pathname !== '/goal/create') {
+        setPendingIndex(next);
+        router.push('/goal/create');
+        return;
+      }
+      setStepIndex(next);
+    },
+    [pathname, router],
+  );
 
   const handleCallback = (data: CallBackProps) => {
     const { status, type, index } = data;

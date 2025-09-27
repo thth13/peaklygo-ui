@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes, faCrop } from '@fortawesome/free-solid-svg-icons';
@@ -131,10 +132,13 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ src, onCropComplete,
             minWidth={50}
             minHeight={50}
           >
-            <img
+            <Image
               ref={imgRef}
               alt="Crop me"
               src={src}
+              unoptimized
+              width={500}
+              height={500}
               style={{ maxWidth: '100%', maxHeight: '100%' }}
               onLoad={onImageLoad}
             />

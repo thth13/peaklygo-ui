@@ -215,10 +215,13 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
               minWidth={50}
               minHeight={50}
             >
-              <img
+              <Image
                 ref={imgRef}
                 alt="Crop me"
                 src={cropperSrc}
+                unoptimized
+                width={500}
+                height={400}
                 style={{ maxWidth: '100%', maxHeight: '400px' }}
                 onLoad={onImageLoad}
               />

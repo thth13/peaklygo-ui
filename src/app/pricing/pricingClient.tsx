@@ -45,7 +45,6 @@ export default function PricingClient() {
       setActivatedPlan(plan);
     } catch (e) {
       // Minimal error handling; extend with toast/notification if available
-      // eslint-disable-next-line no-console
       console.error('Failed to activate premium:', e);
     } finally {
       setLoadingPlan(null);
@@ -217,7 +216,6 @@ export default function PricingClient() {
             try {
               await refetchProfile();
             } catch (e) {
-              // eslint-disable-next-line no-console
               console.error('Failed to refresh profile after activation', e);
             }
           }

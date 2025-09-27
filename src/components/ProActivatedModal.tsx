@@ -17,10 +17,6 @@ export const ProActivatedModal = ({ plan, onClose }: ProActivatedModalProps) => 
   const [showConfetti, setShowConfetti] = useState<boolean>(true);
 
   // Prepare confetti pieces
-  const prefersReducedMotion = useMemo(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  }, []);
 
   const confettiPieces = useMemo(() => {
     return generateConfettiPieces({
@@ -29,7 +25,7 @@ export const ProActivatedModal = ({ plan, onClose }: ProActivatedModalProps) => 
       minDuration: 3,
       maxDuration: 5,
     });
-  }, [prefersReducedMotion]);
+  }, []);
 
   useEffect(() => {
     if (!plan) return;
