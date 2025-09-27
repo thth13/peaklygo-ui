@@ -1,12 +1,14 @@
 'use client';
 import { useState, useContext, ChangeEvent, FormEvent } from 'react';
 import { trackEvent } from '@/lib/analytics';
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { CodeResponse, GoogleOAuthProvider } from '@react-oauth/google';
 import { useTranslations } from 'next-intl';
 import { AuthContext } from '@/context/AuthContext';
 import { GOOGLE_CLIENT_ID } from '@/constants';
 import GoogleLoginButton from '@/components/GoogleLoginButton';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import { AuthResponse } from '@/lib/api';
 
 interface FormData {
   email: string;
@@ -107,6 +109,20 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
 
     if (errors[e.target.name as keyof ValidationErrors]) {
       setErrors({ ...errors, [e.target.name]: undefined });
+    }
+  };
+
+  const handleGoogleLogin = async (codeResponse: CodeResponse): Promise<AuthResponse> => {
+    try {
+      const user = await googleLogin(codeResponse);
+
+      router.push('/');
+
+      return user;
+    } catch (error) {
+      console.error('Google login error:', error);
+      toast.error(t('notifications.googleLoginError'));
+      throw error;
     }
   };
 
@@ -299,7 +315,7 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
                   </div>
                   <div className="mt-6 grid grid-cols-1 ">
                     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-                      <GoogleLoginButton googleLogin={googleLogin} />
+                      <GoogleLoginButton googleLogin={handleGoogleLogin} />
                     </GoogleOAuthProvider>
                   </div>
                 </div>
