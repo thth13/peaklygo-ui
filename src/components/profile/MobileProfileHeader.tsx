@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faUser } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 import { IMAGE_URL } from '@/constants';
 import { ProfileStats, UserProfile } from '@/types';
 
@@ -13,6 +14,8 @@ interface MobileProfileHeaderProps {
 }
 
 export default function MobileProfileHeader({ profile, stats, isMyProfile, userId }: MobileProfileHeaderProps) {
+  const t = useTranslations('sidebar');
+
   const username =
     typeof profile?.user === 'object'
       ? profile.user.username
@@ -41,7 +44,7 @@ export default function MobileProfileHeader({ profile, stats, isMyProfile, userI
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <h2 className="text-base font-semibold text-gray-800 dark:text-gray-100 truncate">
-                {profile?.name || 'Пользователь'}
+                {profile?.name || t('user')}
               </h2>
               {isMyProfile && userId && (
                 <Link
@@ -62,19 +65,19 @@ export default function MobileProfileHeader({ profile, stats, isMyProfile, userI
             <div className="text-green-500 dark:text-green-400 font-semibold text-base">
               {stats?.completedGoals || 0}
             </div>
-            <div className="text-gray-500 dark:text-gray-400 text-[11px]">Достигнуто</div>
+            <div className="text-gray-500 dark:text-gray-400 text-[11px]">{t('achieved')}</div>
           </div>
           <div className="text-center">
             <div className="text-primary-500 dark:text-primary-400 font-semibold text-base">
               {stats?.activeGoalsNow || 0}
             </div>
-            <div className="text-gray-500 dark:text-gray-400 text-[11px]">В процессе</div>
+            <div className="text-gray-500 dark:text-gray-400 text-[11px]">{t('inProgress')}</div>
           </div>
           <div className="text-center">
             <div className="text-orange-500 dark:text-orange-400 font-semibold text-base">
               {stats?.closedTasks || 0}
             </div>
-            <div className="text-gray-500 dark:text-gray-400 text-[11px]">Задач</div>
+            <div className="text-gray-500 dark:text-gray-400 text-[11px]">{t('tasks')}</div>
           </div>
         </div>
       </div>

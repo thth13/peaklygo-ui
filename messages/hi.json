@@ -198,6 +198,18 @@
         "dreamWithoutImage": "\"बिना छवि का सपना केवल इच्छा है। छवि के साथ सपना एक योजना है\"",
         "perfectionAchieved": "\"पूर्णता तब प्राप्त होती है जब जोड़ने के लिए कुछ नहीं होता, बल्कि हटाने के लिए कुछ नहीं होता\""
       },
+      "stepsManager": {
+        "goalLabel": "आपका लक्ष्य:",
+        "goalFallback": "हाफ मैराथन दौड़ें",
+        "sectionTitle": "लक्ष्य चरण",
+        "optionalBadge": "वैकल्पिक",
+        "addStep": "चरण जोड़ें",
+        "stepsHint": "चरण लक्ष्य की दिशा में काम को संरचित करने में मदद करते हैं",
+        "placeholders": {
+          "firstStep": "पहला चरण जोड़ें...",
+          "stepWithIndex": "चरण {index}..."
+        }
+      },
       "authors": {
         "laoTzu": "लाओ त्ज़ू",
         "confucius": "कन्फ्यूशियस",
@@ -594,7 +606,18 @@
     "supportedFormats": "PNG, JPG, GIF 10MB तक",
     "cropImage": "छवि क्रॉप करें",
     "selectDifferentImage": "भिन्न छवि चुनें",
-    "removeImage": "छवि हटाएं"
+    "removeImage": "छवि हटाएं",
+    "errorWrongType": "कृपया एक छवि फ़ाइल चुनें",
+    "errorTooLarge": "फ़ाइल का आकार 10MB से अधिक नहीं होना चाहिए",
+    "errorCropFailed": "छवि क्रॉप करने में त्रुटि",
+    "displaySettings": "प्रदर्शन सेटिंग्स",
+    "applyCrop": "लागू करें",
+    "cropAlt": "क्रॉप करने के लिए छवि",
+    "previewAlt": "अपलोड की गई छवि का पूर्वावलोकन",
+    "dragPrompt": "अपना फ़ोटो यहाँ खींचें या",
+    "chooseFile": "एक फ़ाइल चुनें",
+    "fileSelected": "फ़ाइल चयनित: {fileName}",
+    "helperDescription": "छवि लक्ष्य को दृश्य बनाने में मदद करती है। समर्थित प्रारूप: {formats}"
   },
   "pagination": {
     "previous": "पिछला",

@@ -201,6 +201,18 @@
         "dreamWithoutImage": "\"A dream without an image is just a wish. A dream with an image is a plan\"",
         "perfectionAchieved": "\"Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away\""
       },
+      "stepsManager": {
+        "goalLabel": "Your goal:",
+        "goalFallback": "Run a half marathon",
+        "sectionTitle": "Goal steps",
+        "optionalBadge": "Optional",
+        "addStep": "Add step",
+        "stepsHint": "Steps help you structure the journey toward the goal",
+        "placeholders": {
+          "firstStep": "Add the first step...",
+          "stepWithIndex": "Step {index}..."
+        }
+      },
       "authors": {
         "laoTzu": "Lao Tzu",
         "confucius": "Confucius",
@@ -601,7 +613,18 @@
     "supportedFormats": "PNG, JPG, GIF up to 10MB",
     "cropImage": "Crop image",
     "selectDifferentImage": "Select different image",
-    "removeImage": "Remove image"
+    "removeImage": "Remove image",
+    "errorWrongType": "Please select an image file",
+    "errorTooLarge": "File size must not exceed 10MB",
+    "errorCropFailed": "Error while cropping image",
+    "displaySettings": "Display settings",
+    "applyCrop": "Apply",
+    "cropAlt": "Image to crop",
+    "previewAlt": "Preview of the uploaded image",
+    "dragPrompt": "Drag your photo here or",
+    "chooseFile": "choose a file",
+    "fileSelected": "File selected: {fileName}",
+    "helperDescription": "The image helps visualize your goal. Supported formats: {formats}"
   },
   "pagination": {
     "previous": "Previous",

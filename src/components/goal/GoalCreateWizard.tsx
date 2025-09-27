@@ -105,7 +105,7 @@ export const GoalCreateWizard: React.FC = () => {
   const [noDeadline, setNoDeadline] = useState<boolean>(false);
   const router = useRouter();
   const reduceMotion = useReducedMotion();
-  const [userId] = useState<string>(() => Cookies.get('userId') ?? '');
+  const [userId, setUserId] = useState<string>('');
 
   // Auth context
   const { authUser, googleLogin } = useContext(AuthContext);
@@ -120,6 +120,12 @@ export const GoalCreateWizard: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(false);
   const [authLoading, setAuthLoading] = useState<boolean>(false);
   const [authErrors, setAuthErrors] = useState<ValidationErrors>({});
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setUserId(Cookies.get('userId') ?? '');
+    }
+  }, []);
 
   // Инициализация формы при переходе на 6-й шаг
   useEffect(() => {

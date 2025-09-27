@@ -201,6 +201,18 @@
         "dreamWithoutImage": "\"Мечта без образа — просто желание. Мечта с образом — план\"",
         "perfectionAchieved": "\"Совершенство достигается не тогда, когда нечего добавить, а тогда, когда нечего убрать\""
       },
+      "stepsManager": {
+        "goalLabel": "Ваша цель:",
+        "goalFallback": "Пробежать полумарафон",
+        "sectionTitle": "Шаги достижения цели",
+        "optionalBadge": "Необязательно",
+        "addStep": "Добавить шаг",
+        "stepsHint": "Шаги помогут структурировать работу над целью",
+        "placeholders": {
+          "firstStep": "Добавьте первый шаг...",
+          "stepWithIndex": "Шаг {index}..."
+        }
+      },
       "authors": {
         "laoTzu": "Лао-цзы",
         "confucius": "Конфуций",
@@ -601,7 +613,18 @@
     "supportedFormats": "PNG, JPG, GIF до 10MB",
     "cropImage": "Обрезать изображение",
     "selectDifferentImage": "Выбрать другое изображение",
-    "removeImage": "Удалить изображение"
+    "removeImage": "Удалить изображение",
+    "errorWrongType": "Пожалуйста, выберите изображение",
+    "errorTooLarge": "Размер файла не должен превышать 10MB",
+    "errorCropFailed": "Ошибка при обрезке изображения",
+    "displaySettings": "Настройки отображения",
+    "applyCrop": "Применить",
+    "cropAlt": "Изображение для обрезки",
+    "previewAlt": "Превью загруженного изображения",
+    "dragPrompt": "Перетащите фото сюда или",
+    "chooseFile": "выберите файл",
+    "fileSelected": "Файл выбран: {fileName}",
+    "helperDescription": "Изображение поможет визуализировать цель. Поддерживаются {formats}"
   },
   "pagination": {
     "previous": "Назад",

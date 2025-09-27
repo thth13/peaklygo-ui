@@ -1,10 +1,17 @@
-import { format } from 'date-fns';
-import { uk } from 'date-fns/locale';
+import { format, Locale } from 'date-fns';
+import { hi, ru, uk } from 'date-fns/locale';
 
-export function formatDate(date: Date | string, locale: string = 'ua'): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
+const localeMap: Partial<Record<string, Locale>> = {
+  hi,
+  ru,
+  ua: uk,
+  uk,
+};
 
-  return format(d, 'd MMMM yyyy', { locale: locale === 'en' ? undefined : uk });
+export function formatDate(date: Date | string, locale: string = 'en'): string {
+  const normalizedDate: Date = typeof date === 'string' ? new Date(date) : date;
+  const resolvedLocale: Locale | undefined = locale === 'en' ? undefined : localeMap[locale];
+  return format(normalizedDate, 'd MMMM yyyy', { locale: resolvedLocale });
 }
 
 export const cn = (...classes: (string | undefined | false)[]): string => {

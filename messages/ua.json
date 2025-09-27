@@ -201,6 +201,18 @@
         "dreamWithoutImage": "\"Мрія без образу — просто бажання. Мрія з образом — план\"",
         "perfectionAchieved": "\"Досконалість досягається не тоді, коли нема що додати, а тоді, коли нема що забрати\""
       },
+      "stepsManager": {
+        "goalLabel": "Ваша ціль:",
+        "goalFallback": "Пробігти напівмарафон",
+        "sectionTitle": "Кроки досягнення цілі",
+        "optionalBadge": "Необов'язково",
+        "addStep": "Додати крок",
+        "stepsHint": "Кроки допоможуть структурувати роботу над ціллю",
+        "placeholders": {
+          "firstStep": "Додайте перший крок...",
+          "stepWithIndex": "Крок {index}..."
+        }
+      },
       "authors": {
         "laoTzu": "Лао-цзи",
         "confucius": "Конфуцій",
@@ -601,7 +613,18 @@
     "supportedFormats": "PNG, JPG, GIF до 10MB",
     "cropImage": "Обрізати зображення",
     "selectDifferentImage": "Вибрати інше зображення",
-    "removeImage": "Видалити зображення"
+    "removeImage": "Видалити зображення",
+    "errorWrongType": "Будь ласка, виберіть файл зображення",
+    "errorTooLarge": "Розмір файлу не повинен перевищувати 10MB",
+    "errorCropFailed": "Помилка під час обрізання зображення",
+    "displaySettings": "Налаштування відображення",
+    "applyCrop": "Застосувати",
+    "cropAlt": "Зображення для обрізання",
+    "previewAlt": "Попередній перегляд завантаженого зображення",
+    "dragPrompt": "Перетягніть фото сюди або",
+    "chooseFile": "виберіть файл",
+    "fileSelected": "Файл обрано: {fileName}",
+    "helperDescription": "Зображення допомагає візуалізувати ціль. Підтримуються формати: {formats}"
   },
   "pagination": {
     "previous": "Назад",

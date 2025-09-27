@@ -15,7 +15,8 @@ interface ImageUploaderProps {
 }
 
 export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChange }) => {
-  const t = useTranslations('image');
+  const tImage = useTranslations('image');
+  const tCommon = useTranslations('common');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [showCropper, setShowCropper] = useState<boolean>(false);
@@ -109,12 +110,12 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
     const isUnderLimit = file.size <= 10 * 1024 * 1024; // 10MB
 
     if (!isImage) {
-      toast.error('Пожалуйста, выберите изображение');
+      toast.error(tImage('errorWrongType'));
       return;
     }
 
     if (!isUnderLimit) {
-      toast.error('Размер файла не должен превышать 10MB');
+      toast.error(tImage('errorTooLarge'));
       return;
     }
 
@@ -148,7 +149,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
       }
     } catch (error) {
       console.error('Error cropping image:', error);
-      toast.error('Ошибка при обрезке изображения');
+      toast.error(tImage('errorCropFailed'));
     }
   };
 
@@ -179,13 +180,13 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
     <div>
       <label className="block text-lg font-bold text-gray-800 mb-3">
         <FontAwesomeIcon icon={faCamera} className="mr-2 text-primary-500" />
-        Фото цели
+        {tImage('goalPhoto')}
       </label>
 
       {showCropper && cropperSrc ? (
         <div className="border-2 border-primary-300 rounded-xl p-4 bg-primary-50">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">Настройки отображения</h3>
+            <h3 className="text-lg font-semibold text-gray-800">{tImage('displaySettings')}</h3>
             <div className="flex gap-2">
               <button
                 type="button"
@@ -194,7 +195,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
                 className="px-4 py-2 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               >
                 <FontAwesomeIcon icon={faCheck} className="mr-2" />
-                Применить
+                {tImage('applyCrop')}
               </button>
               <button
                 type="button"
@@ -202,7 +203,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
                 className="px-4 py-2 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 transition-colors text-sm"
               >
                 <FontAwesomeIcon icon={faTrash} className="mr-2" />
-                Отмена
+                {tCommon('cancel')}
               </button>
             </div>
           </div>
@@ -217,7 +218,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
             >
               <Image
                 ref={imgRef}
-                alt="Crop me"
+                alt={tImage('cropAlt')}
                 src={cropperSrc}
                 unoptimized
                 width={500}
@@ -250,7 +251,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
             <>
               <Image
                 src={imagePreview}
-                alt="Превью изображения"
+                alt={tImage('previewAlt')}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -266,7 +267,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
                     }
                   }}
                   className="p-2 bg-primary-500 rounded-full text-white hover:bg-primary-600 transition-colors shadow-lg"
-                  title={t('cropImage')}
+                  title={tImage('cropImage')}
                 >
                   <FontAwesomeIcon icon={faCrop} className="w-4 h-4" />
                 </button>
@@ -277,7 +278,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
                     document.getElementById('goal-image')?.click();
                   }}
                   className="p-2 bg-blue-500 rounded-full text-white hover:bg-blue-600 transition-colors shadow-lg"
-                  title={t('selectDifferentImage')}
+                  title={tImage('selectDifferentImage')}
                 >
                   <FontAwesomeIcon icon={faCamera} className="w-4 h-4" />
                 </button>
@@ -285,7 +286,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
                   type="button"
                   onClick={handleRemoveImage}
                   className="p-2 bg-red-500 rounded-full text-white hover:bg-red-600 transition-colors shadow-lg"
-                  title={t('removeImage')}
+                  title={tImage('removeImage')}
                 >
                   <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
                 </button>
@@ -294,11 +295,13 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
           ) : (
             <div className="text-center">
               <FontAwesomeIcon icon={faImage} className="text-4xl text-gray-400 mb-3" />
-              <p className="text-gray-600 mb-2">Перетащите фото сюда или</p>
+              <p className="text-gray-600 mb-2">{tImage('dragPrompt')}</p>
               <span className="cursor-pointer text-primary-600 font-semibold hover:text-primary-700">
-                выберите файл
+                {tImage('chooseFile')}
               </span>
-              {image && <p className="text-sm text-green-600 mt-2">Файл выбран: {image.name}</p>}
+              {image && (
+                <p className="text-sm text-green-600 mt-2">{tImage('fileSelected', { fileName: image.name })}</p>
+              )}
             </div>
           )}
         </div>
@@ -306,7 +309,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
 
       <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="goal-image" />
       <p className="text-sm text-gray-500 mt-2">
-        Изображение поможет визуализировать цель. Поддерживаются JPG, PNG, GIF до 10MB
+        {tImage('helperDescription', { formats: tImage('supportedFormats') })}
       </p>
 
       {/* Hidden canvas for image processing */}
