@@ -1,10 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { CodeResponse, useGoogleLogin } from '@react-oauth/google';
+import { AuthResponse } from '@/lib/api';
 import { useTranslations } from 'next-intl';
 
 interface GoogleLoginButtonProps {
-  googleLogin: (code: CodeResponse) => Promise<void>;
+  googleLogin: (code: CodeResponse) => Promise<AuthResponse>;
 }
 
 const GoogleLoginButton = ({ googleLogin }: GoogleLoginButtonProps) => {

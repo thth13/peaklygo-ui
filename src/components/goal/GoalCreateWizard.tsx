@@ -231,16 +231,17 @@ export const GoalCreateWizard: React.FC = () => {
     }
   };
 
-  const handleGoogleLogin = async (codeResponse: CodeResponse): Promise<void> => {
+  const handleGoogleLogin = async (codeResponse: CodeResponse): Promise<AuthResponse> => {
     try {
-      const { id } = await googleLogin(codeResponse);
+      const user = await googleLogin(codeResponse);
 
-      await createGoalFromData(id);
-
+      await createGoalFromData(user.id);
       toast.success(tAuth('notifications.googleLoginSuccess'));
+      return user;
     } catch (error) {
       console.error('Google login error:', error);
       toast.error(tAuth('notifications.googleLoginError'));
+      throw error;
     }
   };
 

@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { AuthContext } from '@/context/AuthContext';
 import { GOOGLE_CLIENT_ID } from '@/constants';
 import GoogleLoginButton from '@/components/GoogleLoginButton';
+import { useRouter } from 'next/navigation';
 
 interface FormData {
   email: string;
@@ -29,6 +30,7 @@ interface AuthFormProps {
 export default function AuthForm({ isLoginProp }: AuthFormProps) {
   const [isLogin, setIsLogin] = useState<boolean>(isLoginProp);
   const auth = useContext(AuthContext);
+  const router = useRouter();
   const t = useTranslations('auth');
   const tCommon = useTranslations('common');
 
@@ -121,11 +123,14 @@ export default function AuthForm({ isLoginProp }: AuthFormProps) {
 
     try {
       await authUser(email, password, isLogin, username);
+
       if (!isLogin) {
         trackEvent('register_success', { method: 'credentials' });
       } else {
         trackEvent('login_success', { method: 'credentials' });
       }
+
+      router.push('/');
     } catch (error: any) {
       if (error?.response?.data) {
         const serverErrors = error.response.data as Record<string, string> | string;
