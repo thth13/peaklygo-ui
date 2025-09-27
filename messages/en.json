@@ -44,7 +44,9 @@
     "progress": "progress",
     "comments": "comments",
     "comment": "comment",
-    "or": "or"
+    "or": "or",
+    "wait": "Please wait...",
+    "networkError": "Network error. Please try again."
   },
   "auth": {
     "login": "Login",
@@ -67,6 +69,12 @@
     "needAccountLogin": "You need to sign in to write comments",
     "alreadyHaveAccount": "Already have an account",
     "or": "or",
+    "notifications": {
+      "loginSuccess": "Signed in successfully",
+      "registerSuccess": "Account created successfully",
+      "googleLoginSuccess": "Signed in with Google",
+      "googleLoginError": "Google sign-in failed"
+    },
     "validation": {
       "emailOrUsernameRequired": "Please enter a valid email or username (min 3 characters)",
       "validEmailRequired": "Please enter a valid email",
@@ -74,6 +82,12 @@
       "usernameInvalidChars": "Username can only contain letters, numbers, and underscores",
       "passwordMinLength": "Password must be at least 5 characters",
       "passwordsNotMatch": "Passwords do not match"
+    },
+    "placeholders": {
+      "emailOrUsername": "your@email.com or username",
+      "email": "your@email.com",
+      "username": "username",
+      "password": "••••••••"
     },
     "errors": {
       "EMAIL_NOT_UNIQUE": "User with this email already exists",
@@ -105,28 +119,37 @@
         "steps": "Steps",
         "timing": "Timing",
         "design": "Design",
-        "finish": "Finish"
+        "finish": "Finish",
+        "account": "Account"
       },
       "stepDescriptions": {
         "basicInfo": "Basic information",
         "planningSteps": "Planning steps",
         "timingMotivation": "Timing and motivation",
         "photoCategory": "Photo and category",
-        "privacyComplexity": "Privacy and complexity"
+        "privacyComplexity": "Privacy and complexity",
+        "accountCreation": "Create an account"
       },
       "titles": {
         "createNewGoal": "Creating new goal",
         "breakIntoSteps": "Break goal into steps",
         "setDeadlines": "Set deadlines",
         "giveGoalImage": "Give goal an image",
-        "finalSettings": "Final settings"
+        "finalSettings": "Final settings",
+        "createAccount": "Create an account"
       },
       "descriptions": {
         "createStart": "This is where your journey begins. Formulate what you want to achieve — clearly and specifically. When a goal takes on words, it stops being just a thought and becomes the first step toward real action.",
         "breakIntoSteps": "Big goals are achieved with small steps. Divide your goal into concrete actions that will lead you to success. Each step is a small victory on the path to a big dream.",
         "setTiming": "Define time frames and motivation. Clear deadlines make the goal real, while rewards and consequences motivate action.",
         "giveImage": "You can add an image and choose a category. Visualization is a powerful tool: it makes the result tangible and closer. When a goal has an image, it's easier to imagine and strive for daily.",
-        "finalStep": "Last step! Configure additional parameters of your goal. You can create a challenge, invite friends, or just complete creation. Your goal is almost ready to launch!"
+        "finalStep": "Last step! Configure additional parameters of your goal. You can create a challenge, invite friends, or just complete creation. Your goal is almost ready to launch!",
+        "accountCreation": "Create an account to save your goal, follow progress, receive community support, and share achievements. It only takes a minute to unlock the full experience."
+      },
+      "accountBenefits": {
+        "progressTracking": "Progress tracking",
+        "communitySupport": "Community support",
+        "achievementSystem": "Achievement system"
       },
       "fields": {
         "goalName": "Goal name",
@@ -158,7 +181,9 @@
         "skipStep": "Skip this step",
         "back": "Back",
         "createGoal": "Create goal",
-        "creating": "Creating..."
+        "creating": "Creating...",
+        "loginAndCreateGoal": "Sign in and create goal",
+        "registerAndCreateGoal": "Create account and goal"
       },
       "tips": {
         "canSkip": "Can skip",
@@ -200,6 +225,7 @@
         "public": "Public",
         "publicDescription": "All users can see"
       },
+      "stepIndicator": "Step {step} of {totalSteps}",
       "notifications": {
         "goalCreated": "Goal created!",
         "goalCreationError": "Error creating goal"
@@ -379,6 +405,10 @@
       "checkConnection": "Check internet connection",
       "tryLater": "Try again later",
       "contactSupport": "Contact support"
+    },
+    "viewModes": {
+      "grid": "Grid view",
+      "list": "List view"
     },
     "notFound": {
       "title": "Profile Not Found",
@@ -568,7 +598,10 @@
     "goalPhoto": "Goal Photo",
     "uploadPhoto": "Upload photo",
     "dragOrDrop": "or drag and drop here",
-    "supportedFormats": "PNG, JPG, GIF up to 10MB"
+    "supportedFormats": "PNG, JPG, GIF up to 10MB",
+    "cropImage": "Crop image",
+    "selectDifferentImage": "Select different image",
+    "removeImage": "Remove image"
   },
   "pagination": {
     "previous": "Previous",
@@ -609,6 +642,7 @@
     "user": "User",
     "retry": "Try again",
     "addGoal": "Add goal",
+    "closeSidebar": "Close sidebar",
     "error": {
       "dataLoadingError": "Data loading error",
       "profileLoadingError": "Profile loading error",

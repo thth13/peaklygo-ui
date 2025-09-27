@@ -2,22 +2,22 @@
 import NProgress from 'nprogress';
 import { createContext, useState, ReactNode, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import { googleLoginUser, loginUser, registerUser } from '../lib/api';
+import { AuthResponse, googleLoginUser, loginUser, registerUser } from '../lib/api';
 import { api } from '../lib/clientAxios';
 import { CodeResponse } from '@react-oauth/google';
 import { trackEvent } from '@/lib/analytics';
 
 interface AuthContextType {
   userId: string;
-  authUser: (email: string, password: string, isLogin: boolean, username?: string) => Promise<void>;
-  googleLogin: (codeResponse: CodeResponse) => Promise<void>;
+  authUser: (email: string, password: string, isLogin: boolean, username?: string) => Promise<AuthResponse>;
+  googleLogin: (codeResponse: CodeResponse) => Promise<AuthResponse>;
   logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   userId: '',
-  authUser: async () => {},
-  googleLogin: async () => {},
+  authUser: async () => ({ id: '', email: '', username: '', accessToken: '', refreshToken: '' }),
+  googleLogin: async () => ({ id: '', email: '', username: '', accessToken: '', refreshToken: '' }),
   logout: () => {},
 });
 
@@ -35,17 +35,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [userId]);
 
-  const googleLogin = async (codeResponse: CodeResponse) => {
+  const googleLogin = async (codeResponse: CodeResponse): Promise<AuthResponse> => {
     try {
       const data = await googleLoginUser(codeResponse);
       trackEvent('register_success', { method: 'credentials' });
       signIn(data);
+
+      return data;
     } catch (err) {
       throw err;
     }
   };
 
-  const authUser = async (email: string, password: string, isLogin: boolean, username?: string) => {
+  const authUser = async (
+    email: string,
+    password: string,
+    isLogin: boolean,
+    username?: string,
+  ): Promise<AuthResponse> => {
     try {
       let data;
 
@@ -59,6 +66,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       signIn(data);
+
+      return data;
     } catch (err) {
       throw err;
     }
@@ -75,7 +84,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUserId(id);
 
     // For update cookie on the ssr
-    window.location.reload();
+    // window.location.reload();
   };
 
   const logout = () => {

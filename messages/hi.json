@@ -67,6 +67,12 @@
     "needAccountLogin": "टिप्पणियाँ लिखने के लिए आपको साइन इन करना होगा",
     "alreadyHaveAccount": "पहले से ही एक खाता है",
     "or": "या",
+    "notifications": {
+      "loginSuccess": "आप सफलतापूर्वक साइन इन हो गए",
+      "registerSuccess": "खाता सफलतापूर्वक बनाया गया",
+      "googleLoginSuccess": "Google से साइन इन सफल हुआ",
+      "googleLoginError": "Google से साइन इन विफल हुआ"
+    },
     "validation": {
       "emailOrUsernameRequired": "कृपया एक वैध ईमेल या उपयोगकर्ता नाम दर्ज करें (न्यूनतम 3 वर्ण)",
       "validEmailRequired": "कृपया एक वैध ईमेल दर्ज करें",
@@ -83,6 +89,11 @@
       "USER_NOT_FOUND": "उपयोगकर्ता नहीं मिला",
       "INVALID_VERIFICATION_TOKEN": "अमान्य सत्यापन टोकन",
       "INVALID_RESET_REQUEST": "अमान्य पासवर्ड रीसेट अनुरोध"
+    },
+    "placeholders": {
+      "emailOrUsername": "your@email.com या username",
+      "email": "your@email.com",
+      "username": "username"
     }
   },
   "navigation": {
@@ -105,28 +116,37 @@
         "steps": "चरण",
         "timing": "समय",
         "design": "डिज़ाइन",
-        "finish": "समाप्त"
+        "finish": "समाप्त",
+        "account": "खाता"
       },
       "stepDescriptions": {
         "basicInfo": "बुनियादी जानकारी",
         "planningSteps": "चरणों की योजना बनाना",
         "timingMotivation": "समय और प्रेरणा",
         "photoCategory": "फ़ोटो और श्रेणी",
-        "privacyComplexity": "गोपनीयता और जटिलता"
+        "privacyComplexity": "गोपनीयता और जटिलता",
+        "accountCreation": "खाता बनाएँ"
       },
       "titles": {
         "createNewGoal": "नया लक्ष्य बनाना",
         "breakIntoSteps": "लक्ष्य को चरणों में तोड़ें",
         "setDeadlines": "डेडलाइन निर्धारित करें",
         "giveGoalImage": "लक्ष्य को छवि दें",
-        "finalSettings": "अंतिम सेटिंग्स"
+        "finalSettings": "अंतिम सेटिंग्स",
+        "createAccount": "खाता बनाएँ"
       },
       "descriptions": {
         "createStart": "यहाँ आपकी यात्रा शुरू होती है। अपने लक्ष्य को स्पष्ट और विशिष्ट रूप से बताएं। जब लक्ष्य शब्दों में ढलता है, तो वह केवल एक विचार नहीं रह जाता बल्कि वास्तविक कार्य की दिशा में पहला कदम बन जाता है।",
         "breakIntoSteps": "बड़े लक्ष्य छोटे कदमों से हासिल होते हैं। अपने लक्ष्य को ऐसे कार्यों में बांटें जो आपको सफलता तक ले जाएंगे। हर कदम बड़े सपने की राह में एक छोटी जीत है।",
         "setTiming": "समय सीमा और प्रेरणा निर्धारित करें। स्पष्ट डेडलाइन लक्ष्य को वास्तविक बनाती है, जबकि इनाम और परिणाम कार्य के लिए प्रेरित करते हैं।",
         "giveImage": "आप छवि जोड़ सकते हैं और श्रेणी चुन सकते हैं। दृश्यीकरण एक शक्तिशाली उपकरण है: यह परिणाम को स्पर्शनीय और करीब बनाता है। जब लक्ष्य की छवि होती है, तो इसकी कल्पना करना और इसके लिए प्रतिदिन प्रयास करना आसान हो जाता है।",
-        "finalStep": "अंतिम चरण! अपने लक्ष्य के अतिरिक्त पैरामीटर कॉन्फ़िगर करें। आप चुनौती बना सकते हैं, दोस्तों को आमंत्रित कर सकते हैं या बस निर्माण पूरा कर सकते हैं। आपका लक्ष्य शुरू होने के लिए लगभग तैयार है!"
+        "finalStep": "अंतिम चरण! अपने लक्ष्य के अतिरिक्त पैरामीटर कॉन्फ़िगर करें। आप चुनौती बना सकते हैं, दोस्तों को आमंत्रित कर सकते हैं या बस निर्माण पूरा कर सकते हैं। आपका लक्ष्य शुरू होने के लिए लगभग तैयार है!",
+        "accountCreation": "अपना लक्ष्य सहेजने, प्रगति का ट्रैक रखने, समुदाय का समर्थन पाने और उपलब्धियाँ साझा करने के लिए खाता बनाएँ। इसमें केवल एक मिनट लगता है और पूरा अनुभव अनलॉक हो जाता है।"
+      },
+      "accountBenefits": {
+        "progressTracking": "प्रगति ट्रैकिंग",
+        "communitySupport": "समुदाय समर्थन",
+        "achievementSystem": "उपलब्धि प्रणाली"
       },
       "fields": {
         "goalName": "लक्ष्य का नाम",
@@ -158,7 +178,9 @@
         "skipStep": "इस चरण को छोड़ें",
         "back": "वापस",
         "createGoal": "लक्ष्य बनाएँ",
-        "creating": "बनाया जा रहा है..."
+        "creating": "बनाया जा रहा है...",
+        "loginAndCreateGoal": "लॉगिन करके लक्ष्य बनाएँ",
+        "registerAndCreateGoal": "खाता बनाएँ और लक्ष्य बनाएँ"
       },
       "tips": {
         "canSkip": "छोड़ सकते हैं",
@@ -200,6 +222,7 @@
         "public": "सार्वजनिक",
         "publicDescription": "सभी उपयोगकर्ता देख सकते हैं"
       },
+      "stepIndicator": "चरण {step} का {totalSteps}",
       "notifications": {
         "goalCreated": "लक्ष्य बनाया गया!",
         "goalCreationError": "लक्ष्य बनाने में त्रुटि"
@@ -568,7 +591,10 @@
     "goalPhoto": "लक्ष्य फ़ोटो",
     "uploadPhoto": "फ़ोटो अपलोड करें",
     "dragOrDrop": "या यहाँ खींचें और छोड़ें",
-    "supportedFormats": "PNG, JPG, GIF 10MB तक"
+    "supportedFormats": "PNG, JPG, GIF 10MB तक",
+    "cropImage": "छवि क्रॉप करें",
+    "selectDifferentImage": "भिन्न छवि चुनें",
+    "removeImage": "छवि हटाएं"
   },
   "pagination": {
     "previous": "पिछला",

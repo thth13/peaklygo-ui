@@ -6,6 +6,7 @@ import { faImage, faCamera, faCrop, faTrash, faCheck } from '@fortawesome/free-s
 import Image from 'next/image';
 import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop';
 import { toast } from 'react-hot-toast';
+import { useTranslations } from 'next-intl';
 import 'react-image-crop/dist/ReactCrop.css';
 
 interface ImageUploaderProps {
@@ -14,6 +15,7 @@ interface ImageUploaderProps {
 }
 
 export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChange }) => {
+  const t = useTranslations('image');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [showCropper, setShowCropper] = useState<boolean>(false);
@@ -261,7 +263,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
                     }
                   }}
                   className="p-2 bg-primary-500 rounded-full text-white hover:bg-primary-600 transition-colors shadow-lg"
-                  title="Обрезать изображение"
+                  title={t('cropImage')}
                 >
                   <FontAwesomeIcon icon={faCrop} className="w-4 h-4" />
                 </button>
@@ -272,7 +274,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
                     document.getElementById('goal-image')?.click();
                   }}
                   className="p-2 bg-blue-500 rounded-full text-white hover:bg-blue-600 transition-colors shadow-lg"
-                  title="Выбрать другое изображение"
+                  title={t('selectDifferentImage')}
                 >
                   <FontAwesomeIcon icon={faCamera} className="w-4 h-4" />
                 </button>
@@ -280,7 +282,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
                   type="button"
                   onClick={handleRemoveImage}
                   className="p-2 bg-red-500 rounded-full text-white hover:bg-red-600 transition-colors shadow-lg"
-                  title="Удалить изображение"
+                  title={t('removeImage')}
                 >
                   <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
                 </button>

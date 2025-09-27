@@ -44,7 +44,7 @@ export function ProfileContent({ goalsData, isMyProfile, onPageChange, onGoalArc
                     ? 'bg-white dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow-sm'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}
-                title="Плиткой"
+                title={t('viewModes.grid')}
               >
                 <FontAwesomeIcon icon={faTh} className="w-4 h-4" />
               </button>
@@ -55,7 +55,7 @@ export function ProfileContent({ goalsData, isMyProfile, onPageChange, onGoalArc
                     ? 'bg-white dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow-sm'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}
-                title="Списком"
+                title={t('viewModes.list')}
               >
                 <FontAwesomeIcon icon={faList} className="w-4 h-4" />
               </button>

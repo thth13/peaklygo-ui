@@ -2,10 +2,12 @@ import { API_URL } from '@/constants';
 import { api } from '../clientAxios';
 import { CodeResponse } from '@react-oauth/google';
 
-interface AuthResponse {
+export interface AuthResponse {
+  id: string;
+  email: string;
+  username: string;
   accessToken: string;
   refreshToken: string;
-  id: string;
 }
 
 export const loginUser = async (identifier: string, password: string): Promise<AuthResponse> => {

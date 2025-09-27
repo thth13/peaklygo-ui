@@ -104,7 +104,7 @@ const OverlaySidebar = ({ userId, onClose }: OverlaySidebarProps) => {
       >
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">{t('menu')}</h2>
-          <button aria-label="Close sidebar" onClick={startClose} className="text-gray-600 dark:text-gray-200">
+          <button aria-label={t('closeSidebar')} onClick={startClose} className="text-gray-600 dark:text-gray-200">
             ✕
           </button>
         </div>

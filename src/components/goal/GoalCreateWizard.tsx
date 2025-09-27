@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, FormEvent } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -28,14 +28,23 @@ import {
   faEye,
   faExclamationTriangle,
   faGift,
+  faUserPlus,
 } from '@fortawesome/free-solid-svg-icons';
+import Cookies from 'js-cookie';
+
 import { createGoal } from '@/lib/api/goal';
 import { useRouter } from 'next/navigation';
 import { useUserProfile } from '@/context/UserProfileContext';
+import { AuthContext } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { PrivacyStatus } from '@/types';
 import { ImageUploader, StepsManager } from './wizard';
 import { useTranslations } from 'next-intl';
+import { GoogleOAuthProvider, CodeResponse } from '@react-oauth/google';
+import { GOOGLE_CLIENT_ID } from '@/constants';
+import { useContext } from 'react';
+import GoogleLoginButton from '@/components/GoogleLoginButton';
+import { AuthResponse } from '@/lib/api/auth';
 
 export interface GoalCreateWizardData {
   // Шаг 1: Основы
@@ -58,6 +67,21 @@ export interface GoalCreateWizardData {
   // Шаг 5: Приватность и сложность
   privacy: PrivacyStatus;
   value: number;
+}
+
+interface AuthFormData {
+  email: string;
+  username: string;
+  password: string;
+  confirmPassword: string;
+}
+
+interface ValidationErrors {
+  email?: string;
+  username?: string;
+  password?: string;
+  confirmPassword?: string;
+  server?: string;
 }
 
 const defaultState: GoalCreateWizardData = {
@@ -83,46 +107,168 @@ export const GoalCreateWizard: React.FC = () => {
   const router = useRouter();
   const { profile } = useUserProfile();
   const reduceMotion = useReducedMotion();
+  const [userId] = useState<string>(() => Cookies.get('userId') ?? '');
+  const isUserIdLockedRef = useRef<boolean>(Boolean(userId));
+
+  // Auth context
+  const { authUser, googleLogin } = useContext(AuthContext);
+
+  // Auth form state
+  const [authFormData, setAuthFormData] = useState<AuthFormData>({
+    email: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [authLoading, setAuthLoading] = useState<boolean>(false);
+  const [authErrors, setAuthErrors] = useState<ValidationErrors>({});
+
+  // Инициализация формы при переходе на 6-й шаг
+  useEffect(() => {
+    if (!userId && step === 6) {
+      setAuthErrors({});
+    }
+  }, [step, userId]);
 
   // Translations
   const t = useTranslations('goals.wizard');
   const tGoals = useTranslations('goals');
+  const tAuth = useTranslations('auth');
+  const tCommon = useTranslations('common');
 
-  const totalSteps = 5;
+  const totalSteps = userId ? 5 : 6;
 
   const update = (field: keyof GoalCreateWizardData, value: any) => {
     setData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const nextStep = () => {
-    if (canContinue() && step < totalSteps) {
-      setDirection(1);
-      setStep(step + 1);
+  const updateAuthForm = (field: keyof AuthFormData, value: string) => {
+    setAuthFormData((prev) => ({ ...prev, [field]: value }));
+    // Сбрасываем ошибку для этого поля при вводе
+    if (authErrors[field]) {
+      setAuthErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
-  const prevStep = () => {
-    if (step > 1) {
-      setDirection(-1);
-      setStep(step - 1);
-    }
+  // Валидация формы при изменении полей
+  const handleAuthFormChange = (field: keyof AuthFormData, value: string) => {
+    updateAuthForm(field, value);
   };
 
-  const handleSubmit = async () => {
-    if (!profile || !canContinue()) return;
+  const validateAuthForm = (): boolean => {
+    const newErrors: ValidationErrors = {};
+
+    if (isLogin) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const isEmail = emailRegex.test(authFormData.email);
+      const isUsername = authFormData.email.length >= 3 && !authFormData.email.includes('@');
+
+      // Показываем ошибку только если поле не пустое
+      if (authFormData.email && !isEmail && !isUsername) {
+        newErrors.email = tAuth('validation.emailOrUsernameRequired');
+      }
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      // Показываем ошибку только если email введен
+      if (authFormData.email && !emailRegex.test(authFormData.email)) {
+        newErrors.email = tAuth('validation.validEmailRequired');
+      }
+
+      // Показываем ошибку только если username введен
+      if (authFormData.username && authFormData.username.length < 3) {
+        newErrors.username = tAuth('validation.usernameMinLength');
+      } else if (authFormData.username && !/^[a-zA-Z0-9_]+$/.test(authFormData.username)) {
+        newErrors.username = tAuth('validation.usernameInvalidChars');
+      }
+    }
+
+    // Показываем ошибку только если пароль введен
+    if (authFormData.password && authFormData.password.length < 5) {
+      newErrors.password = tAuth('validation.passwordMinLength');
+    }
+
+    // Показываем ошибку только если оба поля пароля введены
+    if (
+      !isLogin &&
+      authFormData.password &&
+      authFormData.confirmPassword &&
+      authFormData.password !== authFormData.confirmPassword
+    ) {
+      newErrors.confirmPassword = tAuth('validation.passwordsNotMatch');
+    }
+
+    setAuthErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleAuthSubmit = async () => {
+    if (!validateAuthForm()) {
+      return;
+    }
+
+    setAuthLoading(true);
+    setAuthErrors({});
 
     try {
-      setSubmitting(true);
+      const { email, password, username } = authFormData;
+      const { id } = await authUser(email, password, isLogin, username);
 
+      await createGoalFromData(id);
+
+      toast.success(isLogin ? tAuth('notifications.loginSuccess') : tAuth('notifications.registerSuccess'));
+    } catch (error: any) {
+      if (error?.response?.data) {
+        const serverErrors = error.response.data as Record<string, string> | string;
+        const normalized =
+          typeof serverErrors === 'string' ? { server: serverErrors } : (serverErrors as Record<string, string>);
+        setAuthErrors(normalized);
+      } else {
+        setAuthErrors({ server: t('common.networkError') });
+      }
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async (codeResponse: CodeResponse): Promise<void> => {
+    try {
+      const { id } = await googleLogin(codeResponse);
+
+      await createGoalFromData(id);
+
+      toast.success(tAuth('notifications.googleLoginSuccess'));
+    } catch (error) {
+      console.error('Google login error:', error);
+      toast.error(tAuth('notifications.googleLoginError'));
+    }
+  };
+
+  // Общая функция для создания цели
+  const createGoalFromData = async (currentUserId: string): Promise<void> => {
+    // Проверяем, что все необходимые данные заполнены
+    if (!data.goalName.trim()) {
+      console.error('Goal name is required');
+      return;
+    }
+
+    // Проверяем, что пользователь авторизован
+    if (!currentUserId) {
+      console.error('User must be authenticated');
+      return;
+    }
+
+    try {
       const formDataToSend = new FormData();
 
       // Основные поля (соответствуют DTO)
       formDataToSend.append('goalName', data.goalName.trim());
       formDataToSend.append('description', data.description?.trim() || '');
-      formDataToSend.append('userId', profile.user._id);
-      formDataToSend.append('category', data.category || 'lifestyle'); // дефолтная категория
+      formDataToSend.append('userId', currentUserId);
+      formDataToSend.append('category', data.category || 'lifestyle');
       formDataToSend.append('privacy', data.privacy);
       formDataToSend.append('value', data.value.toString());
+      formDataToSend.append('tutorialCompleted', 'true');
 
       // Даты
       if (data.startDate) {
@@ -146,7 +292,7 @@ export const GoalCreateWizard: React.FC = () => {
       // Шаги - форматируем под StepDto
       const validSteps = data.steps.filter((step) => step.trim().length > 0);
       const formattedSteps = validSteps.map((step, index) => ({
-        id: `step-${index}`, // добавляем id для StepDto
+        id: `step-${index}`,
         text: step.trim(),
         isCompleted: false,
       }));
@@ -157,10 +303,39 @@ export const GoalCreateWizard: React.FC = () => {
         formDataToSend.append('image', data.image);
       }
 
-      await createGoal(formDataToSend);
+      console.log('Creating goal for user:', currentUserId);
+      const createdGoal = await createGoal(formDataToSend);
+      console.log('Goal created successfully:', createdGoal._id);
 
       toast.success(t('notifications.goalCreated'));
-      router.push('/');
+      router.push(`/goal/${createdGoal._id}`);
+    } catch (error) {
+      console.error('Error creating goal:', error);
+      throw error;
+    }
+  };
+
+  const nextStep = () => {
+    if (canContinue() && step < totalSteps) {
+      setDirection(1);
+      setStep(step + 1);
+    }
+  };
+
+  const prevStep = () => {
+    if (step > 1) {
+      setDirection(-1);
+      setStep(step - 1);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!userId || !canContinue()) return;
+
+    try {
+      setSubmitting(true);
+
+      await createGoalFromData(userId);
     } catch (error) {
       console.error('Ошибка создания цели:', error);
       toast.error(t('notifications.goalCreationError'));
@@ -180,6 +355,8 @@ export const GoalCreateWizard: React.FC = () => {
         return true; // Остальные поля опциональные
       case 5:
         return data.privacy !== undefined; // Требуем выбор приватности
+      case 6:
+        return !userId;
       default:
         return false;
     }
@@ -188,7 +365,7 @@ export const GoalCreateWizard: React.FC = () => {
   return (
     <div
       className={`min-h-screen ${
-        step === 5
+        step === totalSteps
           ? 'bg-gradient-to-br from-green-50 via-white to-emerald-50'
           : 'bg-gradient-to-br from-primary-50 via-white to-primary-50'
       }`}
@@ -203,6 +380,7 @@ export const GoalCreateWizard: React.FC = () => {
               { icon: faCalendarAlt, label: t('steps.timing') },
               { icon: faImage, label: t('steps.design') },
               { icon: faCheck, label: t('steps.finish') },
+              ...(userId ? [] : [{ icon: faUserPlus, label: t('steps.account') }]),
             ].map((stepItem, index) => (
               <React.Fragment key={index}>
                 <div className="flex flex-col items-center">
@@ -225,14 +403,14 @@ export const GoalCreateWizard: React.FC = () => {
                     {stepItem.label}
                   </span>
                 </div>
-                {index < 4 && (
+                {index < totalSteps - 1 && (
                   <div className={`w-8 h-1 rounded mt-3 ${index + 1 < step ? 'bg-green-500' : 'bg-gray-200'}`}></div>
                 )}
               </React.Fragment>
             ))}
           </div>
           <p className="text-sm text-gray-500">
-            Шаг {step} из {totalSteps}:{' '}
+            {t('stepIndicator', { step, totalSteps })}:{' '}
             {
               [
                 t('stepDescriptions.basicInfo'),
@@ -240,6 +418,7 @@ export const GoalCreateWizard: React.FC = () => {
                 t('stepDescriptions.timingMotivation'),
                 t('stepDescriptions.photoCategory'),
                 t('stepDescriptions.privacyComplexity'),
+                ...(userId ? [] : [t('stepDescriptions.accountCreation')]),
               ][step - 1]
             }
           </p>
@@ -334,6 +513,19 @@ export const GoalCreateWizard: React.FC = () => {
                       </div>
                     </>
                   )}
+                  {step === 6 && (
+                    <>
+                      <div className="w-24 h-24 bg-gradient-to-br from-purple-400 via-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <FontAwesomeIcon icon={faUserPlus} className="text-3xl text-white" />
+                      </div>
+                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                        <FontAwesomeIcon icon={faCheck} className="text-xs text-white" />
+                      </div>
+                      <div className="absolute -bottom-1 -left-1 w-5 h-5 bg-orange-400 rounded-full flex items-center justify-center shadow-md">
+                        <FontAwesomeIcon icon={faStar} className="text-xs text-white" />
+                      </div>
+                    </>
+                  )}
                 </div>
                 <h1 className="text-3xl font-bold text-gray-800 mb-4">
                   {
@@ -343,6 +535,7 @@ export const GoalCreateWizard: React.FC = () => {
                       t('titles.setDeadlines'),
                       t('titles.giveGoalImage'),
                       t('titles.finalSettings'),
+                      ...(userId ? [] : [t('titles.createAccount')]),
                     ][step - 1]
                   }
                 </h1>
@@ -354,6 +547,7 @@ export const GoalCreateWizard: React.FC = () => {
                       t('descriptions.setTiming'),
                       t('descriptions.giveImage'),
                       t('descriptions.finalStep'),
+                      ...(userId ? [] : [t('descriptions.accountCreation')]),
                     ][step - 1]
                   }
                 </p>
@@ -371,7 +565,28 @@ export const GoalCreateWizard: React.FC = () => {
                 exit={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : -12 }}
                 transition={{ duration: reduceMotion ? 0 : 0.24, ease: 'easeOut' }}
               >
-                {step === 2 ? (
+                {step === 6 && !userId ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3 text-gray-600">
+                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                        <FontAwesomeIcon icon={faRoute} className="text-green-600 text-sm" />
+                      </div>
+                      <span className="text-sm">{t('accountBenefits.progressTracking')}</span>
+                    </div>
+                    <div className="flex items-center space-x-3 text-gray-600">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <FontAwesomeIcon icon={faUsers} className="text-blue-600 text-sm" />
+                      </div>
+                      <span className="text-sm">{t('accountBenefits.communitySupport')}</span>
+                    </div>
+                    <div className="flex items-center space-x-3 text-gray-600">
+                      <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                        <FontAwesomeIcon icon={faTrophy} className="text-purple-600 text-sm" />
+                      </div>
+                      <span className="text-sm">{t('accountBenefits.achievementSystem')}</span>
+                    </div>
+                  </div>
+                ) : step === 2 ? (
                   <>
                     <div className="text-center mb-6">
                       <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
@@ -775,6 +990,166 @@ export const GoalCreateWizard: React.FC = () => {
                         </div>
                       </>
                     )}
+
+                    {step === 6 && !userId && (
+                      <>
+                        {/* Auth tabs */}
+                        <div className="flex mb-6">
+                          <button
+                            type="button"
+                            className={`flex-1 py-3 text-center font-medium border-b-2 transition-colors ${
+                              !isLogin
+                                ? 'text-primary-600 border-primary-600'
+                                : 'text-gray-400 border-transparent hover:text-primary-600'
+                            }`}
+                            onClick={() => {
+                              setIsLogin(false);
+                              setAuthErrors({});
+                              // Сбросим поля формы при переключении
+                              setAuthFormData({
+                                email: '',
+                                username: '',
+                                password: '',
+                                confirmPassword: '',
+                              });
+                            }}
+                          >
+                            {tAuth('register')}
+                          </button>
+                          <button
+                            type="button"
+                            className={`flex-1 py-3 text-center font-medium border-b-2 transition-colors ${
+                              isLogin
+                                ? 'text-primary-600 border-primary-600'
+                                : 'text-gray-400 border-transparent hover:text-primary-600'
+                            }`}
+                            onClick={() => {
+                              setIsLogin(true);
+                              setAuthErrors({});
+                              // Сбросим поля формы при переключении
+                              setAuthFormData({
+                                email: '',
+                                username: '',
+                                password: '',
+                                confirmPassword: '',
+                              });
+                            }}
+                          >
+                            {tAuth('login')}
+                          </button>
+                        </div>
+
+                        {/* Google Login */}
+                        <div className="mb-6">
+                          <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+                            <div className="w-full [&>button]:w-full [&>button]:bg-white [&>button]:border-2 [&>button]:border-gray-200 [&>button]:text-gray-700 [&>button]:py-3 [&>button]:px-6 [&>button]:rounded-xl [&>button]:font-semibold [&>button]:text-sm [&>button]:hover:border-gray-300 [&>button]:hover:bg-gray-50 [&>button]:transition-all [&>button]:duration-200 [&>button]:shadow-sm [&>button]:hover:shadow-md">
+                              <GoogleLoginButton googleLogin={handleGoogleLogin} />
+                            </div>
+                          </GoogleOAuthProvider>
+                        </div>
+
+                        <div className="relative mb-6">
+                          <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-200"></div>
+                          </div>
+                          <div className="relative flex justify-center text-sm">
+                            <span className="px-3 bg-white text-gray-500 font-medium">{tCommon('or')}</span>
+                          </div>
+                        </div>
+
+                        {/* Email */}
+                        <div className="mb-4">
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            <FontAwesomeIcon icon={faUsers} className="text-primary-500 mr-2" />
+                            {isLogin ? tAuth('emailOrUsername') : tAuth('email')}
+                          </label>
+                          <input
+                            type={isLogin ? 'text' : 'email'}
+                            value={authFormData.email}
+                            onChange={(e) => handleAuthFormChange('email', e.target.value)}
+                            className={`w-full px-3 py-3 border-2 rounded-lg text-sm transition-all duration-200 placeholder-gray-400 ${
+                              authErrors.email
+                                ? 'border-red-500'
+                                : 'border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
+                            }`}
+                            placeholder={tAuth(`placeholders.${isLogin ? 'emailOrUsername' : 'email'}`)}
+                            required
+                          />
+                          {authErrors.email && <p className="text-red-500 text-xs mt-1">{authErrors.email}</p>}
+                        </div>
+
+                        {/* Username (only for registration) */}
+                        {!isLogin && (
+                          <div className="mb-4">
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              <FontAwesomeIcon icon={faUsers} className="text-primary-500 mr-2" />
+                              {tAuth('username')}
+                            </label>
+                            <input
+                              type="text"
+                              value={authFormData.username}
+                              onChange={(e) => handleAuthFormChange('username', e.target.value)}
+                              className={`w-full px-3 py-3 border-2 rounded-lg text-sm transition-all duration-200 placeholder-gray-400 ${
+                                authErrors.username
+                                  ? 'border-red-500'
+                                  : 'border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
+                              }`}
+                              placeholder={tAuth('placeholders.username')}
+                              required
+                            />
+                            {authErrors.username && <p className="text-red-500 text-xs mt-1">{authErrors.username}</p>}
+                          </div>
+                        )}
+
+                        {/* Password */}
+                        <div className="mb-4">
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            <FontAwesomeIcon icon={faLock} className="text-primary-500 mr-2" />
+                            {tAuth('password')}
+                          </label>
+                          <input
+                            type="password"
+                            value={authFormData.password}
+                            onChange={(e) => handleAuthFormChange('password', e.target.value)}
+                            className={`w-full px-3 py-3 border-2 rounded-lg text-sm transition-all duration-200 placeholder-gray-400 ${
+                              authErrors.password
+                                ? 'border-red-500'
+                                : 'border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
+                            }`}
+                            placeholder="••••••••"
+                            required
+                          />
+                          {authErrors.password && <p className="text-red-500 text-xs mt-1">{authErrors.password}</p>}
+                        </div>
+
+                        {/* Confirm Password (only for registration) */}
+                        {!isLogin && (
+                          <div className="mb-4">
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              <FontAwesomeIcon icon={faLock} className="text-primary-500 mr-2" />
+                              {tAuth('confirmPassword')}
+                            </label>
+                            <input
+                              type="password"
+                              value={authFormData.confirmPassword}
+                              onChange={(e) => handleAuthFormChange('confirmPassword', e.target.value)}
+                              className={`w-full px-3 py-3 border-2 rounded-lg text-sm transition-all duration-200 placeholder-gray-400 ${
+                                authErrors.confirmPassword
+                                  ? 'border-red-500'
+                                  : 'border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
+                              }`}
+                              placeholder="••••••••"
+                              required
+                            />
+                            {authErrors.confirmPassword && (
+                              <p className="text-red-500 text-xs mt-1">{authErrors.confirmPassword}</p>
+                            )}
+                          </div>
+                        )}
+
+                        {authErrors.server && <p className="text-red-500 text-xs mb-4">{authErrors.server}</p>}
+                      </>
+                    )}
                   </motion.div>
                 </AnimatePresence>
 
@@ -814,8 +1189,36 @@ export const GoalCreateWizard: React.FC = () => {
                         )}
                       </div>
                     </>
+                  ) : step === totalSteps && !userId ? (
+                    <>
+                      {/* Auth form submit button */}
+                      <button
+                        type="button"
+                        onClick={handleAuthSubmit}
+                        disabled={authLoading}
+                        className="w-full bg-primary-600 text-white py-3 px-6 rounded-xl font-bold text-base hover:bg-primary-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      >
+                        {authLoading
+                          ? tCommon('wait')
+                          : isLogin
+                          ? t('buttons.loginAndCreateGoal')
+                          : t('buttons.registerAndCreateGoal')}
+                        <FontAwesomeIcon icon={faCheck} className="ml-2" />
+                      </button>
+                      {step > 1 && (
+                        <button
+                          type="button"
+                          onClick={prevStep}
+                          className="w-full bg-gray-100 text-gray-600 py-3 px-6 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-colors"
+                        >
+                          <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+                          Назад
+                        </button>
+                      )}
+                    </>
                   ) : (
                     <>
+                      {/* Final submit button for goal creation */}
                       <button
                         type="button"
                         onClick={handleSubmit}
