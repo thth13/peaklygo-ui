@@ -1,8 +1,8 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { getProfile } from '@/lib/api/profile';
-import Cookies from 'js-cookie';
+import { AuthContext } from '@/context/AuthContext';
 import { UserProfile } from '../types';
 
 interface UserProfileContextType {
@@ -21,44 +21,66 @@ export const UserProfileContext = createContext<UserProfileContextType>({
   setTutorialCompleted: () => {},
 });
 
+interface ErrorWithResponse {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
+const getErrorMessage = (error: unknown): string => {
+  if (typeof error === 'object' && error !== null) {
+    const errorWithResponse = error as ErrorWithResponse;
+    if (errorWithResponse.response?.data?.message) {
+      return errorWithResponse.response.data.message;
+    }
+  }
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+  return 'Ошибка загрузки профиля';
+};
+
 export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchProfile = async (userId: string): Promise<void> => {
+  const { userId } = useContext(AuthContext);
+
+  const fetchProfile = useCallback(async (targetUserId: string): Promise<void> => {
     try {
       setIsLoading(true);
       setError(null);
-
-      const data = await getProfile(userId);
-
+      const data = await getProfile(targetUserId);
       setProfile(data);
-    } catch (err: any) {
-      const errorMessage = err?.response?.data?.message || err?.message || 'Ошибка загрузки профиля';
+    } catch (err: unknown) {
+      const errorMessage = getErrorMessage(err);
       setError(errorMessage);
       console.error('Failed to fetch profile:', err);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const refetchProfile = async (): Promise<void> => {
-    const userId = Cookies.get('userId');
-    if (userId) {
-      await fetchProfile(userId);
+  const refetchProfile = useCallback(async (): Promise<void> => {
+    if (!userId) {
+      return;
     }
-  };
+    await fetchProfile(userId);
+  }, [fetchProfile, userId]);
 
   useEffect(() => {
-    const userId = Cookies.get('userId');
-
-    if (userId) {
-      fetchProfile(userId);
-    } else {
+    if (!userId) {
+      setProfile(null);
+      setError(null);
       setIsLoading(false);
+
+      return;
     }
-  }, []);
+    void fetchProfile(userId);
+  }, [fetchProfile, userId]);
 
   return (
     <UserProfileContext.Provider
