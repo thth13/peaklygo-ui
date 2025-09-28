@@ -83,6 +83,10 @@ interface ValidationErrors {
   server?: string;
 }
 
+const GOAL_VALUE_MIN = 0;
+const GOAL_VALUE_MAX = 500;
+const GOAL_VALUE_MARKS: readonly number[] = [0, 125, 250, 375, 500];
+
 const defaultState: GoalCreateWizardData = {
   goalName: '',
   description: '',
@@ -144,6 +148,35 @@ export const GoalCreateWizard: React.FC = () => {
 
   const update = (field: keyof GoalCreateWizardData, value: any) => {
     setData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleValueChange = (rawValue: number) => {
+    const fallbackValue = Number.isNaN(rawValue) ? GOAL_VALUE_MIN : rawValue;
+    const normalizedValue = Math.min(GOAL_VALUE_MAX, Math.max(GOAL_VALUE_MIN, fallbackValue));
+    update('value', normalizedValue);
+  };
+
+  const resolveImportanceLabel = (currentValue: number): string => {
+    const importancePercent = (currentValue / GOAL_VALUE_MAX) * 100;
+    if (importancePercent <= 20) {
+      return t('importance.minimal');
+    }
+    if (importancePercent <= 40) {
+      return t('importance.low');
+    }
+    if (importancePercent <= 55) {
+      return t('importance.belowAverage');
+    }
+    if (importancePercent <= 70) {
+      return t('importance.average');
+    }
+    if (importancePercent <= 85) {
+      return t('importance.aboveAverage');
+    }
+    if (importancePercent <= 95) {
+      return t('importance.high');
+    }
+    return t('importance.critical');
   };
 
   const updateAuthForm = (field: keyof AuthFormData, value: string) => {
@@ -847,43 +880,38 @@ export const GoalCreateWizard: React.FC = () => {
                             <div className="relative">
                               <input
                                 type="range"
-                                min="0"
-                                max="100"
+                                min={GOAL_VALUE_MIN}
+                                max={GOAL_VALUE_MAX}
                                 value={data.value}
-                                onChange={(e) => update('value', parseInt(e.target.value))}
+                                onChange={(e) => handleValueChange(Number(e.target.value))}
                                 className="w-full h-3 bg-gradient-to-r from-gray-200 via-yellow-300 to-red-500 rounded-lg appearance-none cursor-pointer"
                                 style={{
                                   background: 'linear-gradient(to right, #e5e7eb 0%, #fde047 50%, #ef4444 100%)',
                                 }}
                               />
                               <div className="flex justify-between text-xs text-gray-500 mt-2">
-                                <span>0</span>
-                                <span>25</span>
-                                <span>50</span>
-                                <span>75</span>
-                                <span>100</span>
+                                {GOAL_VALUE_MARKS.map((mark) => (
+                                  <span key={`goal-value-mark-${mark}`}>{mark}</span>
+                                ))}
                               </div>
                             </div>
-                            <div className="text-center">
-                              <span className="text-3xl font-bold text-primary-600">{data.value}</span>
-                              <p className="text-sm text-gray-500 mt-1">
-                                {data.value <= 20
-                                  ? t('importance.minimal')
-                                  : data.value <= 40
-                                  ? t('importance.low')
-                                  : data.value <= 55
-                                  ? t('importance.belowAverage')
-                                  : data.value <= 70
-                                  ? t('importance.average')
-                                  : data.value <= 85
-                                  ? t('importance.aboveAverage')
-                                  : data.value <= 95
-                                  ? t('importance.high')
-                                  : t('importance.critical')}
-                              </p>
+                            <div className="text-center space-y-1">
+                              <label htmlFor="goal-value-input" className="sr-only">
+                                {t('fields.goalImportance')}
+                              </label>
+                              <input
+                                id="goal-value-input"
+                                min={GOAL_VALUE_MIN}
+                                max={GOAL_VALUE_MAX}
+                                value={data.value}
+                                onChange={(e) => handleValueChange(Number(e.target.value))}
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                className="w-full text-3xl font-bold text-primary-600 text-center bg-transparent border-none focus:outline-none focus:ring-0"
+                              />
+                              <p className="text-sm text-gray-500">{resolveImportanceLabel(data.value)}</p>
                             </div>
                           </div>
-                          <p className="text-sm text-gray-500 mt-3">{t('fields.rateFrom0To100')}</p>
                         </div>
 
                         {/* Privacy Settings */}

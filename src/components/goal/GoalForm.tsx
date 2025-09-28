@@ -49,6 +49,9 @@ export interface GoalFormData {
   existingImageUrl?: string;
 }
 
+const GOAL_VALUE_MIN = 0;
+const GOAL_VALUE_MAX = 500;
+
 interface GoalFormProps {
   mode: 'create' | 'edit';
   initialData?: Partial<GoalFormData>;
@@ -128,6 +131,16 @@ export const GoalForm: React.FC<GoalFormProps> = ({
       ...prev,
       [field]: value,
     }));
+  };
+
+  const handleGoalValueChange = (rawValue: number) => {
+    if (Number.isNaN(rawValue)) {
+      handleInputChange('value', GOAL_VALUE_MIN);
+      return;
+    }
+
+    const normalizedValue = Math.min(GOAL_VALUE_MAX, Math.max(GOAL_VALUE_MIN, rawValue));
+    handleInputChange('value', normalizedValue);
   };
 
   const handleStepChange = (id: string, text: string) => {
@@ -438,20 +451,34 @@ export const GoalForm: React.FC<GoalFormProps> = ({
                       <div className="px-3">
                         <input
                           type="range"
-                          min="0"
-                          max="500"
+                          min={GOAL_VALUE_MIN}
+                          max={GOAL_VALUE_MAX}
                           value={formData.value}
                           className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
-                          onChange={(e) => handleInputChange('value', parseInt(e.target.value))}
+                          onChange={(e) => handleGoalValueChange(Number(e.target.value))}
                           disabled={isSubmitting}
                         />
                         <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-2">
                           <span>{t('valueLow')}</span>
-                          <div className="text-center mt-2">
-                            <span className="text-2xl font-medium text-blue-600 dark:text-blue-400">
-                              {formData.value}
-                            </span>
-                            <span className="text-gray-500 dark:text-gray-400"> {t('points')}</span>
+                          <div className="text-center mt-2 space-y-1">
+                            <label htmlFor="goal-form-value-input" className="sr-only">
+                              {t('goalValue')}
+                            </label>
+                            <div className="flex items-baseline justify-center gap-1">
+                              <input
+                                id="goal-form-value-input"
+                                min={GOAL_VALUE_MIN}
+                                max={GOAL_VALUE_MAX}
+                                value={formData.value}
+                                onChange={(e) => handleGoalValueChange(Number(e.target.value))}
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                className="w-11 text-2xl font-medium text-blue-600 dark:text-blue-400 bg-transparent border-none text-center focus:outline-none focus:ring"
+                                style={{ MozAppearance: 'textfield' }}
+                                disabled={isSubmitting}
+                              />
+                              <span className="text-gray-500 dark:text-gray-400">{t('points')}</span>
+                            </div>
                           </div>
                           <span>{t('valueHigh')}</span>
                         </div>
