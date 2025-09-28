@@ -34,6 +34,7 @@
     "next-intl": "^4.3.9",
     "nprogress": "^0.2.0",
     "react": "^19.0.0",
+    "react-confetti-boom": "^2.0.1",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
     "react-image-crop": "^11.0.10",

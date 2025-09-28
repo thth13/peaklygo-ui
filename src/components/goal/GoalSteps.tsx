@@ -4,9 +4,11 @@ import { Step } from '@/types';
 import { faCheck, faCircle, faEdit, faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { updateStepStatus, updateStepText, createStep, completeGoal } from '@/lib/api/goal';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslations } from 'next-intl';
+import dynamic from 'next/dynamic';
+import type { ConfettiProps } from 'react-confetti-boom';
 
 interface StepsProps {
   steps: Step[];
@@ -17,6 +19,14 @@ interface StepsProps {
   onProgressUpdate?: (progress: number) => void;
   onGoalComplete?: () => void;
 }
+
+interface ConfettiShot {
+  id: string;
+  x: number;
+  y: number;
+}
+
+const ConfettiBoom = dynamic<ConfettiProps>(() => import('react-confetti-boom'), { ssr: false });
 
 export const GoalSteps = (props: StepsProps) => {
   const {
@@ -34,6 +44,7 @@ export const GoalSteps = (props: StepsProps) => {
   // Локальное состояние для шагов
   const [steps, setSteps] = useState<Step[]>(initialSteps);
   const [loadingSteps, setLoadingSteps] = useState<Set<string>>(new Set());
+  const [confettiShots, setConfettiShots] = useState<ConfettiShot[]>([]);
 
   // Состояние для формы добавления этапа
   const [showAddForm, setShowAddForm] = useState(false);
@@ -50,6 +61,7 @@ export const GoalSteps = (props: StepsProps) => {
   const [editingStepId, setEditingStepId] = useState<string | null>(null);
   const [editingStepText, setEditingStepText] = useState('');
   const [isUpdatingStep, setIsUpdatingStep] = useState(false);
+  const confettiTimeouts = useRef<number[]>([]);
 
   // Проверяем является ли пользователь владельцем цели
   const isOwner = currentUserId === goalUserId;
@@ -58,6 +70,13 @@ export const GoalSteps = (props: StepsProps) => {
   useEffect(() => {
     setSteps(initialSteps);
   }, [initialSteps]);
+
+  useEffect(() => {
+    return () => {
+      confettiTimeouts.current.forEach((timeoutId) => window.clearTimeout(timeoutId));
+      confettiTimeouts.current = [];
+    };
+  }, []);
 
   // Функция для вычисления прогресса
   const calculateProgress = (stepsList: Step[]): number => {
@@ -69,7 +88,25 @@ export const GoalSteps = (props: StepsProps) => {
   const currentStepIndex = steps.findIndex((step) => !step.isCompleted);
   const allStepsCompleted = steps.length > 0 && steps.every((step) => step.isCompleted);
 
-  const handleStepToggle = async (step: Step) => {
+  const triggerConfetti = (buttonElement: HTMLButtonElement) => {
+    if (typeof window === 'undefined') return;
+    const rect = buttonElement.getBoundingClientRect();
+    const { innerWidth, innerHeight } = window;
+    if (innerWidth === 0 || innerHeight === 0) return;
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const shotId = `confetti-${Date.now()}-${Math.random()}`;
+    const x = Math.min(Math.max(centerX / innerWidth, 0), 1);
+    const y = Math.min(Math.max(centerY / innerHeight, 0), 1);
+    setConfettiShots((prev) => [...prev, { id: shotId, x, y }]);
+    const timeoutId = window.setTimeout(() => {
+      setConfettiShots((prev) => prev.filter((shot) => shot.id !== shotId));
+      confettiTimeouts.current = confettiTimeouts.current.filter((id) => id !== timeoutId);
+    }, 2000);
+    confettiTimeouts.current = [...confettiTimeouts.current, timeoutId];
+  };
+
+  const handleStepToggle = async (step: Step, buttonElement: HTMLButtonElement) => {
     const newStatus = !step.isCompleted;
 
     // Устанавливаем состояние загрузки
@@ -90,6 +127,10 @@ export const GoalSteps = (props: StepsProps) => {
       // Обновляем прогресс в родительском компоненте
       const newProgress = calculateProgress(updatedSteps);
       onProgressUpdate?.(newProgress);
+
+      if (newStatus) {
+        triggerConfetti(buttonElement);
+      }
 
       // Показываем уведомление
       toast.success(newStatus ? t('steps.completed') : t('steps.markedIncomplete'), { duration: 2000 });
@@ -386,7 +427,7 @@ export const GoalSteps = (props: StepsProps) => {
             >
               {isOwner && (
                 <button
-                  onClick={() => handleStepToggle(step)}
+                  onClick={(event) => handleStepToggle(step, event.currentTarget)}
                   disabled={isLoading || isDeleting}
                   className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${styles.circle} ${
                     isLoading || isDeleting ? 'opacity-50 cursor-not-allowed' : ''
@@ -473,6 +514,21 @@ export const GoalSteps = (props: StepsProps) => {
           );
         })}
       </div>
+      {confettiShots.map((shot) => (
+        <ConfettiBoom
+          key={shot.id}
+          mode="boom"
+          x={shot.x}
+          y={shot.y}
+          particleCount={80}
+          spreadDeg={75}
+          effectCount={1}
+          effectInterval={1}
+          launchSpeed={1.2}
+          opacityDeltaMultiplier={1.4}
+          style={{ position: 'fixed', inset: '0', pointerEvents: 'none', zIndex: 50 }}
+        />
+      ))}
     </div>
   );
 };
