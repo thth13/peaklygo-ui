@@ -7,7 +7,8 @@ import toast from 'react-hot-toast';
 import { useTranslations } from 'next-intl';
 import { ShareGoal } from './ShareGoal';
 import { ArchiveGoalModal } from './ArchiveGoalModal';
-import { archiveGoal } from '@/lib/api/goal';
+import { DeleteGoalModal } from './DeleteGoalModal';
+import { archiveGoal, deleteGoal, unarchiveGoal } from '@/lib/api/goal';
 import { useRouter } from 'next/navigation';
 
 interface GoalActionsProps {
@@ -25,6 +26,9 @@ export const GoalActions: React.FC<GoalActionsProps> = ({ goal, currentUserId })
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isArchiving, setIsArchiving] = useState(false);
+  const [isUnarchiving, setIsUnarchiving] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [newEntry, setNewEntry] = useState({ content: '' });
 
   const router = useRouter();
@@ -49,6 +53,21 @@ export const GoalActions: React.FC<GoalActionsProps> = ({ goal, currentUserId })
     setIsArchiveModalOpen(true);
   };
 
+  const handleUnarchiveGoal = async () => {
+    setIsUnarchiving(true);
+
+    try {
+      await unarchiveGoal(goal._id);
+      toast.success(t('unarchivedSuccess'));
+      router.refresh();
+    } catch (error) {
+      toast.error(t('unarchiveError'));
+      console.error('Error unarchiving goal:', error);
+    } finally {
+      setIsUnarchiving(false);
+    }
+  };
+
   const confirmArchive = async () => {
     setIsArchiving(true);
     setIsArchiveModalOpen(false);
@@ -62,6 +81,26 @@ export const GoalActions: React.FC<GoalActionsProps> = ({ goal, currentUserId })
       console.error('Error archiving goal:', error);
     } finally {
       setIsArchiving(false);
+    }
+  };
+
+  const handleDeleteGoal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    setIsDeleting(true);
+    setIsDeleteModalOpen(false);
+
+    try {
+      await deleteGoal(goal._id);
+      toast.success(t('deletedSuccess'));
+      router.push('/profile/' + goal.userId);
+    } catch (error) {
+      toast.error(t('deleteError'));
+      console.error('Error deleting goal:', error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -85,13 +124,31 @@ export const GoalActions: React.FC<GoalActionsProps> = ({ goal, currentUserId })
         >
           {t('shareGoal')}
         </button>
-        {isOwner && (
+        {isOwner && !goal.isArchived && (
           <button
             onClick={handleArchiveGoal}
             disabled={isArchiving}
             className="w-full text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 border border-red-200 dark:border-red-500 py-2 px-4 rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isArchiving ? t('archiving') : t('archiveGoal')}
+          </button>
+        )}
+        {isOwner && goal.isArchived && (
+          <button
+            onClick={handleUnarchiveGoal}
+            disabled={isUnarchiving}
+            className="w-full text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 border border-blue-200 dark:border-blue-500 py-2 px-4 rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {isUnarchiving ? t('unarchiving') : t('unarchiveGoal')}
+          </button>
+        )}
+        {isOwner && (
+          <button
+            onClick={handleDeleteGoal}
+            disabled={isDeleting}
+            className="w-full text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 border border-red-200 dark:border-red-500 py-2 px-4 rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {isDeleting ? t('deleting') : t('deleteGoal')}
           </button>
         )}
       </div>
@@ -145,6 +202,15 @@ export const GoalActions: React.FC<GoalActionsProps> = ({ goal, currentUserId })
           isArchiving={isArchiving}
           onClose={() => setIsArchiveModalOpen(false)}
           onConfirm={confirmArchive}
+        />
+      )}
+
+      {isOwner && (
+        <DeleteGoalModal
+          isOpen={isDeleteModalOpen}
+          isDeleting={isDeleting}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={confirmDelete}
         />
       )}
 

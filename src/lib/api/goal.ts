@@ -132,6 +132,15 @@ export const archiveGoal = async (goalId: string): Promise<Goal> => {
   }
 };
 
+export const unarchiveGoal = async (goalId: string): Promise<Goal> => {
+  try {
+    const res = await api.put(`${API_URL}/goals/${goalId}/unarchive`);
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
 export const getArchivedGoals = async (
   userId: string,
   pagination?: GetGoalsPaginationDto,

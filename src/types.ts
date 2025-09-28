@@ -95,6 +95,7 @@ export interface Goal {
   consequence?: string;
   privacy: PrivacyStatus;
   isCompleted: boolean;
+  isArchived: boolean;
   value: number;
   userId: string;
   progress: number;

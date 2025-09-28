@@ -249,7 +249,7 @@ export const ImagePreviewer = ({ handleInputChange, image, existingImageUrl }: I
                     }
                   }}
                   className="p-2 bg-blue-500 dark:bg-blue-600 rounded-full text-white hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors shadow-lg"
-                  title={t('image.cropImage')}
+                  title={t('cropImage')}
                 >
                   <FontAwesomeIcon icon={faCrop} className="w-4 h-4" />
                 </button>
@@ -260,7 +260,7 @@ export const ImagePreviewer = ({ handleInputChange, image, existingImageUrl }: I
                     fileInputRef.current?.click();
                   }}
                   className="p-2 bg-green-500 dark:bg-green-600 rounded-full text-white hover:bg-green-600 dark:hover:bg-green-700 transition-colors shadow-lg"
-                  title={t('image.selectDifferentImage')}
+                  title={t('selectDifferentImage')}
                 >
                   <FontAwesomeIcon icon={faCamera} className="w-4 h-4" />
                 </button>
