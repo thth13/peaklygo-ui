@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage, faCamera, faCrop, faTrash, faCheck } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
-import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop';
+import ReactCrop, { Crop, PixelCrop, centerCrop, convertToPixelCrop, makeAspectCrop } from 'react-image-crop';
 import { toast } from 'react-hot-toast';
 import { useTranslations } from 'next-intl';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -26,7 +26,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
   const imgRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       // Очистка URL превью при размонтировании
       if (imagePreview) {
@@ -55,8 +55,13 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
   }
 
   const onImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
-    const { width, height } = e.currentTarget;
-    setCrop(centerAspectCrop(width, height, 16 / 9));
+    const imageElement: HTMLImageElement = e.currentTarget;
+    const rect: DOMRect = imageElement.getBoundingClientRect();
+    const width: number = Math.max(1, Math.round(rect.width));
+    const height: number = Math.max(1, Math.round(rect.height));
+    const initialCrop: Crop = centerAspectCrop(width, height, 16 / 9);
+    setCrop(initialCrop);
+    setCompletedCrop(convertToPixelCrop(initialCrop, width, height));
   }, []);
 
   const getCroppedImg = useCallback(async () => {

@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Image from 'next/image';
-import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop';
+import ReactCrop, { Crop, PixelCrop, centerCrop, convertToPixelCrop, makeAspectCrop } from 'react-image-crop';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes, faCrop } from '@fortawesome/free-solid-svg-icons';
 import 'react-image-crop/dist/ReactCrop.css';
+import { useTranslations } from 'next-intl';
 
 interface ImageCropperProps {
   src: string;
@@ -35,19 +36,37 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ src, onCropComplete,
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
   const imgRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const t = useTranslations('image');
+  const tCommon = useTranslations('common');
+
+  useEffect(() => {
+    setCrop(undefined);
+    setCompletedCrop(undefined);
+  }, [src, aspectRatio]);
 
   const onImageLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
-      if (aspectRatio) {
-        const { width, height } = e.currentTarget;
-        setCrop(centerAspectCrop(width, height, aspectRatio));
-      }
+      const imageElement: HTMLImageElement = e.currentTarget;
+      const rect: DOMRect = imageElement.getBoundingClientRect();
+      const width: number = Math.max(1, Math.round(rect.width));
+      const height: number = Math.max(1, Math.round(rect.height));
+      const initialCrop: Crop = aspectRatio
+        ? centerAspectCrop(width, height, aspectRatio)
+        : { unit: '%', x: 0, y: 0, width: 100, height: 100 };
+      setCrop(initialCrop);
+      setCompletedCrop(convertToPixelCrop(initialCrop, width, height));
     },
     [aspectRatio],
   );
 
   const getCroppedImg = useCallback(async () => {
-    if (!completedCrop || !imgRef.current || !canvasRef.current) {
+    if (
+      !completedCrop ||
+      completedCrop.width < 1 ||
+      completedCrop.height < 1 ||
+      !imgRef.current ||
+      !canvasRef.current
+    ) {
       return;
     }
 
@@ -62,8 +81,8 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ src, onCropComplete,
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
 
-    canvas.width = Math.floor(completedCrop.width * scaleX);
-    canvas.height = Math.floor(completedCrop.height * scaleY);
+    canvas.width = Math.max(1, Math.floor(completedCrop.width * scaleX));
+    canvas.height = Math.max(1, Math.floor(completedCrop.height * scaleY));
 
     ctx.imageSmoothingQuality = 'high';
 
@@ -151,7 +170,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ src, onCropComplete,
             className="flex-1 py-3 px-4 bg-gray-100 text-gray-600 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
           >
             <FontAwesomeIcon icon={faTimes} className="mr-2" />
-            Отмена
+            {tCommon('cancel')}
           </button>
           <button
             onClick={handleCropComplete}
@@ -159,7 +178,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ src, onCropComplete,
             className="flex-1 py-3 px-4 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <FontAwesomeIcon icon={faCheck} className="mr-2" />
-            Применить
+            {t('applyCrop')}
           </button>
         </div>
 

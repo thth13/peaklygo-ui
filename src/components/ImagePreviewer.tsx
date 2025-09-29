@@ -21,6 +21,7 @@ export const ImagePreviewer = ({ handleInputChange, image, existingImageUrl }: I
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
   const t = useTranslations('image');
+  const tCommon = useTranslations('common');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -173,7 +174,7 @@ export const ImagePreviewer = ({ handleInputChange, image, existingImageUrl }: I
                 className="px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               >
                 <FontAwesomeIcon icon={faCheck} className="mr-2" />
-                Применить
+                {t('applyCrop')}
               </button>
               <button
                 type="button"
@@ -181,7 +182,7 @@ export const ImagePreviewer = ({ handleInputChange, image, existingImageUrl }: I
                 className="px-4 py-2 bg-gray-500 dark:bg-gray-600 text-white rounded-lg font-semibold hover:bg-gray-600 dark:hover:bg-gray-700 transition-colors text-sm"
               >
                 <FontAwesomeIcon icon={faTrash} className="mr-2" />
-                Отмена
+                {tCommon('cancel')}
               </button>
             </div>
           </div>
