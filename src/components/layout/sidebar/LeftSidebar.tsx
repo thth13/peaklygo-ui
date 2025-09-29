@@ -18,9 +18,42 @@ interface LeftSidebarProps {
   userId?: string;
 }
 
+interface ApiError {
+  response?: {
+    status?: number;
+    data?: {
+      message?: string;
+    };
+  };
+  message?: string;
+}
+
+const getErrorMessage = (error: unknown, fallbackMessage: string): string => {
+  if (typeof error === 'object' && error !== null) {
+    const apiError = error as ApiError;
+    if (apiError.response?.data?.message) {
+      return apiError.response.data.message;
+    }
+    if (typeof apiError.message === 'string') {
+      return apiError.message;
+    }
+  }
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+  return fallbackMessage;
+};
+
 export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
   const t = useTranslations('sidebar');
-  const { profile: currentUserProfile, isLoading: profileLoading, error: profileError } = useUserProfile();
+  const defaultErrorMessage = t('error.dataLoadingError');
+  const notFoundProfileMessage = t('error.profileNotFound');
+  const {
+    profile: currentUserProfile,
+    isLoading: profileLoading,
+    error: profileError,
+    userStats: currentUserStats,
+  } = useUserProfile();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState<ProfileStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -39,45 +72,94 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
   };
 
   useEffect(() => {
-    const userId = Cookies.get('userId');
-    setMyUserId(userId || null);
+    const storedUserId = Cookies.get('userId');
+    setMyUserId(storedUserId || null);
   }, []);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        if (actualUserId) {
-          const [profileData, statsData] = await Promise.all([getProfile(actualUserId), getProfileStats(actualUserId)]);
-          setProfile(profileData);
-          setStats(statsData);
-        } else if (currentUserProfile) {
-          setProfile(currentUserProfile);
-          const statsData = await getProfileStats(currentUserProfile._id);
-          setStats(statsData);
-        } else {
-          setProfile(null);
-          setStats(null);
-        }
-      } catch (err: any) {
-        const errorMessage = err?.response?.data?.message || err?.message || t('error.dataLoadingError');
-        setError(errorMessage);
-        console.error('Failed to fetch user data:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (profileError) {
-      setError(profileError);
-      setIsLoading(false);
+    if (!isMyProfile) {
       return;
     }
 
+    if (profileLoading || (!currentUserProfile && !profileError)) {
+      setIsLoading(true);
+      return;
+    }
+
+    setProfile(currentUserProfile ?? null);
+    setStats(currentUserStats ?? null);
+    setError(profileError);
+    setIsLoading(false);
+  }, [isMyProfile, currentUserProfile, currentUserStats, profileError, profileLoading]);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const fetchUserData = async () => {
+      if (!actualUserId || isMyProfile) {
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        setError(null);
+        setProfile(null);
+        setStats(null);
+        const [profileResult, statsResult] = await Promise.allSettled([
+          getProfile(actualUserId),
+          getProfileStats(actualUserId),
+        ]);
+
+        if (isCancelled) {
+          return;
+        }
+
+        if (profileResult.status === 'fulfilled') {
+          setProfile(profileResult.value);
+          setError(null);
+        } else {
+          const profileErrorResult = profileResult.reason as ApiError;
+          if (profileErrorResult.response?.status === 404) {
+            setError(notFoundProfileMessage);
+            return;
+          }
+          const errorMessage = getErrorMessage(profileResult.reason, defaultErrorMessage);
+          setError(errorMessage);
+          return;
+        }
+
+        if (statsResult.status === 'fulfilled') {
+          setStats(statsResult.value);
+        } else {
+          const statsError = statsResult.reason as ApiError;
+          if (statsError.response?.status === 404) {
+            setStats(null);
+            return;
+          }
+
+          const errorMessage = getErrorMessage(statsResult.reason, defaultErrorMessage);
+          setError(errorMessage);
+        }
+      } catch (err: unknown) {
+        if (isCancelled) {
+          return;
+        }
+        const errorMessage = getErrorMessage(err, defaultErrorMessage);
+        setError(errorMessage);
+        console.error('Failed to fetch user data:', err);
+      } finally {
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
+      }
+    };
+
     fetchUserData();
-  }, [userId, actualUserId, currentUserProfile, profileLoading, profileError, t]);
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [actualUserId, isMyProfile, defaultErrorMessage]);
 
   return (
     <div id="left-sidebar" className="w-1/4 pr-6 hidden md:block">

@@ -7,6 +7,7 @@ import { IMAGE_URL } from '@/constants';
 import { formatDate } from '@/lib/utils';
 import { ProgressBlog } from './ProgressBlog';
 import { useTranslations, useLocale } from 'next-intl';
+import { useUserProfile } from '@/context/UserProfileContext';
 
 interface GoalProgressProps {
   goal: Goal;
@@ -18,6 +19,7 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
   const [progress, setProgress] = useState(goal.progress);
   const t = useTranslations();
   const locale = useLocale();
+  const { updateRatingOnStepCompletion } = useUserProfile();
 
   const handleProgressUpdate = (newProgress: number) => {
     setProgress(newProgress);
@@ -148,8 +150,10 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
             goalId={goalId}
             currentUserId={currentUserId}
             goalUserId={goal.userId}
+            goal={goal}
             onProgressUpdate={handleProgressUpdate}
             onGoalComplete={handleGoalComplete}
+            onStepRatingUpdate={updateRatingOnStepCompletion}
           />
         )}
 

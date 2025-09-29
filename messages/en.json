@@ -680,7 +680,8 @@
     "error": {
       "dataLoadingError": "Data loading error",
       "profileLoadingError": "Profile loading error",
-      "tryAgain": "Try again"
+      "tryAgain": "Try again",
+      "profileNotFound": "Profile not found"
     },
   "pricing": "PeaklyGo Pro"
   },

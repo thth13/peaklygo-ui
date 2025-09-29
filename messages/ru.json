@@ -679,7 +679,8 @@
     "error": {
       "dataLoadingError": "Ошибка загрузки данных",
       "profileLoadingError": "Ошибка загрузки профиля",
-      "tryAgain": "Попробовать снова"
+      "tryAgain": "Попробовать снова",
+      "profileNotFound": "Профиль не найден"
     },
     "closeSidebar": "Закрыть боковую панель",
   "pricing": "PeaklyGo Pro"

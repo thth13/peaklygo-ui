@@ -1,6 +1,7 @@
 'use client';
 
-import { Step } from '@/types';
+import { Goal, Step } from '@/types';
+import type { StepCompletionRatingPayload } from '@/context/UserProfileContext';
 import { faCheck, faCircle, faEdit, faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { updateStepStatus, updateStepText, createStep, completeGoal } from '@/lib/api/goal';
@@ -15,9 +16,11 @@ interface StepsProps {
   goalId: string;
   currentUserId?: string;
   goalUserId: string;
+  goal: Goal;
   onStepsUpdate?: (updatedSteps: Step[]) => void;
   onProgressUpdate?: (progress: number) => void;
   onGoalComplete?: () => void;
+  onStepRatingUpdate?: (payload: StepCompletionRatingPayload) => void;
 }
 
 interface ConfettiShot {
@@ -34,9 +37,11 @@ export const GoalSteps = (props: StepsProps) => {
     goalId,
     currentUserId,
     goalUserId,
+    goal,
     onStepsUpdate,
     onProgressUpdate,
     onGoalComplete,
+    onStepRatingUpdate,
   } = props;
 
   const t = useTranslations();
@@ -123,6 +128,10 @@ export const GoalSteps = (props: StepsProps) => {
 
       // Уведомляем родительский компонент об изменениях
       onStepsUpdate?.(updatedSteps);
+
+      if (isOwner) {
+        onStepRatingUpdate?.({ goalValue: goal.value, isCompleted: newStatus });
+      }
 
       // Обновляем прогресс в родительском компоненте
       const newProgress = calculateProgress(updatedSteps);

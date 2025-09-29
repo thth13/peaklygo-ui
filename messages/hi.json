@@ -661,7 +661,8 @@
     "error": {
       "dataLoadingError": "डेटा लोड करने में त्रुटि",
       "profileLoadingError": "प्रोफ़ाइल लोड करने में त्रुटि",
-      "tryAgain": "पुनः प्रयास करें"
+      "tryAgain": "पुनः प्रयास करें",
+      "profileNotFound": "प्रोफ़ाइल नहीं मिली"
     },
     "pricing": "पीक्लीगो प्रो"
   },

@@ -1,3 +1,5 @@
+'use client';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 interface RatingLevel {
@@ -92,26 +94,81 @@ function getRatingInfo(rating: number): RatingInfo {
 }
 
 export const RatingSummary = ({ rating }: RatingSummaryProps) => {
-  const { level, currentMin, nextMin, progressPercent }: RatingInfo = getRatingInfo(rating);
+  const [displayRating, setDisplayRating] = useState<number>(rating);
+  const [ratingInfo, setRatingInfo] = useState<RatingInfo>(() => getRatingInfo(rating));
+  const animationFrame = useRef<number | null>(null);
   const t = useTranslations('rating');
+
+  useEffect(() => {
+    const start = performance.now();
+    const duration = 500;
+    const initialRating = displayRating;
+    const delta = rating - initialRating;
+
+    const animate = (timestamp: number) => {
+      const elapsed = timestamp - start;
+      const progress = Math.min(1, elapsed / duration);
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+      const currentRating = Math.round(initialRating + delta * easedProgress);
+      setDisplayRating(currentRating);
+      setRatingInfo(getRatingInfo(currentRating));
+
+      if (progress < 1) {
+        animationFrame.current = requestAnimationFrame(animate);
+      }
+    };
+
+    if (animationFrame.current) {
+      cancelAnimationFrame(animationFrame.current);
+    }
+    animationFrame.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrame.current) {
+        cancelAnimationFrame(animationFrame.current);
+      }
+    };
+  }, [rating, displayRating]);
+
+  useEffect(() => {
+    const handleUserUpdate = (event: Event) => {
+      const { detail } = event as CustomEvent<{ rating?: number }>;
+      if (typeof detail.rating !== 'number') {
+        return;
+      }
+      setDisplayRating(detail.rating);
+      setRatingInfo(getRatingInfo(detail.rating));
+    };
+
+    window.addEventListener('user:update', handleUserUpdate);
+
+    return () => {
+      window.removeEventListener('user:update', handleUserUpdate);
+    };
+  }, []);
+
+  const ratingLabel = useMemo(() => `${displayRating}`, [displayRating]);
 
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-2">
         <span className="text-gray-600 dark:text-gray-300 font-medium">{t('title')}</span>
         <div className="flex items-center space-x-2">
-          <span className={`${level.textClass} font-bold text-xl`}>{rating}</span>
-          <span className={`${level.textClass} text-xs px-2 py-0.5 rounded-full border border-current`}>
-            {t(`levels.${level.nameKey}`)}
+          <span className={`${ratingInfo.level.textClass} font-bold text-xl transition-all`}>{ratingLabel}</span>
+          <span className={`${ratingInfo.level.textClass} text-xs px-2 py-0.5 rounded-full border border-current`}>
+            {t(`levels.${ratingInfo.level.nameKey}`)}
           </span>
         </div>
       </div>
       <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full">
-        <div className={`${level.barClass} h-2 rounded-full`} style={{ width: `${progressPercent}%` }}></div>
+        <div
+          className={`${ratingInfo.level.barClass} h-2 rounded-full transition-all`}
+          style={{ width: `${ratingInfo.progressPercent}%` }}
+        ></div>
       </div>
       <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-        <span>{currentMin}</span>
-        <span>{nextMin === null ? 'MAX' : nextMin}</span>
+        <span>{ratingInfo.currentMin}</span>
+        <span>{ratingInfo.nextMin === null ? 'MAX' : ratingInfo.nextMin}</span>
       </div>
     </div>
   );
