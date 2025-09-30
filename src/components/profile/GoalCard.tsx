@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useContext } from 'react';
+import { useState, useRef, useEffect, useContext, CSSProperties } from 'react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useStopPropagation } from '@/hooks/useStopPropagation';
@@ -15,13 +15,23 @@ import toast from 'react-hot-toast';
 import { useTranslations, useLocale } from 'next-intl';
 import { AuthContext } from '@/context/AuthContext';
 
+const GRID_CARD_DESCRIPTION_MAX_LENGTH = 160;
+
+const GRID_DESCRIPTION_STYLE: CSSProperties = {
+  display: '-webkit-box',
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+};
+
 interface GoalCardProps {
   goal: Goal;
   onGoalArchived?: (goalId: string) => void;
   isArchived?: boolean;
+  displayMode?: 'grid' | 'list';
 }
 
-export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardProps) => {
+export const GoalCard = ({ goal, onGoalArchived, isArchived = false, displayMode = 'list' }: GoalCardProps) => {
   const t = useTranslations('goals');
   const locale = useLocale();
   const router = useRouter();
@@ -32,6 +42,18 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
   const { userId } = useContext(AuthContext);
 
   const isOwner = userId === goal.userId;
+  const isGridMode = displayMode === 'grid';
+  const truncatedDescription =
+    goal.description && goal.description.length > GRID_CARD_DESCRIPTION_MAX_LENGTH
+      ? `${goal.description.slice(0, GRID_CARD_DESCRIPTION_MAX_LENGTH).trim()}...`
+      : goal.description;
+  const cardClassName = `group block overflow-hidden rounded-xl shadow-sm bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all cursor-pointer mb-4${
+    isGridMode ? ' h-full flex flex-col' : ''
+  }`;
+  const contentClassName = `p-5${isGridMode ? ' flex flex-col flex-1' : ''}`;
+  const footerClassName = `${
+    isGridMode ? 'mt-auto' : ''
+  } flex items-center justify-between text-sm text-gray-500 dark:text-gray-400`;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -77,10 +99,7 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
   });
 
   return (
-    <Link
-      href={`/goal/${goal._id}`}
-      className="group block overflow-hidden rounded-xl shadow-sm bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all cursor-pointer mb-4"
-    >
+    <Link href={`/goal/${goal._id}`} className={cardClassName}>
       {/* Image banner (only if image exists) */}
       {goal.image && (
         <div className="relative w-full h-48 md:h-56 lg:h-64 bg-gray-100 dark:bg-gray-700">
@@ -145,7 +164,7 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
       )}
 
       {/* Content */}
-      <div className="p-5">
+      <div className={contentClassName}>
         <div className="mb-2">
           <div className="flex items-center justify-between gap-3 mb-1">
             <h3 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 leading-snug flex-1">
@@ -202,7 +221,11 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
           </p>
         </div>
 
-        {goal.description && <p className="text-gray-600 dark:text-gray-300 mb-4">{goal.description}</p>}
+        {goal.description && (
+          <p className="text-gray-600 dark:text-gray-300 mb-4" style={isGridMode ? GRID_DESCRIPTION_STYLE : undefined}>
+            {isGridMode ? truncatedDescription : goal.description}
+          </p>
+        )}
 
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
@@ -225,7 +248,7 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false }: GoalCardP
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+        <div className={footerClassName}>
           {goal.endDate && (
             <div className="flex items-center">
               <FontAwesomeIcon icon={faCalendarRegular} className="w-4 mr-2" />

@@ -97,7 +97,7 @@ export function ProfileContent({ goalsData, isMyProfile, onPageChange, onGoalArc
       ) : (
         <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 gap-6' : 'space-y-6'}>
           {goals.map((goal) => (
-            <GoalCard key={goal._id} goal={goal} onGoalArchived={onGoalArchived} />
+            <GoalCard key={goal._id} goal={goal} onGoalArchived={onGoalArchived} displayMode={viewMode} />
           ))}
         </div>
       )}

@@ -55,7 +55,7 @@ export function ArchivedContent({ archivedGoalsData, isMyProfile, userId, onPage
       ) : (
         <div className="space-y-6">
           {archivedGoals.map((goal) => (
-            <GoalCard key={goal._id} goal={goal} isArchived={true} />
+            <GoalCard key={goal._id} goal={goal} isArchived={true} displayMode="list" />
           ))}
         </div>
       )}
