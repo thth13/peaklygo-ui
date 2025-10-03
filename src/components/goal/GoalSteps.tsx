@@ -1,8 +1,16 @@
 'use client';
 
 import { Goal, Step } from '@/types';
-import type { StepCompletionRatingPayload } from '@/context/UserProfileContext';
-import { faCheck, faCircle, faEdit, faPlus, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
+import type { GoalCompletionRatingPayload, StepCompletionRatingPayload } from '@/context/UserProfileContext';
+import {
+  faCheck,
+  faCheckCircle,
+  faCircle,
+  faEdit,
+  faPlus,
+  faSpinner,
+  faTimes,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { updateStepStatus, updateStepText, createStep, completeGoal } from '@/lib/api/goal';
 import { useState, useEffect, useRef } from 'react';
@@ -21,6 +29,7 @@ interface StepsProps {
   onProgressUpdate?: (progress: number) => void;
   onGoalComplete?: () => void;
   onStepRatingUpdate?: (payload: StepCompletionRatingPayload) => void;
+  onGoalRatingUpdate?: (payload: GoalCompletionRatingPayload) => void;
 }
 
 interface ConfettiShot {
@@ -130,7 +139,7 @@ export const GoalSteps = (props: StepsProps) => {
       onStepsUpdate?.(updatedSteps);
 
       if (isOwner) {
-        onStepRatingUpdate?.({ goalValue: goal.value, isCompleted: newStatus });
+        onStepRatingUpdate?.({ goalValue: goal.value / 10, isCompleted: newStatus });
       }
 
       // Обновляем прогресс в родительском компоненте
@@ -190,8 +199,6 @@ export const GoalSteps = (props: StepsProps) => {
       // Сбрасываем форму
       setNewStepText('');
       setShowAddForm(false);
-
-      toast.success(t('steps.completed'));
     } catch (error) {
       console.error('Failed to create step:', error);
       toast.error(t('steps.addFailed'));
@@ -242,12 +249,8 @@ export const GoalSteps = (props: StepsProps) => {
   // };
 
   const handleCompleteGoal = async () => {
-    if (!allStepsCompleted) {
-      toast.error(t('steps.completeAllFirst'));
-      return;
-    }
-
     setIsCompletingGoal(true);
+
     try {
       await completeGoal(goalId);
       toast.success(t('goals.completed'));
@@ -294,8 +297,6 @@ export const GoalSteps = (props: StepsProps) => {
       // Сбрасываем состояние редактирования
       setEditingStepId(null);
       setEditingStepText('');
-
-      toast.success(t('steps.completed'));
     } catch (error) {
       console.error('Failed to update step text:', error);
       toast.error(t('steps.updateTextFailed'));
@@ -345,7 +346,12 @@ export const GoalSteps = (props: StepsProps) => {
           {t('steps.title')} ({steps.filter((s) => s.isCompleted).length}/{steps.length})
         </h3>
         <div className="flex items-center space-x-3">
-          {isOwner && allStepsCompleted && (
+          {isOwner && goal.isCompleted ? (
+            <div className="flex items-center text-green-600 font-medium">
+              <FontAwesomeIcon icon={faCheckCircle} className="w-4 mr-2" />
+              {t('steps.goalCompleted')}
+            </div>
+          ) : isOwner && allStepsCompleted ? (
             <button
               onClick={handleCompleteGoal}
               disabled={isCompletingGoal}
@@ -354,31 +360,31 @@ export const GoalSteps = (props: StepsProps) => {
               {isCompletingGoal ? (
                 <>
                   <FontAwesomeIcon icon={faSpinner} className="w-4 mr-2 animate-spin" />
-                  Завершаем...
+                  {t('steps.completing')}
                 </>
               ) : (
                 <>
                   <FontAwesomeIcon icon={faCheck} className="w-4 mr-2" />
-                  Завершить цель
+                  {t('steps.completeGoal')}
                 </>
               )}
             </button>
-          )}
-          {isOwner && (
+          ) : null}
+          {isOwner && !goal.isCompleted && (
             <button
               onClick={() => setShowAddForm(true)}
               disabled={showAddForm}
               className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <FontAwesomeIcon icon={faPlus} className="w-4 mr-1" />
-              Добавить этап
+              {t('steps.addStage')}
             </button>
           )}
         </div>
       </div>
 
       {/* Форма добавления нового этапа */}
-      {showAddForm && (
+      {showAddForm && !goal.isCompleted && (
         <div className="mb-4 p-4 border border-blue-200 dark:border-blue-600 rounded-lg bg-blue-50 dark:bg-blue-900">
           <div className="flex items-center space-x-3">
             <input
@@ -405,7 +411,7 @@ export const GoalSteps = (props: StepsProps) => {
               {isCreatingStep ? (
                 <>
                   <FontAwesomeIcon icon={faSpinner} className="w-4 h-4 animate-spin mr-1" />
-                  Создание...
+                  {t('steps.creating')}
                 </>
               ) : (
                 t('steps.add')
@@ -505,7 +511,7 @@ export const GoalSteps = (props: StepsProps) => {
               </div>
 
               <div className="flex items-center space-x-2">
-                {isOwner && editingStepId !== step.id && editingStepId === null && (
+                {isOwner && !goal.isCompleted && editingStepId !== step.id && editingStepId === null && (
                   <button
                     onClick={() => handleStartEdit(step)}
                     disabled={isLoading || isDeleting}

@@ -13,6 +13,7 @@ interface UserProfileContextType {
   refetchProfile: () => Promise<void>;
   setTutorialCompleted: () => void;
   updateRatingOnStepCompletion: (payload: StepCompletionRatingPayload) => void;
+  updateRatingOnGoalCompletion: (payload: GoalCompletionRatingPayload) => void;
 }
 
 export const UserProfileContext = createContext<UserProfileContextType>({
@@ -23,6 +24,7 @@ export const UserProfileContext = createContext<UserProfileContextType>({
   refetchProfile: async () => {},
   setTutorialCompleted: () => {},
   updateRatingOnStepCompletion: () => {},
+  updateRatingOnGoalCompletion: () => {},
 });
 
 interface ErrorWithResponse {
@@ -38,7 +40,11 @@ export interface StepCompletionRatingPayload {
   isCompleted: boolean;
 }
 
-const RATING_COMPLETION_DIVIDER = 10;
+export interface GoalCompletionRatingPayload {
+  goalValue: number;
+}
+
+const calculateRatingDelta = (goalValue: number): number => goalValue;
 
 const getErrorMessage = (error: unknown): string => {
   if (typeof error === 'object' && error !== null) {
@@ -103,7 +109,7 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
       if (!prev) {
         return prev;
       }
-      const delta = goalValue / RATING_COMPLETION_DIVIDER;
+      const delta = calculateRatingDelta(goalValue);
       const newRating = isCompleted ? prev.rating + delta : Math.max(prev.rating - delta, 0);
       return {
         ...prev,
@@ -114,11 +120,34 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
       if (!prev) {
         return prev;
       }
-      const delta = goalValue / RATING_COMPLETION_DIVIDER;
+      const delta = calculateRatingDelta(goalValue);
       const newRating = isCompleted ? prev.rating + delta : Math.max(prev.rating - delta, 0);
       return {
         ...prev,
         rating: newRating,
+      };
+    });
+  };
+
+  const updateRatingOnGoalCompletion = ({ goalValue }: GoalCompletionRatingPayload): void => {
+    setProfile((prev) => {
+      if (!prev) {
+        return prev;
+      }
+      const delta = calculateRatingDelta(goalValue);
+      return {
+        ...prev,
+        rating: prev.rating + delta,
+      };
+    });
+    setUserStats((prev) => {
+      if (!prev) {
+        return prev;
+      }
+      const delta = calculateRatingDelta(goalValue);
+      return {
+        ...prev,
+        rating: prev.rating + delta,
       };
     });
   };
@@ -135,6 +164,7 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
           setProfile((prev) => (prev ? { ...prev, user: { ...prev.user, tutorialCompleted: true } } : prev));
         },
         updateRatingOnStepCompletion,
+        updateRatingOnGoalCompletion,
       }}
     >
       {children}

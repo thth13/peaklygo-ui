@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faCheck, faEdit } from '@fortawesome/free-solid-svg-icons';
 import Link from '@/components/Link';
 import { LeftSidebar } from '@/components/layout/sidebar';
 import { getActivityTypeLabel, ActivityTypeColors, Goal } from '@/types';
@@ -153,7 +153,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
                     <span className="text-sm">{t('navigation.backToGoals')}</span>
                   </Link>
                 </div>
-                {currentUserId === goal.userId && (
+                {currentUserId === goal.userId && !goal.isCompleted && (
                   <div className="flex items-center space-x-3">
                     <Link
                       href={`/goal/${id}/edit`}
@@ -171,12 +171,19 @@ export default async function GoalPage({ params }: GoalPageProps) {
                   {goal.goalName}
                 </h1>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-sm font-medium">
+                  {/* <span className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-sm font-medium">
                     {goal.category}
-                  </span>
-                  <span className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-medium">
-                    {goal.isCompleted ? t('goals.status.completed') : t('goals.status.inProgress')}
-                  </span>
+                  </span> */}
+                  {goal.isCompleted ? (
+                    <span className="bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-sm font-medium flex items-center">
+                      <FontAwesomeIcon icon={faCheck} className="w-3 h-3 mr-2" />
+                      {t('goals.status.completed')}
+                    </span>
+                  ) : (
+                    <span className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-medium">
+                      {t('goals.status.inProgress')}
+                    </span>
+                  )}
                   <span className="text-gray-500 dark:text-gray-400 text-sm">
                     {t('goals.created')} {formatDate(goal.startDate, locale)}
                   </span>

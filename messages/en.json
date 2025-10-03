@@ -326,6 +326,8 @@
     "notSpecified": "Not specified",
     "overallProgress": "Overall progress",
     "reward": "Reward for completion",
+    "rewardReceived": "Reward received",
+    "ratingGained": "Rating gained",
     "consequence": "Consequence of failure",
     "statistics": "Statistics",
     "points": "points",
@@ -359,6 +361,7 @@
     "daysToDeadline": "days to deadline",
     "daysAfterDeadline": "days ago",
     "completed": "Goal completed! 🎉",
+    "goalAchieved": "Goal achieved!",
     "value": "Value"
   },
   "profile": {
@@ -593,7 +596,12 @@
     "pending": "Pending",
     "edit": "Edit step",
     "completeAllFirst": "Complete all steps first!",
-    "subgoalsAndSteps": "Subgoals and Steps"
+    "subgoalsAndSteps": "Subgoals and Steps",
+    "completing": "Completing...",
+    "completeGoal": "Complete goal",
+    "creating": "Creating...",
+    "addStage": "Add stage",
+    "goalCompleted": "All steps completed"
   },
   "blog": {
     "title": "Progress Blog",

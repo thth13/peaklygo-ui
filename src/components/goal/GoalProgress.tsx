@@ -19,14 +19,14 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
   const [progress, setProgress] = useState(goal.progress);
   const t = useTranslations();
   const locale = useLocale();
-  const { updateRatingOnStepCompletion } = useUserProfile();
+  const { updateRatingOnStepCompletion, updateRatingOnGoalCompletion } = useUserProfile();
 
   const handleProgressUpdate = (newProgress: number) => {
     setProgress(newProgress);
   };
 
   const handleGoalComplete = () => {
-    // window.location.reload();
+    updateRatingOnGoalCompletion({ goalValue: goal.value });
   };
 
   const getDaysLeft = () => {
@@ -39,6 +39,7 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
   };
 
   const daysLeft = getDaysLeft();
+  const ratingEarned = Math.max(goal.value, 0);
 
   return (
     <>
@@ -60,7 +61,9 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
               </div>
               {goal.endDate && (
                 <div className="text-md mt-1 text-white/80">
-                  {daysLeft && daysLeft > 0
+                  {goal.isCompleted
+                    ? t('goals.goalAchieved')
+                    : daysLeft && daysLeft > 0
                     ? `${daysLeft} ${t('goals.daysToDeadline')}`
                     : `${t('goals.deadlinePassed')} ${Math.abs(daysLeft || 0)} ${t('goals.daysAfterDeadline')}`}
                 </div>
@@ -77,7 +80,9 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
               </div>
               {goal.endDate && (
                 <div className="text-white/80">
-                  {daysLeft && daysLeft > 0
+                  {goal.isCompleted
+                    ? t('goals.goalAchieved')
+                    : daysLeft && daysLeft > 0
                     ? `${daysLeft} ${t('goals.daysToDeadline')}`
                     : `${t('goals.deadlinePassed')} ${Math.abs(daysLeft || 0)} ${t('goals.daysAfterDeadline')}`}
                 </div>
@@ -129,20 +134,37 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          {goal.reward && (
-            <div className="bg-green-50 dark:bg-green-900 p-4 rounded-lg">
-              <h4 className="font-medium text-green-800 dark:text-green-200 mb-2">{t('goals.reward')}</h4>
-              <p className="text-green-700 dark:text-green-300">{goal.reward}</p>
+        {goal.isCompleted ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {goal.reward && (
+              <div className="bg-green-50 dark:bg-green-900 p-4 rounded-lg border border-green-200 dark:border-green-700">
+                <div className="text-sm text-green-700 dark:text-green-300 mb-1">{t('goals.rewardReceived')}</div>
+                <div className="font-medium text-green-800 dark:text-green-200">{goal.reward}</div>
+              </div>
+            )}
+            <div className="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg border border-blue-200 dark:border-blue-700">
+              <div className="text-sm text-blue-700 dark:text-blue-300 mb-1">{t('goals.ratingGained')}</div>
+              <div className="font-medium text-blue-800 dark:text-blue-200">
+                +{ratingEarned} {t('goals.points')}
+              </div>
             </div>
-          )}
-          {goal.consequence && (
-            <div className="bg-red-50 dark:bg-red-900 p-4 rounded-lg">
-              <h4 className="font-medium text-red-800 dark:text-red-200 mb-2">{t('goals.consequence')}</h4>
-              <p className="text-red-700 dark:text-red-300">{goal.consequence}</p>
-            </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {goal.reward && (
+              <div className="bg-green-50 dark:bg-green-900 p-4 rounded-lg">
+                <h4 className="font-medium text-green-800 dark:text-green-200 mb-2">{t('goals.reward')}</h4>
+                <p className="text-green-700 dark:text-green-300">{goal.reward}</p>
+              </div>
+            )}
+            {goal.consequence && (
+              <div className="bg-red-50 dark:bg-red-900 p-4 rounded-lg">
+                <h4 className="font-medium text-red-800 dark:text-red-200 mb-2">{t('goals.consequence')}</h4>
+                <p className="text-red-700 dark:text-red-300">{goal.consequence}</p>
+              </div>
+            )}
+          </div>
+        )}
 
         {goal.steps.length > 0 && (
           <GoalSteps
@@ -154,6 +176,7 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
             onProgressUpdate={handleProgressUpdate}
             onGoalComplete={handleGoalComplete}
             onStepRatingUpdate={updateRatingOnStepCompletion}
+            onGoalRatingUpdate={updateRatingOnGoalCompletion}
           />
         )}
 
