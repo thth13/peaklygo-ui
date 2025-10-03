@@ -50,7 +50,7 @@ export const GoalCard = ({ goal, onGoalArchived, isArchived = false, displayMode
   const cardClassName = `group block overflow-hidden rounded-xl shadow-sm bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all cursor-pointer mb-4${
     isGridMode ? ' h-full flex flex-col' : ''
   }`;
-  const contentClassName = `p-5${isGridMode ? ' flex flex-col flex-1' : ''}`;
+  const contentClassName = `p-5 ${isGridMode ? ' flex flex-col flex-1' : ''}`;
   const footerClassName = `${
     isGridMode ? 'mt-auto' : ''
   } flex items-center justify-between text-sm text-gray-500 dark:text-gray-400`;
