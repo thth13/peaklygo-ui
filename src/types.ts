@@ -158,9 +158,16 @@ export interface ProfileStats {
   rating: number;
 }
 
+export enum GoalFilterType {
+  ACTIVE = 'active',
+  COMPLETED = 'completed',
+  ARCHIVED = 'archived',
+}
+
 export interface GetGoalsPaginationDto {
   page?: number;
   limit?: number;
+  filter?: GoalFilterType;
 }
 
 export interface PaginatedGoalsResponse {

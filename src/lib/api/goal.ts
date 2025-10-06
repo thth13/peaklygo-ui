@@ -1,7 +1,7 @@
 import { API_URL } from '@/constants';
 import api from '../clientAxios';
 import nProgress from 'nprogress';
-import { Goal, GetGoalsPaginationDto, PaginatedGoalsResponse, LandingGoal } from '@/types';
+import { Goal, GetGoalsPaginationDto, PaginatedGoalsResponse, LandingGoal, GoalFilterType } from '@/types';
 import { AxiosInstance } from 'axios';
 
 export const createGoal = async (goal: FormData) => {
@@ -29,26 +29,6 @@ export const updateGoal = async (id: string, goal: FormData) => {
 export const deleteGoal = async (id: string): Promise<void> => {
   try {
     await api.delete(`/goals/${id}`);
-  } catch (err: any) {
-    throw err;
-  }
-};
-
-export const getGoals = async (
-  userId: string,
-  pagination?: GetGoalsPaginationDto,
-  apiInstance?: AxiosInstance,
-): Promise<Goal[] | PaginatedGoalsResponse> => {
-  try {
-    const params = new URLSearchParams();
-    if (pagination?.page) params.append('page', pagination.page.toString());
-    if (pagination?.limit) params.append('limit', pagination.limit.toString());
-
-    const url = `${API_URL}/goals/userGoals/${userId}${params.toString() ? `?${params.toString()}` : ''}`;
-    const client = apiInstance ?? api;
-    const res = await client.get(url);
-
-    return res.data;
   } catch (err: any) {
     throw err;
   }
@@ -141,7 +121,7 @@ export const unarchiveGoal = async (goalId: string): Promise<Goal> => {
   }
 };
 
-export const getArchivedGoals = async (
+export const getGoals = async (
   userId: string,
   pagination?: GetGoalsPaginationDto,
   apiInstance?: AxiosInstance,
@@ -150,8 +130,9 @@ export const getArchivedGoals = async (
     const params = new URLSearchParams();
     if (pagination?.page) params.append('page', pagination.page.toString());
     if (pagination?.limit) params.append('limit', pagination.limit.toString());
+    if (pagination?.filter) params.append('filter', pagination.filter);
 
-    const url = `${API_URL}/goals/userGoals/${userId}/archived${params.toString() ? `?${params.toString()}` : ''}`;
+    const url = `${API_URL}/goals/userGoals/${userId}${params.toString() ? `?${params.toString()}` : ''}`;
     const client = apiInstance ?? api;
     const res = await client.get(url);
 
@@ -159,4 +140,28 @@ export const getArchivedGoals = async (
   } catch (err: any) {
     throw err;
   }
+};
+
+export const getActiveGoals = async (
+  userId: string,
+  pagination?: GetGoalsPaginationDto,
+  apiInstance?: AxiosInstance,
+): Promise<Goal[] | PaginatedGoalsResponse> => {
+  return getGoals(userId, { ...pagination, filter: GoalFilterType.ACTIVE }, apiInstance);
+};
+
+export const getArchivedGoals = async (
+  userId: string,
+  pagination?: GetGoalsPaginationDto,
+  apiInstance?: AxiosInstance,
+): Promise<Goal[] | PaginatedGoalsResponse> => {
+  return getGoals(userId, { ...pagination, filter: GoalFilterType.ARCHIVED }, apiInstance);
+};
+
+export const getCompletedGoals = async (
+  userId: string,
+  pagination?: GetGoalsPaginationDto,
+  apiInstance?: AxiosInstance,
+): Promise<Goal[] | PaginatedGoalsResponse> => {
+  return getGoals(userId, { ...pagination, filter: GoalFilterType.COMPLETED }, apiInstance);
 };
