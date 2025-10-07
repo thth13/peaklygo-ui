@@ -6,6 +6,7 @@ import { getActivityTypeLabel, ActivityTypeColors, Goal } from '@/types';
 import { getGoal } from '@/lib/api/goal';
 import { formatDate } from '@/lib/utils';
 import { GoalProgress } from '@/components/goal/GoalProgress';
+import { CompletionBanner } from '@/components/goal/CompletionBanner';
 import { cookies } from 'next/headers';
 import { GoalActions } from '@/components/goal/GoalActions';
 import { ProgressBlogProvider } from '@/context/ProgressBlogContext';
@@ -140,6 +141,9 @@ export default async function GoalPage({ params }: GoalPageProps) {
       <ProgressBlogProvider goalId={id}>
         {/* Основная область */}
         <div className="w-full lg:w-1/2 px-0 lg:px-6 mb-6 lg:mb-0">
+          {/* Плашка поздравления с завершением цели */}
+          <CompletionBanner goal={goal} />
+
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-colors">
             {/* Заголовок */}
             <div className="p-4 lg:p-6">

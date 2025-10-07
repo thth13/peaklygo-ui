@@ -3,7 +3,14 @@
     "title": "You took the first step toward a new version of yourself!",
     "description": "Registration is just the beginning. Now it's the perfect time to set your first goal and watch a dream turn into a plan. 🚀",
     "createFirstGoal": "Start",
-    "startTutorial": "Take quick tutorial"
+    "startTutorial": "Take quick tutorial",
+    "goalCompleted": {
+      "title": "Congratulations on achieving your goal!",
+      "description": "You successfully completed {goalName} and earned {value} rating points",
+      "completedOn": "Completed on {date}",
+      "duration": "Completion time: {days} days",
+      "ratingEarned": "+{value} to rating"
+    }
   },
   "timeAgo": {
     "today": "today",
