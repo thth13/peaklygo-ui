@@ -38,6 +38,21 @@ export enum PrivacyStatus {
   Public = 'public',
 }
 
+export enum GoalType {
+  Regular = 'regular',
+  Habit = 'habit',
+}
+
+export enum DayOfWeek {
+  Monday = 'monday',
+  Tuesday = 'tuesday',
+  Wednesday = 'wednesday',
+  Thursday = 'thursday',
+  Friday = 'friday',
+  Saturday = 'saturday',
+  Sunday = 'sunday',
+}
+
 export interface Step {
   id: string;
   text: string;
@@ -85,9 +100,12 @@ export interface Goal {
   goalName: string;
   category: string;
   description?: string;
+  goalType?: GoalType;
   startDate: Date;
   endDate?: Date;
   noDeadline?: boolean;
+  habitDuration?: number; // количество дней для привычки
+  habitDaysOfWeek?: DayOfWeek[]; // дни недели для привычки
   image?: string;
   steps: Step[];
   activity: Activity[];
@@ -185,9 +203,12 @@ export interface LandingGoal {
   goalName: string;
   category: string;
   description?: string;
+  goalType?: GoalType;
   startDate: Date;
   endDate?: Date;
   noDeadline?: boolean;
+  habitDuration?: number;
+  habitDaysOfWeek?: DayOfWeek[];
   image?: string;
   steps: Step[];
   activity: Activity[];

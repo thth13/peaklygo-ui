@@ -29,6 +29,8 @@ import {
   faExclamationTriangle,
   faGift,
   faUserPlus,
+  faFire,
+  faCalendarCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import Cookies from 'js-cookie';
 
@@ -36,8 +38,9 @@ import { createGoal } from '@/lib/api/goal';
 import { useRouter } from 'next/navigation';
 import { AuthContext } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
-import { PrivacyStatus } from '@/types';
+import { PrivacyStatus, GoalType, DayOfWeek } from '@/types';
 import { ImageUploader, StepsManager } from './wizard';
+import { HabitSettings } from './HabitSettings';
 import { useTranslations } from 'next-intl';
 import { GoogleOAuthProvider, CodeResponse } from '@react-oauth/google';
 import { GOOGLE_CLIENT_ID } from '@/constants';
@@ -46,24 +49,31 @@ import GoogleLoginButton from '@/components/GoogleLoginButton';
 import { AuthResponse } from '@/lib/api/auth';
 
 export interface GoalCreateWizardData {
-  // Шаг 1: Основы
+  // Шаг 1: Тип цели
+  goalType: 'deadline' | 'challenge' | 'group-challenge' | '';
+
+  // Шаг 2: Основы
   goalName: string;
   description: string;
 
-  // Шаг 2: Планирование шагов
+  // Шаг 3: Планирование шагов или параметры привычки
   steps: string[];
 
-  // Шаг 3: Даты и мотивация
+  // Параметры привычки
+  habitDuration: number;
+  habitDaysOfWeek: DayOfWeek[];
+
+  // Шаг 4: Даты и мотивация
   startDate: string;
   endDate: string;
   reward: string;
   consequence: string;
 
-  // Шаг 4: Фото и категория
+  // Шаг 5: Фото и категория
   image: File | null;
   category: string;
 
-  // Шаг 5: Приватность и сложность
+  // Шаг 6: Приватность и сложность
   privacy: PrivacyStatus;
   value: number;
 }
@@ -88,9 +98,12 @@ const GOAL_VALUE_MAX = 500;
 const GOAL_VALUE_MARKS: readonly number[] = [0, 125, 250, 375, 500];
 
 const defaultState: GoalCreateWizardData = {
+  goalType: '',
   goalName: '',
   description: '',
   steps: [''],
+  habitDuration: 30,
+  habitDaysOfWeek: [DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday],
   startDate: new Date().toISOString().split('T')[0],
   endDate: '',
   reward: '',
@@ -144,7 +157,7 @@ export const GoalCreateWizard: React.FC = () => {
   const tAuth = useTranslations('auth');
   const tCommon = useTranslations('common');
 
-  const totalSteps = userId ? 5 : 6;
+  const totalSteps = userId ? 6 : 7;
 
   const update = (field: keyof GoalCreateWizardData, value: any) => {
     setData((prev) => ({ ...prev, [field]: value }));
@@ -307,14 +320,25 @@ export const GoalCreateWizard: React.FC = () => {
       formDataToSend.append('value', data.value.toString());
       formDataToSend.append('tutorialCompleted', 'true');
 
+      // Тип цели
+      if (data.goalType === 'challenge') {
+        formDataToSend.append('goalType', GoalType.Habit);
+
+        // Параметры привычки
+        formDataToSend.append('habitDuration', data.habitDuration.toString());
+        formDataToSend.append('habitDaysOfWeek', JSON.stringify(data.habitDaysOfWeek));
+      } else {
+        formDataToSend.append('goalType', GoalType.Regular);
+      }
+
       // Даты
       if (data.startDate) {
         formDataToSend.append('startDate', data.startDate);
       }
-      if (data.endDate && !noDeadline) {
+      if (data.endDate && !noDeadline && data.goalType !== 'challenge') {
         formDataToSend.append('endDate', data.endDate);
       }
-      if (noDeadline) {
+      if (noDeadline || data.goalType === 'challenge') {
         formDataToSend.append('noDeadline', 'true');
       }
 
@@ -326,14 +350,19 @@ export const GoalCreateWizard: React.FC = () => {
         formDataToSend.append('consequence', data.consequence.trim());
       }
 
-      // Шаги - форматируем под StepDto
-      const validSteps = data.steps.filter((step) => step.trim().length > 0);
-      const formattedSteps = validSteps.map((step, index) => ({
-        id: `step-${index}`,
-        text: step.trim(),
-        isCompleted: false,
-      }));
-      formDataToSend.append('steps', JSON.stringify(formattedSteps));
+      // Шаги - форматируем под StepDto (только для обычных целей)
+      if (data.goalType !== 'challenge') {
+        const validSteps = data.steps.filter((step) => step.trim().length > 0);
+        const formattedSteps = validSteps.map((step, index) => ({
+          id: `step-${index}`,
+          text: step.trim(),
+          isCompleted: false,
+        }));
+        formDataToSend.append('steps', JSON.stringify(formattedSteps));
+      } else {
+        // Для привычек создаем пустой массив шагов
+        formDataToSend.append('steps', JSON.stringify([]));
+      }
 
       // Изображение
       if (data.image) {
@@ -384,15 +413,21 @@ export const GoalCreateWizard: React.FC = () => {
   const canContinue = () => {
     switch (step) {
       case 1:
-        return data.goalName.trim().length > 0;
+        return data.goalType.trim().length > 0;
       case 2:
-        return true; // Шаги теперь необязательны
+        return data.goalName.trim().length > 0;
       case 3:
+        // Для привычек проверяем, что выбран хотя бы один день недели
+        if (data.goalType === 'challenge') {
+          return data.habitDaysOfWeek.length > 0;
+        }
+        return true; // Шаги теперь необязательны для обычных целей
       case 4:
-        return true; // Остальные поля опциональные
       case 5:
-        return data.privacy !== undefined; // Требуем выбор приватности
+        return true; // Остальные поля опциональные
       case 6:
+        return data.privacy !== undefined; // Требуем выбор приватности
+      case 7:
         return !userId;
       default:
         return false;
@@ -412,9 +447,13 @@ export const GoalCreateWizard: React.FC = () => {
         <div className="text-center mb-6">
           <div className="flex items-center justify-center space-x-2 mb-3">
             {[
+              { icon: faListCheck, label: t('steps.goalType') },
               { icon: faBullseye, label: t('steps.basics') },
-              { icon: faListCheck, label: t('steps.steps') },
-              { icon: faCalendarAlt, label: t('steps.timing') },
+              {
+                icon: data.goalType === 'challenge' ? faFire : faListCheck,
+                label: data.goalType === 'challenge' ? t('steps.habit') : t('steps.steps'),
+              },
+              { icon: faCalendarAlt, label: t('steps.motivation') },
               { icon: faImage, label: t('steps.design') },
               { icon: faCheck, label: t('steps.finish') },
               ...(userId ? [] : [{ icon: faUserPlus, label: t('steps.account') }]),
@@ -450,9 +489,10 @@ export const GoalCreateWizard: React.FC = () => {
             {t('stepIndicator', { step, totalSteps })}:{' '}
             {
               [
+                t('stepDescriptions.goalTypeSelection'),
                 t('stepDescriptions.basicInfo'),
-                t('stepDescriptions.planningSteps'),
-                t('stepDescriptions.timingMotivation'),
+                data.goalType === 'challenge' ? t('stepDescriptions.habitSetup') : t('stepDescriptions.planningSteps'),
+                t('stepDescriptions.motivationRewards'),
                 t('stepDescriptions.photoCategory'),
                 t('stepDescriptions.privacyComplexity'),
                 ...(userId ? [] : [t('stepDescriptions.accountCreation')]),
@@ -487,6 +527,19 @@ export const GoalCreateWizard: React.FC = () => {
                 <div className="relative inline-block mb-6">
                   {step === 1 && (
                     <>
+                      <div className="w-24 h-24 bg-gradient-to-br from-purple-400 via-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <FontAwesomeIcon icon={faListCheck} className="text-3xl text-white" />
+                      </div>
+                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-400 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                        <FontAwesomeIcon icon={faBullseye} className="text-xs text-white" />
+                      </div>
+                      <div className="absolute -bottom-1 -left-1 w-5 h-5 bg-green-400 rounded-full flex items-center justify-center shadow-md">
+                        <FontAwesomeIcon icon={faUsers} className="text-xs text-white" />
+                      </div>
+                    </>
+                  )}
+                  {step === 2 && (
+                    <>
                       <div className="w-24 h-24 bg-gradient-to-br from-primary-400 via-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
                         <FontAwesomeIcon icon={faBullseye} className="text-3xl text-white" />
                       </div>
@@ -498,20 +551,32 @@ export const GoalCreateWizard: React.FC = () => {
                       </div>
                     </>
                   )}
-                  {step === 2 && (
+                  {step === 3 && (
                     <>
-                      <div className="w-24 h-24 bg-gradient-to-br from-green-400 via-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                        <FontAwesomeIcon icon={faListCheck} className="text-3xl text-white" />
+                      <div
+                        className={`w-24 h-24 ${
+                          data.goalType === 'challenge'
+                            ? 'bg-gradient-to-br from-purple-400 via-purple-500 to-indigo-500'
+                            : 'bg-gradient-to-br from-green-400 via-emerald-500 to-teal-600'
+                        } rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300`}
+                      >
+                        <FontAwesomeIcon
+                          icon={data.goalType === 'challenge' ? faFire : faListCheck}
+                          className="text-3xl text-white"
+                        />
                       </div>
-                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center shadow-lg animate-pulse">
-                        <FontAwesomeIcon icon={faRoute} className="text-xs text-white" />
+                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                        <FontAwesomeIcon
+                          icon={data.goalType === 'challenge' ? faCalendarCheck : faRoute}
+                          className="text-xs text-white"
+                        />
                       </div>
                       <div className="absolute -bottom-1 -left-1 w-5 h-5 bg-orange-400 rounded-full flex items-center justify-center shadow-md">
                         <FontAwesomeIcon icon={faStar} className="text-xs text-white" />
                       </div>
                     </>
                   )}
-                  {step === 3 && (
+                  {step === 4 && (
                     <>
                       <div className="w-24 h-24 bg-gradient-to-br from-orange-400 via-orange-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
                         <FontAwesomeIcon icon={faClock} className="text-3xl text-white" />
@@ -524,7 +589,7 @@ export const GoalCreateWizard: React.FC = () => {
                       </div>
                     </>
                   )}
-                  {step === 4 && (
+                  {step === 5 && (
                     <>
                       <div className="w-24 h-24 bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
                         <FontAwesomeIcon icon={faImage} className="text-3xl text-white" />
@@ -537,7 +602,7 @@ export const GoalCreateWizard: React.FC = () => {
                       </div>
                     </>
                   )}
-                  {step === 5 && (
+                  {step === 6 && (
                     <>
                       <div className="w-24 h-24 bg-gradient-to-br from-green-400 via-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
                         <FontAwesomeIcon icon={faFlagCheckered} className="text-3xl text-white" />
@@ -550,7 +615,7 @@ export const GoalCreateWizard: React.FC = () => {
                       </div>
                     </>
                   )}
-                  {step === 6 && (
+                  {step === 7 && (
                     <>
                       <div className="w-24 h-24 bg-gradient-to-br from-purple-400 via-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
                         <FontAwesomeIcon icon={faUserPlus} className="text-3xl text-white" />
@@ -565,28 +630,30 @@ export const GoalCreateWizard: React.FC = () => {
                   )}
                 </div>
                 <h1 className="text-3xl font-bold text-gray-800 mb-4">
-                  {
-                    [
-                      t('titles.createNewGoal'),
-                      t('titles.breakIntoSteps'),
-                      t('titles.setDeadlines'),
-                      t('titles.giveGoalImage'),
-                      t('titles.finalSettings'),
-                      ...(userId ? [] : [t('titles.createAccount')]),
-                    ][step - 1]
-                  }
+                  {step === 3 && data.goalType === 'challenge'
+                    ? t('titles.habitFormation')
+                    : [
+                        t('titles.selectGoalType'),
+                        t('titles.createNewGoal'),
+                        t('titles.breakIntoSteps'),
+                        t('titles.setDeadlines'),
+                        t('titles.giveGoalImage'),
+                        t('titles.finalSettings'),
+                        ...(userId ? [] : [t('titles.createAccount')]),
+                      ][step - 1]}
                 </h1>
                 <p className="text-lg text-gray-600 leading-relaxed">
-                  {
-                    [
-                      t('descriptions.createStart'),
-                      t('descriptions.breakIntoSteps'),
-                      t('descriptions.setTiming'),
-                      t('descriptions.giveImage'),
-                      t('descriptions.finalStep'),
-                      ...(userId ? [] : [t('descriptions.accountCreation')]),
-                    ][step - 1]
-                  }
+                  {step === 3 && data.goalType === 'challenge'
+                    ? t('descriptions.habitFormation')
+                    : [
+                        t('descriptions.selectGoalType'),
+                        t('descriptions.createStart'),
+                        t('descriptions.breakIntoSteps'),
+                        t('descriptions.setTiming'),
+                        t('descriptions.giveImage'),
+                        t('descriptions.finalStep'),
+                        ...(userId ? [] : [t('descriptions.accountCreation')]),
+                      ][step - 1]}
                 </p>
               </motion.div>
             </AnimatePresence>
@@ -602,7 +669,7 @@ export const GoalCreateWizard: React.FC = () => {
                 exit={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : -12 }}
                 transition={{ duration: reduceMotion ? 0 : 0.24, ease: 'easeOut' }}
               >
-                {step === 6 && !userId ? (
+                {step === 7 && !userId ? (
                   <div className="space-y-3">
                     <div className="flex items-center space-x-3 text-gray-600">
                       <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
@@ -623,7 +690,13 @@ export const GoalCreateWizard: React.FC = () => {
                       <span className="text-sm">{t('accountBenefits.achievementSystem')}</span>
                     </div>
                   </div>
-                ) : step === 2 ? (
+                ) : step === 3 && data.goalType === 'challenge' ? (
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-white/30 shadow-lg">
+                    <FontAwesomeIcon icon={faLightbulb} className="text-purple-400 text-xl mb-3" />
+                    <p className="text-purple-700 italic text-lg font-medium mb-2">{t('quotes.habitQuote')}</p>
+                    <p className="text-purple-600 text-sm">— {t('authors.aristotle')}</p>
+                  </div>
+                ) : step === 3 ? (
                   <>
                     <div className="text-center mb-6">
                       <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
@@ -663,24 +736,26 @@ export const GoalCreateWizard: React.FC = () => {
                     <p className="text-primary-700 italic text-lg font-medium mb-2">
                       {
                         [
+                          t('quotes.goalWithoutPlan'),
                           t('quotes.thousandMilesJourney'),
                           t('quotes.bigJourneyStep'),
                           t('quotes.timeIsLife'),
                           t('quotes.dreamWithoutImage'),
                           t('quotes.perfectionAchieved'),
-                        ][step === 2 ? 1 : step - 1]
+                        ][step === 3 ? 2 : step - 1]
                       }
                     </p>
                     <p className="text-primary-500 text-sm">
                       —{' '}
                       {
                         [
+                          t('authors.saintExupery'),
                           t('authors.laoTzu'),
                           t('authors.confucius'),
                           t('authors.benjaminFranklin'),
                           t('authors.folkWisdom'),
                           t('authors.saintExupery'),
-                        ][step === 2 ? 1 : step - 1]
+                        ][step === 3 ? 2 : step - 1]
                       }
                     </p>
                   </div>
@@ -704,6 +779,97 @@ export const GoalCreateWizard: React.FC = () => {
                     transition={{ duration: reduceMotion ? 0 : 0.28, ease: 'easeOut' }}
                   >
                     {step === 1 && (
+                      <>
+                        {/* Goal Type Selection */}
+                        <div>
+                          <label className="block text-lg font-bold text-gray-800 mb-6">{t('goalTypes.title')}</label>
+
+                          <div className="space-y-4">
+                            <label
+                              className={`cursor-pointer group block p-6 border-2 rounded-xl transition-all duration-300 hover:border-blue-300 hover:shadow-lg transform hover:-translate-y-1 ${
+                                data.goalType === 'deadline'
+                                  ? 'border-blue-500 bg-blue-50 shadow-lg'
+                                  : 'border-gray-200 bg-white'
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                name="goal-type"
+                                value="deadline"
+                                checked={data.goalType === 'deadline'}
+                                onChange={(e) => update('goalType', e.target.value)}
+                                className="sr-only"
+                              />
+                              <div className="flex items-center">
+                                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors">
+                                  <FontAwesomeIcon icon={faCalendarCheck} className="text-blue-600 text-xl" />
+                                </div>
+                                <div className="flex-1">
+                                  <h3 className="text-lg font-bold text-gray-800 mb-2">
+                                    {t('goalTypes.deadlineGoal')}
+                                  </h3>
+                                  <p className="text-sm text-gray-600">{t('goalTypes.deadlineGoalDescription')}</p>
+                                </div>
+                              </div>
+                            </label>
+
+                            <label
+                              className={`cursor-pointer group block p-6 border-2 rounded-xl transition-all duration-300 hover:border-orange-300 hover:shadow-lg transform hover:-translate-y-1 ${
+                                data.goalType === 'challenge'
+                                  ? 'border-orange-500 bg-orange-50 shadow-lg'
+                                  : 'border-gray-200 bg-white'
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                name="goal-type"
+                                value="challenge"
+                                checked={data.goalType === 'challenge'}
+                                onChange={(e) => update('goalType', e.target.value)}
+                                className="sr-only"
+                              />
+                              <div className="flex items-center">
+                                <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-orange-200 transition-colors">
+                                  <FontAwesomeIcon icon={faFire} className="text-orange-600 text-xl" />
+                                </div>
+                                <div className="flex-1">
+                                  <h3 className="text-lg font-bold text-gray-800 mb-2">{t('goalTypes.habitGoal')}</h3>
+                                  <p className="text-sm text-gray-600">{t('goalTypes.habitGoalDescription')}</p>
+                                </div>
+                              </div>
+                            </label>
+
+                            <label
+                              className={`group block p-6 border-2 rounded-xl transition-all duration-300 opacity-50 cursor-not-allowed border-gray-200 bg-gray-50`}
+                            >
+                              <input
+                                type="radio"
+                                name="goal-type"
+                                value="group-challenge"
+                                disabled
+                                className="sr-only"
+                              />
+                              <div className="flex items-center">
+                                <div className="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center mr-4">
+                                  <FontAwesomeIcon icon={faUsers} className="text-gray-400 text-xl" />
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <h3 className="text-lg font-bold text-gray-500">{t('goalTypes.groupChallenge')}</h3>
+                                    <span className="px-2 py-1 bg-gray-200 text-gray-500 text-xs font-semibold rounded-full">
+                                      {t('goalTypes.comingSoon')}
+                                    </span>
+                                  </div>
+                                  <p className="text-sm text-gray-400">{t('goalTypes.groupChallengeDescription')}</p>
+                                </div>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    {step === 2 && (
                       <>
                         {/* Goal Title */}
                         <div>
@@ -741,68 +907,81 @@ export const GoalCreateWizard: React.FC = () => {
                       </>
                     )}
 
-                    {step === 2 && (
-                      <StepsManager
-                        steps={data.steps}
-                        onStepsChange={(steps) => update('steps', steps)}
-                        goalName={data.goalName}
-                      />
-                    )}
-
                     {step === 3 && (
                       <>
-                        {/* Timing Section */}
-                        <div>
-                          <h3 className="text-lg font-bold text-gray-800 mb-4">
-                            <FontAwesomeIcon icon={faCalendarAlt} className="text-primary-500 mr-2" />
-                            {t('fields.timeframe')}
-                          </h3>
+                        {data.goalType === 'challenge' ? (
+                          <HabitSettings
+                            habitDuration={data.habitDuration}
+                            habitDaysOfWeek={data.habitDaysOfWeek}
+                            onHabitDurationChange={(duration) => update('habitDuration', duration)}
+                            onHabitDaysOfWeekChange={(days) => update('habitDaysOfWeek', days)}
+                          />
+                        ) : (
+                          <StepsManager
+                            steps={data.steps}
+                            onStepsChange={(steps) => update('steps', steps)}
+                            goalName={data.goalName}
+                          />
+                        )}
+                      </>
+                    )}
 
-                          <div className={`grid gap-4 mb-4 ${noDeadline ? 'grid-cols-1' : 'grid-cols-2'}`}>
-                            <div>
-                              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                {t('fields.startDate')}
-                              </label>
-                              <input
-                                type="date"
-                                value={data.startDate}
-                                onChange={(e) => update('startDate', e.target.value)}
-                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200"
-                              />
-                            </div>
-                            {!noDeadline && (
+                    {step === 4 && (
+                      <>
+                        {/* Timing Section - только для обычных целей */}
+                        {data.goalType !== 'challenge' && (
+                          <div>
+                            <h3 className="text-lg font-bold text-gray-800 mb-4">
+                              <FontAwesomeIcon icon={faCalendarAlt} className="text-primary-500 mr-2" />
+                              {t('fields.timeframe')}
+                            </h3>
+
+                            <div className={`grid gap-4 mb-4 ${noDeadline ? 'grid-cols-1' : 'grid-cols-2'}`}>
                               <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                  {t('fields.deadline')}
+                                  {t('fields.startDate')}
                                 </label>
                                 <input
                                   type="date"
-                                  value={data.endDate}
-                                  onChange={(e) => update('endDate', e.target.value)}
+                                  value={data.startDate}
+                                  onChange={(e) => update('startDate', e.target.value)}
                                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200"
                                 />
                               </div>
-                            )}
-                          </div>
+                              {!noDeadline && (
+                                <div>
+                                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    {t('fields.deadline')}
+                                  </label>
+                                  <input
+                                    type="date"
+                                    value={data.endDate}
+                                    onChange={(e) => update('endDate', e.target.value)}
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200"
+                                  />
+                                </div>
+                              )}
+                            </div>
 
-                          <div className="flex items-center space-x-2 mb-4">
-                            <input
-                              type="checkbox"
-                              id="no-deadline"
-                              checked={noDeadline}
-                              onChange={(e) => {
-                                setNoDeadline(e.target.checked);
-                                if (e.target.checked) {
-                                  update('endDate', ''); // Очищаем дату окончания
-                                }
-                              }}
-                              className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
-                            />
-                            <label htmlFor="no-deadline" className="text-sm text-gray-600">
-                              {t('fields.noDeadline')}
-                            </label>
+                            <div className="flex items-center space-x-2 mb-4">
+                              <input
+                                type="checkbox"
+                                id="no-deadline"
+                                checked={noDeadline}
+                                onChange={(e) => {
+                                  setNoDeadline(e.target.checked);
+                                  if (e.target.checked) {
+                                    update('endDate', ''); // Очищаем дату окончания
+                                  }
+                                }}
+                                className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
+                              />
+                              <label htmlFor="no-deadline" className="text-sm text-gray-600">
+                                {t('fields.noDeadline')}
+                              </label>
+                            </div>
                           </div>
-                        </div>
+                        )}
 
                         {/* Reward */}
                         <div>
@@ -838,7 +1017,7 @@ export const GoalCreateWizard: React.FC = () => {
                       </>
                     )}
 
-                    {step === 4 && (
+                    {step === 5 && (
                       <>
                         {/* Goal Image */}
                         <ImageUploader image={data.image} onImageChange={(image) => update('image', image)} />
@@ -869,7 +1048,7 @@ export const GoalCreateWizard: React.FC = () => {
                       </>
                     )}
 
-                    {step === 5 && (
+                    {step === 6 && (
                       <>
                         {/* Goal Importance Slider */}
                         <div>
@@ -1023,7 +1202,7 @@ export const GoalCreateWizard: React.FC = () => {
                       </>
                     )}
 
-                    {step === 6 && !userId && (
+                    {step === 7 && !userId && (
                       <>
                         {/* Auth tabs */}
                         <div className="flex mb-6">
@@ -1198,7 +1377,7 @@ export const GoalCreateWizard: React.FC = () => {
                         {t('buttons.continue')}
                         <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
                       </button>
-                      {(step === 2 || step === 3 || step === 4) && (
+                      {(step === 3 || step === 4 || step === 5) && (
                         <button
                           type="button"
                           onClick={nextStep}

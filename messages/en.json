@@ -122,33 +122,41 @@
     },
     "wizard": {
       "steps": {
+        "goalType": "Type",
         "basics": "Basics",
         "steps": "Steps",
-        "timing": "Timing",
+        "habit": "Habit",
+        "motivation": "Motivation",
         "design": "Design",
         "finish": "Finish",
         "account": "Account"
       },
       "stepDescriptions": {
+        "goalTypeSelection": "Goal type selection",
         "basicInfo": "Basic information",
         "planningSteps": "Planning steps",
-        "timingMotivation": "Timing and motivation",
+        "habitSetup": "Habit parameters setup",
+        "motivationRewards": "Motivation and rewards",
         "photoCategory": "Photo and category",
         "privacyComplexity": "Privacy and complexity",
         "accountCreation": "Create an account"
       },
       "titles": {
+        "selectGoalType": "Select goal type",
         "createNewGoal": "Creating new goal",
         "breakIntoSteps": "Break goal into steps",
+        "habitFormation": "Habit formation",
         "setDeadlines": "Set deadlines",
         "giveGoalImage": "Give goal an image",
         "finalSettings": "Final settings",
         "createAccount": "Create an account"
       },
       "descriptions": {
+        "selectGoalType": "Determine the format for achieving your goal. Each type has its own features and is suitable for different tasks.",
         "createStart": "This is where your journey begins. Formulate what you want to achieve — clearly and specifically. When a goal takes on words, it stops being just a thought and becomes the first step toward real action.",
         "breakIntoSteps": "Big goals are achieved with small steps. Divide your goal into concrete actions that will lead you to success. Each step is a small victory on the path to a big dream.",
-        "setTiming": "Define time frames and motivation. Clear deadlines make the goal real, while rewards and consequences motivate action.",
+        "habitFormation": "Set up frequency and progress tracking. Small daily actions lead to big life changes.",
+        "setTiming": "Define motivation and rewards. Clear motivation makes the goal meaningful, while rewards drive action.",
         "giveImage": "You can add an image and choose a category. Visualization is a powerful tool: it makes the result tangible and closer. When a goal has an image, it's easier to imagine and strive for daily.",
         "finalStep": "Last step! Configure additional parameters of your goal. You can create a challenge, invite friends, or just complete creation. Your goal is almost ready to launch!",
         "accountCreation": "Create an account to save your goal, follow progress, receive community support, and share achievements. It only takes a minute to unlock the full experience."
@@ -202,11 +210,13 @@
         "dontFearDetails": "Don't be afraid to add details"
       },
       "quotes": {
+        "goalWithoutPlan": "\"A goal without a plan is just a wish\"",
         "thousandMilesJourney": "\"A journey of a thousand miles begins with a single step\"",
         "bigJourneyStep": "\"A big journey begins with a small step\"",
         "timeIsLife": "\"Time is what life is made of\"",
         "dreamWithoutImage": "\"A dream without an image is just a wish. A dream with an image is a plan\"",
-        "perfectionAchieved": "\"Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away\""
+        "perfectionAchieved": "\"Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away\"",
+        "habitQuote": "\"We are what we repeatedly do. Excellence, then, is not an act, but a habit\""
       },
       "stepsManager": {
         "goalLabel": "Your goal:",
@@ -225,7 +235,8 @@
         "confucius": "Confucius",
         "benjaminFranklin": "Benjamin Franklin",
         "folkWisdom": "Folk wisdom",
-        "saintExupery": "Antoine de Saint-Exupéry"
+        "saintExupery": "Antoine de Saint-Exupéry",
+        "aristotle": "Aristotle"
       },
       "importance": {
         "minimal": "Minimal importance",
@@ -245,6 +256,16 @@
         "publicDescription": "All users can see"
       },
       "stepIndicator": "Step {step} of {totalSteps}",
+      "goalTypes": {
+        "title": "Select Goal Type",
+        "deadlineGoal": "Deadline Goal",
+        "deadlineGoalDescription": "Classic goal with a concrete deadline. Perfect for projects, learning, and achievements with clear timeframes.",
+        "habitGoal": "Habit Goal",
+        "habitGoalDescription": "Goal for a specific number of days. Perfect for building habits and consistent daily practice.",
+        "groupChallenge": "Group Challenge",
+        "groupChallengeDescription": "Challenge involving other people. Motivation through community and healthy competition with friends.",
+        "comingSoon": "Coming Soon"
+      },
       "notifications": {
         "goalCreated": "Goal created!",
         "goalCreationError": "Error creating goal"
@@ -369,7 +390,44 @@
     "daysAfterDeadline": "days ago",
     "completed": "Goal completed! 🎉",
     "goalAchieved": "Goal achieved!",
-    "value": "Value"
+    "value": "Value",
+    "habitSettings": {
+      "title": "Habit Settings",
+      "duration": {
+        "title": "Challenge Duration",
+        "daysCount": "Number of days",
+        "untilDate": "Until specific date",
+        "customAmount": "Custom amount",
+        "days": "days",
+        "day": "day",
+        "endDate": "Challenge end date",
+        "untilDateDescription": "Challenge will last until the selected date inclusive"
+      },
+      "weekDays": {
+        "title": "Days of the week to perform",
+        "selectedCount": "{count} days per week selected"
+      },
+      "tracking": {
+        "title": "Progress tracking",
+        "simple": {
+          "title": "Simple mark",
+          "description": "Done/not done"
+        },
+        "quantitative": {
+          "title": "Quantitative",
+          "description": "Record quantity or time"
+        }
+      },
+      "weekDayLabels": {
+        "monday": "Mon",
+        "tuesday": "Tue",
+        "wednesday": "Wed",
+        "thursday": "Thu",
+        "friday": "Fri",
+        "saturday": "Sat",
+        "sunday": "Sun"
+      }
+    }
   },
   "profile": {
     "title": "Profile",
