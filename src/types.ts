@@ -68,7 +68,14 @@ export enum ActivityType {
   CompletedGoal = 'completedGoal',
 }
 
-export const getActivityTypeLabel = (activityType: ActivityType, t: (key: string) => string): string => {
+export const getActivityTypeLabel = (
+  activityType: ActivityType | undefined | null,
+  t: (key: string) => string,
+): string => {
+  if (!activityType) {
+    return t('activities.unknownActivity');
+  }
+
   const labelKeys: Record<ActivityType, string> = {
     [ActivityType.ProgressEntry]: 'activities.progressEntry',
     [ActivityType.MarkStep]: 'activities.markStep',
@@ -78,7 +85,8 @@ export const getActivityTypeLabel = (activityType: ActivityType, t: (key: string
     [ActivityType.CompletedGoal]: 'activities.completedGoal',
   };
 
-  return t(labelKeys[activityType]);
+  const labelKey = labelKeys[activityType];
+  return labelKey ? t(labelKey) : t('activities.unknownActivity');
 };
 
 export const ActivityTypeColors: Record<ActivityType, { light: string; dark: string }> = {
@@ -95,17 +103,24 @@ export interface Activity {
   date: Date;
 }
 
-export interface Goal {
+export interface HabitDay {
+  date: Date;
+  isCompleted: boolean;
+}
+
+export interface Goal extends Document {
   _id: string;
   goalName: string;
   category: string;
   description?: string;
-  goalType?: GoalType;
+  goalType: GoalType;
   startDate: Date;
   endDate?: Date;
+  completedDate?: Date;
   noDeadline?: boolean;
-  habitDuration?: number; // количество дней для привычки
-  habitDaysOfWeek?: DayOfWeek[]; // дни недели для привычки
+  habitDuration?: number;
+  habitDaysOfWeek?: DayOfWeek[];
+  habitCompletedDays?: HabitDay[];
   image?: string;
   steps: Step[];
   activity: Activity[];
@@ -165,6 +180,11 @@ export interface Comment {
 
 export interface CreateCommentDto {
   content: string;
+}
+
+export interface MarkHabitDayDto {
+  date: Date;
+  isCompleted: boolean;
 }
 
 export interface ProfileStats {

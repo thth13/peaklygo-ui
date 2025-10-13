@@ -195,6 +195,7 @@ export default async function GoalPage({ params }: GoalPageProps) {
               </div>
             </div>
 
+            {/* Компоненты привычки */}
             <GoalProgress goal={goal} goalId={id} currentUserId={currentUserId} />
           </div>
         </div>
@@ -237,7 +238,10 @@ export default async function GoalPage({ params }: GoalPageProps) {
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('goals.lastActivity')}</h3>
             <div className="space-y-3">
               {goal.activity?.slice(-5).map((item, index) => {
-                const colors = ActivityTypeColors[item.activityType];
+                const colors = ActivityTypeColors[item.activityType] || {
+                  light: 'bg-gray-500',
+                  dark: 'dark:bg-gray-400',
+                };
                 return (
                   <div key={index} className="flex items-start space-x-3">
                     <div className={`w-2 h-2 ${colors.light} ${colors.dark} rounded-full mt-2`}></div>

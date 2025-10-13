@@ -1,13 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import { Goal } from '@/types';
+import { useState, useEffect, useCallback } from 'react';
+import { Goal, GoalType, HabitDay } from '@/types';
 import { GoalSteps } from './GoalSteps';
 import { IMAGE_URL } from '@/constants';
 import { formatDate } from '@/lib/utils';
 import { ProgressBlog } from './ProgressBlog';
 import { useTranslations, useLocale } from 'next-intl';
 import { useUserProfile } from '@/context/UserProfileContext';
+import { TodayHabitTracker } from './TodayHabitTracker';
+import { HabitProgressCalendar } from './HabitProgressCalendar';
 
 interface GoalProgressProps {
   goal: Goal;
@@ -15,11 +17,86 @@ interface GoalProgressProps {
   currentUserId?: string;
 }
 
+// Функция для вычисления прогресса привычки на основе данных цели
+const calculateHabitProgress = (habitCompletedDays: HabitDay[] = []) => {
+  const completedDates = habitCompletedDays
+    .filter((day) => day.isCompleted)
+    .map((day) => {
+      // Normalize to UTC day to avoid timezone off-by-one
+      const date = new Date(day.date);
+      return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+    });
+
+  // Вычисляем текущую серию
+  let currentStreak = 0;
+  const today = new Date();
+  const todayNormalized = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+  // Сортируем даты по убыванию (от сегодня)
+  const sortedDates = completedDates.sort((a, b) => b.getTime() - a.getTime());
+
+  // Проверяем выполнен ли сегодняшний день
+  const isTodayCompleted = sortedDates.some((date) => date.getTime() === todayNormalized.getTime());
+
+  // Начинаем проверку стрика
+  const checkDate = new Date(todayNormalized);
+
+  // Если сегодня выполнено - начинаем с сегодня, иначе с вчера
+  if (!isTodayCompleted) {
+    checkDate.setDate(checkDate.getDate() - 1);
+  }
+
+  for (let i = 0; i < sortedDates.length; i++) {
+    if (sortedDates[i].getTime() === checkDate.getTime()) {
+      currentStreak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  return { completedDates, currentStreak };
+};
+
 export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps) => {
   const [progress, setProgress] = useState(goal.progress);
+  const [completedDates, setCompletedDates] = useState<Date[]>([]);
+  const [currentStreak, setCurrentStreak] = useState(0);
+  const [isTodayCompleted, setIsTodayCompleted] = useState(false);
+
   const t = useTranslations();
   const locale = useLocale();
   const { updateRatingOnStepCompletion, updateRatingOnGoalCompletion } = useUserProfile();
+
+  // Вычисление прогресса на основе данных цели
+  const calculateProgress = useCallback(() => {
+    if (goal.goalType === GoalType.Habit) {
+      const { completedDates: dates, currentStreak: streak } = calculateHabitProgress(goal.habitCompletedDays);
+
+      setCompletedDates(dates);
+      setCurrentStreak(streak);
+
+      // Проверяем сегодняшний день более простым способом
+      const today = new Date();
+      const todayString = today.toDateString(); // "Sun Oct 13 2025"
+
+      const todayCompleted = dates.some((date) => {
+        return date.toDateString() === todayString;
+      });
+
+      setIsTodayCompleted(todayCompleted);
+    }
+  }, [goal.goalType, goal.habitCompletedDays]);
+
+  // Обновление локального состояния после отметки
+  const handleMarkComplete = useCallback(() => {
+    // Просто пересчитываем прогресс, так как API вызов уже сделан в TodayHabitTracker
+    calculateProgress();
+  }, [calculateProgress]);
+
+  useEffect(() => {
+    calculateProgress();
+  }, [calculateProgress]);
 
   const handleProgressUpdate = (newProgress: number) => {
     setProgress(newProgress);
@@ -119,6 +196,15 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
           </div>
         </div>
 
+        {goal.goalType === GoalType.Habit && currentUserId === goal.userId && (
+          <TodayHabitTracker
+            goalId={goalId}
+            currentStreak={currentStreak}
+            onMarkComplete={handleMarkComplete}
+            isCompleted={isTodayCompleted}
+          />
+        )}
+
         {goal.image && (
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
@@ -164,6 +250,14 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
               </div>
             )}
           </div>
+        )}
+
+        {goal.goalType === GoalType.Habit && (
+          <HabitProgressCalendar
+            startDate={new Date(goal.startDate)}
+            completedDates={completedDates}
+            currentStreak={currentStreak}
+          />
         )}
 
         {goal.steps.length > 0 && (

@@ -26,7 +26,8 @@
     "unmarkStep": "Зняв виконання кроку",
     "updatedDeadline": "Змінив дедлайн",
     "editedGoal": "Відредагував ціль",
-    "completedGoal": "Завершив ціль"
+    "completedGoal": "Завершив ціль",
+    "unknownActivity": "Невідома активність"
   },
   "common": {
     "welcome": "Ласкаво просимо",
@@ -405,6 +406,22 @@
         "sunday": "Нд"
       }
     }
+  },
+  "habits": {
+    "progressByDays": "Мій прогрес по днях",
+    "completed": "Виконано",
+    "missed": "Пропущено",
+    "today": "Сьогодні",
+    "currentStreak": "Поточна серія",
+    "days": "днів",
+    "markCompletionForToday": "Відмітьте виконання за сьогодні",
+    "completedForToday": "Виконано за сьогодні!",
+    "daysInRow": "днів поспіль",
+    "markAsCompleted": "Відмітити як виконане",
+    "markAsIncomplete": "Відмітити як невиконане",
+    "alreadyCompleted": "Вже виконано",
+    "marking": "Відмічаємо...",
+    "dayLabels": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"]
   },
   "profile": {
     "title": "Профіль",

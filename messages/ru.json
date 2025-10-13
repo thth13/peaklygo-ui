@@ -25,7 +25,8 @@
     "unmarkStep": "Снял выполнение шага",
     "updatedDeadline": "Изменил дедлайн",
     "editedGoal": "Отредактировал цель",
-    "completedGoal": "Завершил цель"
+    "completedGoal": "Завершил цель",
+    "unknownActivity": "Неизвестная активность"
   },
   "common": {
     "welcome": "Добро пожаловать",
@@ -777,6 +778,22 @@
     "rating": "Рейтинг"
   }
   ,
+  "habits": {
+    "progressByDays": "Мой прогресс по дням",
+    "completed": "Выполнено",
+    "missed": "Пропущено",
+    "today": "Сегодня",
+    "currentStreak": "Текущая серия",
+    "days": "дней",
+    "markCompletionForToday": "Отметьте выполнение за сегодня",
+    "completedForToday": "Выполнено за сегодня!",
+    "daysInRow": "дней подряд",
+    "markAsCompleted": "Отметить как выполненное",
+    "markAsIncomplete": "Отметить как невыполненное",
+    "alreadyCompleted": "Уже выполнено",
+    "marking": "Отмечаем...",
+    "dayLabels": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+  },
   "metadata": {
     "title": "PeaklyGo — Делайте прогресс видимым. Достигайте цели осознанно.",
     "description": "PeaklyGo — место, где ваши цели превращаются в чёткий план и понятную историю прогресса. Без сложностей, без шума — только движение вперёд.",

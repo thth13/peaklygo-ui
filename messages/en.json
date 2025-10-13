@@ -25,7 +25,8 @@
     "unmarkStep": "Uncompleted step",
     "updatedDeadline": "Updated deadline",
     "editedGoal": "Edited goal",
-    "completedGoal": "Completed goal"
+    "completedGoal": "Completed goal",
+    "unknownActivity": "Unknown activity"
   },
   "common": {
     "welcome": "Welcome",
@@ -428,6 +429,22 @@
         "sunday": "Sun"
       }
     }
+  },
+  "habits": {
+    "progressByDays": "My daily progress",
+    "completed": "Completed",
+    "missed": "Missed",
+    "today": "Today",
+    "currentStreak": "Current streak",
+    "days": "days",
+    "markCompletionForToday": "Mark completion for today",
+    "completedForToday": "Completed for today!",
+    "daysInRow": "days in row",
+    "markAsCompleted": "Mark as completed",
+    "markAsIncomplete": "Mark as incomplete",
+    "alreadyCompleted": "Already completed",
+    "marking": "Marking...",
+    "dayLabels": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
   },
   "profile": {
     "title": "Profile",

@@ -1,7 +1,14 @@
 import { API_URL } from '@/constants';
 import api from '../clientAxios';
 import nProgress from 'nprogress';
-import { Goal, GetGoalsPaginationDto, PaginatedGoalsResponse, LandingGoal, GoalFilterType } from '@/types';
+import {
+  Goal,
+  GetGoalsPaginationDto,
+  PaginatedGoalsResponse,
+  LandingGoal,
+  GoalFilterType,
+  MarkHabitDayDto,
+} from '@/types';
 import { AxiosInstance } from 'axios';
 
 export const createGoal = async (goal: FormData) => {
@@ -164,4 +171,19 @@ export const getCompletedGoals = async (
   apiInstance?: AxiosInstance,
 ): Promise<Goal[] | PaginatedGoalsResponse> => {
   return getGoals(userId, { ...pagination, filter: GoalFilterType.COMPLETED }, apiInstance);
+};
+
+export const markHabitDay = async (goalId: string, date: Date, isCompleted: boolean): Promise<any> => {
+  try {
+    const markHabitDayDto: MarkHabitDayDto = {
+      date,
+      isCompleted,
+    };
+
+    const res = await api.put(`/goals/${goalId}/markHabitDay`, markHabitDayDto);
+
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
 };

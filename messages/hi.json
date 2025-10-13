@@ -25,7 +25,8 @@
     "unmarkStep": "चरण अधूरा किया",
     "updatedDeadline": "डेडलाइन अपडेट की",
     "editedGoal": "लक्ष्य संपादित किया",
-    "completedGoal": "लक्ष्य पूरा किया"
+    "completedGoal": "लक्ष्य पूरा किया",
+    "unknownActivity": "अज्ञात गतिविधि"
   },
   "common": {
     "welcome": "स्वागत है",
@@ -401,6 +402,22 @@
         "sunday": "रवि"
       }
     }
+  },
+  "habits": {
+    "progressByDays": "मेरी दैनिक प्रगति",
+    "completed": "पूर्ण",
+    "missed": "छूटा हुआ",
+    "today": "आज",
+    "currentStreak": "वर्तमान श्रृंखला",
+    "days": "दिन",
+    "markCompletionForToday": "आज के लिए पूरा होना चिह्नित करें",
+    "completedForToday": "आज के लिए पूर्ण!",
+    "daysInRow": "लगातार दिन",
+    "markAsCompleted": "पूर्ण के रूप में चिह्नित करें",
+    "markAsIncomplete": "अधूरे के रूप में चिह्नित करें",
+    "alreadyCompleted": "पहले से पूर्ण",
+    "marking": "चिह्नित कर रहे हैं...",
+    "dayLabels": ["सो", "मं", "बु", "गु", "शु", "श", "र"]
   },
   "profile": {
     "title": "प्रोफ़ाइल",
