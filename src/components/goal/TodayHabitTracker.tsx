@@ -9,7 +9,7 @@ import { markHabitDay } from '@/lib/api/goal';
 interface TodayHabitTrackerProps {
   goalId: string;
   currentStreak?: number;
-  onMarkComplete?: () => void;
+  onMarkComplete?: (date: Date, isCompleted: boolean) => void;
   isCompleted?: boolean;
 }
 
@@ -36,7 +36,7 @@ export function TodayHabitTracker({
       await markHabitDay(goalId, today, newCompletedState);
 
       setLocalIsCompleted(newCompletedState);
-      onMarkComplete?.();
+      onMarkComplete?.(today, newCompletedState);
     } catch (error) {
       console.error('Failed to mark habit day:', error);
     } finally {

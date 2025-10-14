@@ -63,6 +63,7 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
   const [completedDates, setCompletedDates] = useState<Date[]>([]);
   const [currentStreak, setCurrentStreak] = useState(0);
   const [isTodayCompleted, setIsTodayCompleted] = useState(false);
+  const [localHabitDays, setLocalHabitDays] = useState(goal.habitCompletedDays || []);
 
   const t = useTranslations();
   const locale = useLocale();
@@ -71,7 +72,7 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
   // Вычисление прогресса на основе данных цели
   const calculateProgress = useCallback(() => {
     if (goal.goalType === GoalType.Habit) {
-      const { completedDates: dates, currentStreak: streak } = calculateHabitProgress(goal.habitCompletedDays);
+      const { completedDates: dates, currentStreak: streak } = calculateHabitProgress(localHabitDays);
 
       setCompletedDates(dates);
       setCurrentStreak(streak);
@@ -86,17 +87,43 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
 
       setIsTodayCompleted(todayCompleted);
     }
-  }, [goal.goalType, goal.habitCompletedDays]);
+  }, [goal.goalType, localHabitDays]);
 
   // Обновление локального состояния после отметки
-  const handleMarkComplete = useCallback(() => {
-    // Просто пересчитываем прогресс, так как API вызов уже сделан в TodayHabitTracker
-    calculateProgress();
-  }, [calculateProgress]);
+  const handleMarkComplete = useCallback((date: Date, isCompleted: boolean) => {
+    // Обновляем локальное состояние habitDays
+    setLocalHabitDays((prevDays) => {
+      const dateString = date.toISOString().split('T')[0];
+      const existingDayIndex = prevDays.findIndex(
+        (day) => new Date(day.date).toISOString().split('T')[0] === dateString,
+      );
+
+      if (existingDayIndex >= 0) {
+        // Обновляем существующий день
+        const newDays = [...prevDays];
+        newDays[existingDayIndex] = { ...newDays[existingDayIndex], isCompleted };
+        return newDays;
+      } else {
+        // Добавляем новый день
+        return [...prevDays, { date: new Date(date), isCompleted }];
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    setLocalHabitDays(goal.habitCompletedDays || []);
+  }, [goal.habitCompletedDays]);
 
   useEffect(() => {
     calculateProgress();
   }, [calculateProgress]);
+
+  // Пересчитываем прогресс при изменении localHabitDays
+  useEffect(() => {
+    if (goal.goalType === GoalType.Habit) {
+      calculateProgress();
+    }
+  }, [localHabitDays, goal.goalType, calculateProgress]);
 
   const handleProgressUpdate = (newProgress: number) => {
     setProgress(newProgress);
