@@ -183,7 +183,7 @@ export interface CreateCommentDto {
 }
 
 export interface MarkHabitDayDto {
-  date: Date;
+  date: string; // YYYY-MM-DD format
   isCompleted: boolean;
 }
 

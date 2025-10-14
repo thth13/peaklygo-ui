@@ -175,8 +175,10 @@ export const getCompletedGoals = async (
 
 export const markHabitDay = async (goalId: string, date: Date, isCompleted: boolean): Promise<any> => {
   try {
+    const dateString = date.toLocaleDateString('en-CA');
+
     const markHabitDayDto: MarkHabitDayDto = {
-      date,
+      date: dateString,
       isCompleted,
     };
 
