@@ -14,6 +14,12 @@ export function formatDate(date: Date | string, locale: string = 'en'): string {
   return format(normalizedDate, 'd MMMM yyyy', { locale: resolvedLocale });
 }
 
+export function formatDateWithTime(date: Date | string, locale: string = 'en'): string {
+  const normalizedDate: Date = typeof date === 'string' ? new Date(date) : date;
+  const resolvedLocale: Locale | undefined = locale === 'en' ? undefined : localeMap[locale];
+  return format(normalizedDate, 'd MMMM yyyy, HH:mm', { locale: resolvedLocale });
+}
+
 export const cn = (...classes: (string | undefined | false)[]): string => {
   return classes.filter(Boolean).join(' ');
 };

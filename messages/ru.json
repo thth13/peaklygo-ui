@@ -23,6 +23,8 @@
     "progressEntry": "Написал сообщение в блог",
     "markStep": "Выполнил шаг",
     "unmarkStep": "Снял выполнение шага",
+    "markHabitDay": "Отметил выполнение привычки",
+    "unmarkHabitDay": "Снял выполнение привычки",
     "updatedDeadline": "Изменил дедлайн",
     "editedGoal": "Отредактировал цель",
     "completedGoal": "Завершил цель",

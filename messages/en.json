@@ -23,6 +23,8 @@
     "progressEntry": "Wrote a blog post",
     "markStep": "Completed step",
     "unmarkStep": "Uncompleted step",
+    "markHabitDay": "Marked habit as completed",
+    "unmarkHabitDay": "Unmarked habit completion",
     "updatedDeadline": "Updated deadline",
     "editedGoal": "Edited goal",
     "completedGoal": "Completed goal",

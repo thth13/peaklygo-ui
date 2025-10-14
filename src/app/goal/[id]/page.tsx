@@ -4,7 +4,7 @@ import Link from '@/components/Link';
 import { LeftSidebar } from '@/components/layout/sidebar';
 import { getActivityTypeLabel, ActivityTypeColors, Goal } from '@/types';
 import { getGoal } from '@/lib/api/goal';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatDateWithTime } from '@/lib/utils';
 import { GoalProgress } from '@/components/goal/GoalProgress';
 import { CompletionBanner } from '@/components/goal/CompletionBanner';
 import { cookies } from 'next/headers';
@@ -249,7 +249,9 @@ export default async function GoalPage({ params }: GoalPageProps) {
                       <p className="text-sm text-gray-900 dark:text-gray-100">
                         {getActivityTypeLabel(item.activityType, (key: string) => t(key))}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{formatDate(item.date, locale)}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {formatDateWithTime(item.date, locale)}
+                      </p>
                     </div>
                   </div>
                 );

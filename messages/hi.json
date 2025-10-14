@@ -23,6 +23,8 @@
     "progressEntry": "एक ब्लॉग पोस्ट लिखा",
     "markStep": "चरण पूरा किया",
     "unmarkStep": "चरण अधूरा किया",
+    "markHabitDay": "आदत को पूरा के रूप में चिह्नित किया",
+    "unmarkHabitDay": "आदत की पूर्णता को अचिह्नित किया",
     "updatedDeadline": "डेडलाइन अपडेट की",
     "editedGoal": "लक्ष्य संपादित किया",
     "completedGoal": "लक्ष्य पूरा किया",
