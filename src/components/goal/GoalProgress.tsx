@@ -115,7 +115,19 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
     return diffDays;
   };
 
+  const getChallengeDaysLeft = () => {
+    if (goal.goalType !== GoalType.Habit || !goal.habitDuration) return null;
+
+    const startDate = new Date(goal.startDate);
+    const today = new Date();
+    const daysFromStart = Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    const challengeDaysLeft = goal.habitDuration - daysFromStart - 1; // -1 потому что стартовый день считается
+
+    return Math.max(0, challengeDaysLeft);
+  };
+
   const daysLeft = getDaysLeft();
+  const challengeDaysLeft = getChallengeDaysLeft();
   const ratingEarned = Math.max(goal.value, 0);
 
   return (
@@ -134,12 +146,18 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
 
             <div className="absolute left-0 bottom-0 z-10 text-white p-6">
               <div className="text-3xl font-bold mb-1">
-                {progress}% {t('common.completed')}
+                {goal.goalType === GoalType.Habit
+                  ? `${currentStreak} ${t('goals.streakDays')}`
+                  : `${progress}% ${t('common.completed')}`}
               </div>
-              {goal.endDate && (
+              {(goal.endDate || (goal.goalType === GoalType.Habit && goal.habitDuration)) && (
                 <div className="text-md mt-1 text-white/80">
                   {goal.isCompleted
                     ? t('goals.goalAchieved')
+                    : goal.goalType === GoalType.Habit && challengeDaysLeft !== null
+                    ? challengeDaysLeft > 0
+                      ? `${challengeDaysLeft} ${t('goals.challengeDaysLeft')}`
+                      : t('goals.deadlinePassed')
                     : daysLeft && daysLeft > 0
                     ? `${daysLeft} ${t('goals.daysToDeadline')}`
                     : `${t('goals.deadlinePassed')} ${Math.abs(daysLeft || 0)} ${t('goals.daysAfterDeadline')}`}
@@ -153,27 +171,35 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
           <div className="flex items-center justify-between text-white">
             <div>
               <div className="text-3xl font-bold mb-1">
-                {progress}% {t('common.completed')}
+                {goal.goalType === GoalType.Habit
+                  ? `${currentStreak} ${t('goals.streakDays')}`
+                  : `${progress}% ${t('common.completed')}`}
               </div>
-              {goal.endDate && (
+              {(goal.endDate || (goal.goalType === GoalType.Habit && goal.habitDuration)) && (
                 <div className="text-white/80">
                   {goal.isCompleted
                     ? t('goals.goalAchieved')
+                    : goal.goalType === GoalType.Habit && challengeDaysLeft !== null
+                    ? challengeDaysLeft > 0
+                      ? `${challengeDaysLeft} ${t('goals.challengeDaysLeft')}`
+                      : t('goals.deadlinePassed')
                     : daysLeft && daysLeft > 0
                     ? `${daysLeft} ${t('goals.daysToDeadline')}`
                     : `${t('goals.deadlinePassed')} ${Math.abs(daysLeft || 0)} ${t('goals.daysAfterDeadline')}`}
                 </div>
               )}
             </div>
-            <div className="text-right">
-              <div className="text-white/80 text-sm mb-2">{t('goals.overallProgress')}</div>
-              <div className="w-24 bg-white/20 h-2 rounded-full">
-                <div
-                  className="bg-white h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${progress}%` }}
-                ></div>
+            {goal.goalType !== GoalType.Habit && (
+              <div className="text-right">
+                <div className="text-white/80 text-sm mb-2">{t('goals.overallProgress')}</div>
+                <div className="w-24 bg-white/20 h-2 rounded-full">
+                  <div
+                    className="bg-white h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}
@@ -205,7 +231,7 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
           />
         )}
 
-        {goal.image && (
+        {goal.image && goal.goalType !== GoalType.Habit && (
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
               <span className="font-medium text-gray-700 dark:text-gray-300">{t('goals.overallProgress')}</span>

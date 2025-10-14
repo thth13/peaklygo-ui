@@ -391,6 +391,8 @@
     "daysAfterDeadline": "days ago",
     "completed": "Goal completed! 🎉",
     "goalAchieved": "Goal achieved!",
+    "streakDays": "days streak",
+    "challengeDaysLeft": "days left",
     "value": "Value",
     "habitSettings": {
       "title": "Habit Settings",
