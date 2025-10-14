@@ -38,12 +38,12 @@ const SortableStepItem: React.FC<SortableStepItemProps> = ({ id, step, index, on
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className={`step-item flex items-center gap-3 p-3 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 hover:border-primary-300 transition-colors ${
+      className={`step-item flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-600 hover:border-primary-300 dark:hover:border-primary-500 transition-colors ${
         isDragging ? 'opacity-50 shadow-lg' : ''
       }`}
     >
       <div {...listeners} className="flex-shrink-0 cursor-grab active:cursor-grabbing">
-        <div className="w-8 h-8 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center text-sm font-semibold">
+        <div className="w-8 h-8 bg-primary-100 dark:bg-primary-800 text-primary-600 dark:text-primary-300 rounded-full flex items-center justify-center text-sm font-semibold">
           {index + 1}
         </div>
       </div>
@@ -51,14 +51,14 @@ const SortableStepItem: React.FC<SortableStepItemProps> = ({ id, step, index, on
         type="text"
         value={step}
         onChange={(e) => onUpdate(e.target.value)}
-        className="flex-1 bg-transparent border-none outline-none text-gray-700 placeholder-gray-400 cursor-text"
+        className="flex-1 bg-transparent border-none outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 cursor-text"
         placeholder={placeholder}
       />
       {canRemove && (
         <button
           type="button"
           onClick={onRemove}
-          className="text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+          className="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors cursor-pointer"
         >
           <FontAwesomeIcon icon={faTrash} className="text-sm" />
         </button>
@@ -111,16 +111,18 @@ export const StepsManager: React.FC<StepsManagerProps> = ({ steps, onStepsChange
   return (
     <>
       {/* Goal Summary */}
-      <div className="mb-6 p-4 bg-gray-50 rounded-xl">
-        <h3 className="font-semibold text-gray-800 mb-1">{t('goalLabel')}</h3>
-        <p className="text-gray-600">{goalName || t('goalFallback')}</p>
+      <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+        <h3 className="font-semibold text-gray-800 dark:text-white mb-1">{t('goalLabel')}</h3>
+        <p className="text-gray-600 dark:text-gray-300">{goalName || t('goalFallback')}</p>
       </div>
 
       {/* Steps Section */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <label className="block text-lg font-bold text-gray-800">{t('sectionTitle')}</label>
-          <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{t('optionalBadge')}</span>
+          <label className="block text-lg font-bold text-gray-800 dark:text-white">{t('sectionTitle')}</label>
+          <span className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+            {t('optionalBadge')}
+          </span>
         </div>
 
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -144,13 +146,13 @@ export const StepsManager: React.FC<StepsManagerProps> = ({ steps, onStepsChange
         <button
           type="button"
           onClick={addStep}
-          className="w-full py-3 px-4 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-primary-400 hover:text-primary-600 transition-all duration-200 flex items-center justify-center gap-2"
+          className="w-full py-3 px-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-gray-500 dark:text-gray-400 hover:border-primary-400 dark:hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-200 flex items-center justify-center gap-2"
         >
           <FontAwesomeIcon icon={faPlus} />
           <span>{t('addStep')}</span>
         </button>
 
-        <p className="text-sm text-gray-500 mt-3">{t('stepsHint')}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-3">{t('stepsHint')}</p>
       </div>
     </>
   );

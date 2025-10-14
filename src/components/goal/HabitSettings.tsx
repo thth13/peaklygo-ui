@@ -112,8 +112,8 @@ export const HabitSettings: React.FC<HabitSettingsProps> = ({
     <div className="space-y-6">
       {/* Продолжительность челленджа */}
       <div>
-        <h3 className="text-lg font-bold text-gray-800 mb-4">
-          <FontAwesomeIcon icon={faHourglassHalf} className="text-amber-500 mr-2" />
+        <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
+          <FontAwesomeIcon icon={faHourglassHalf} className="text-amber-500 dark:text-amber-400 mr-2" />
           {t('duration.title')}
         </h3>
 
@@ -128,7 +128,7 @@ export const HabitSettings: React.FC<HabitSettingsProps> = ({
                 onChange={() => handleDurationTypeChange('days')}
                 className="w-4 h-4 text-primary-600 focus:ring-primary-500 mr-2"
               />
-              <span className="font-semibold text-gray-700">{t('duration.daysCount')}</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-300">{t('duration.daysCount')}</span>
             </label>
             <label className="flex items-center cursor-pointer">
               <input
@@ -139,7 +139,7 @@ export const HabitSettings: React.FC<HabitSettingsProps> = ({
                 onChange={() => handleDurationTypeChange('date')}
                 className="w-4 h-4 text-primary-600 focus:ring-primary-500 mr-2"
               />
-              <span className="font-semibold text-gray-700">{t('duration.untilDate')}</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-300">{t('duration.untilDate')}</span>
             </label>
           </div>
 
@@ -149,8 +149,10 @@ export const HabitSettings: React.FC<HabitSettingsProps> = ({
                 {[7, 21, 30, 66].map((days) => (
                   <label
                     key={days}
-                    className={`flex flex-col items-center p-3 border-2 rounded-lg cursor-pointer hover:border-primary-300 transition-colors group ${
-                      customDays === days ? 'border-primary-300 bg-primary-50' : 'border-gray-200'
+                    className={`flex flex-col items-center p-3 border-2 rounded-lg cursor-pointer hover:border-primary-300 dark:hover:border-primary-500 transition-colors group ${
+                      customDays === days
+                        ? 'border-primary-300 bg-primary-50 dark:border-primary-500 dark:bg-primary-900/30'
+                        : 'border-gray-200 dark:border-gray-600'
                     }`}
                   >
                     <input
@@ -161,8 +163,10 @@ export const HabitSettings: React.FC<HabitSettingsProps> = ({
                       onChange={() => handleDaysPresetChange(days)}
                       className="w-4 h-4 text-primary-600 focus:ring-primary-500 mb-2"
                     />
-                    <span className="text-xl font-bold text-primary-600 group-hover:text-primary-700">{days}</span>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-xl font-bold text-primary-600 dark:text-primary-400 group-hover:text-primary-700 dark:group-hover:text-primary-300">
+                      {days}
+                    </span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
                       {days === 21 ? t('duration.day') : t('duration.days')}
                     </span>
                   </label>
@@ -179,7 +183,7 @@ export const HabitSettings: React.FC<HabitSettingsProps> = ({
                     onChange={() => {}}
                     className="w-4 h-4 text-primary-600 focus:ring-primary-500 mr-2"
                   />
-                  <span className="font-medium text-gray-700">{t('duration.customAmount')}:</span>
+                  <span className="font-medium text-gray-700 dark:text-gray-300">{t('duration.customAmount')}:</span>
                 </label>
                 <input
                   type="number"
@@ -187,21 +191,23 @@ export const HabitSettings: React.FC<HabitSettingsProps> = ({
                   max="365"
                   value={customDays}
                   onChange={(e) => handleCustomDaysChange(Number(e.target.value))}
-                  className="w-20 px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm text-center"
+                  className="w-20 px-3 py-2 border-2 border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm text-center bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
-                <span className="text-sm text-gray-600">{t('duration.days')}</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">{t('duration.days')}</span>
               </div>
             </div>
           ) : (
             <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700">{t('duration.endDate')}</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                {t('duration.endDate')}
+              </label>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => handleEndDateChange(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm"
+                className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
-              <p className="text-sm text-gray-500">{t('duration.untilDateDescription')}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('duration.untilDateDescription')}</p>
             </div>
           )}
         </div>
@@ -209,8 +215,8 @@ export const HabitSettings: React.FC<HabitSettingsProps> = ({
 
       {/* Дни недели для выполнения */}
       <div>
-        <h3 className="text-lg font-bold text-gray-800 mb-4">
-          <FontAwesomeIcon icon={faCalendarDays} className="text-primary-500 mr-2" />
+        <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
+          <FontAwesomeIcon icon={faCalendarDays} className="text-primary-500 dark:text-primary-400 mr-2" />
           {t('weekDays.title')}
         </h3>
 
@@ -226,7 +232,7 @@ export const HabitSettings: React.FC<HabitSettingsProps> = ({
                 className="sr-only peer"
               />
               <div
-                className={`w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center peer-checked:bg-primary-500 peer-checked:border-primary-500 peer-checked:text-white text-gray-600 font-semibold text-sm transition-all duration-200 group-hover:border-primary-400 ${
+                className={`w-12 h-12 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center peer-checked:bg-primary-500 peer-checked:border-primary-500 peer-checked:text-white text-gray-600 dark:text-gray-300 font-semibold text-sm transition-all duration-200 group-hover:border-primary-400 dark:group-hover:border-primary-500 ${
                   habitDaysOfWeek.includes(day) ? 'bg-primary-500 border-primary-500 text-white' : ''
                 }`}
               >
@@ -236,18 +242,20 @@ export const HabitSettings: React.FC<HabitSettingsProps> = ({
           ))}
         </div>
 
-        <p className="text-sm text-gray-500 mb-3">{t('weekDays.selectedCount', { count: getSelectedDaysCount() })}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+          {t('weekDays.selectedCount', { count: getSelectedDaysCount() })}
+        </p>
       </div>
 
       {/* Отслеживание прогресса */}
       <div>
-        <h3 className="text-lg font-bold text-gray-800 mb-4">
-          <FontAwesomeIcon icon={faChartLine} className="text-green-500 mr-2" />
+        <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
+          <FontAwesomeIcon icon={faChartLine} className="text-green-500 dark:text-green-400 mr-2" />
           {t('tracking.title')}
         </h3>
 
         <div className="space-y-3">
-          <label className="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-green-300 transition-colors">
+          <label className="flex items-center p-3 border-2 border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:border-green-300 dark:hover:border-green-500 transition-colors">
             <input
               type="radio"
               name="tracking"
@@ -256,12 +264,12 @@ export const HabitSettings: React.FC<HabitSettingsProps> = ({
               className="w-4 h-4 text-green-600 focus:ring-green-500"
             />
             <div className="ml-3">
-              <span className="font-semibold text-gray-800">{t('tracking.simple.title')}</span>
-              <p className="text-sm text-gray-500">{t('tracking.simple.description')}</p>
+              <span className="font-semibold text-gray-800 dark:text-white">{t('tracking.simple.title')}</span>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('tracking.simple.description')}</p>
             </div>
           </label>
 
-          <label className="flex items-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-green-300 transition-colors">
+          <label className="flex items-center p-3 border-2 border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:border-green-300 dark:hover:border-green-500 transition-colors">
             <input
               type="radio"
               name="tracking"
@@ -269,8 +277,8 @@ export const HabitSettings: React.FC<HabitSettingsProps> = ({
               className="w-4 h-4 text-green-600 focus:ring-green-500"
             />
             <div className="ml-3">
-              <span className="font-semibold text-gray-800">{t('tracking.quantitative.title')}</span>
-              <p className="text-sm text-gray-500">{t('tracking.quantitative.description')}</p>
+              <span className="font-semibold text-gray-800 dark:text-white">{t('tracking.quantitative.title')}</span>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('tracking.quantitative.description')}</p>
             </div>
           </label>
         </div>

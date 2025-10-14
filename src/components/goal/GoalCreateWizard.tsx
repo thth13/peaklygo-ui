@@ -436,12 +436,17 @@ export const GoalCreateWizard: React.FC = () => {
 
   return (
     <div
-      className={`min-h-screen ${
+      className={`min-h-screen relative overflow-hidden ${
         step === totalSteps
-          ? 'bg-gradient-to-br from-green-50 via-white to-emerald-50'
-          : 'bg-gradient-to-br from-primary-50 via-white to-primary-50'
+          ? 'bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-950 dark:via-gray-900 dark:to-teal-950'
+          : 'bg-gradient-to-br from-indigo-50 via-white to-sky-50 dark:from-slate-950 dark:via-gray-900 dark:to-indigo-950'
       }`}
     >
+      {/* Decorative gradient blobs */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-gradient-to-tr from-primary-200 via-primary-100 to-transparent blur-3xl opacity-60 dark:from-primary-900 dark:via-primary-800 dark:opacity-40" />
+        <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-gradient-to-tr from-emerald-200 via-emerald-100 to-transparent blur-3xl opacity-60 dark:from-emerald-900 dark:via-emerald-800 dark:opacity-40" />
+      </div>
       <main className="max-w-6xl mx-auto px-4 py-6">
         {/* Progress Indicator */}
         <div className="text-center mb-6">
@@ -463,29 +468,37 @@ export const GoalCreateWizard: React.FC = () => {
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold mb-2 ${
                       index + 1 === step
-                        ? 'bg-primary-500 text-white'
+                        ? 'bg-primary-500 text-white dark:bg-primary-600'
                         : index + 1 < step
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-200 text-gray-400'
+                        ? 'bg-green-600 text-white dark:bg-green-700'
+                        : 'bg-gray-200 text-gray-400 dark:bg-gray-700 dark:text-gray-500'
                     }`}
                   >
                     <FontAwesomeIcon icon={stepItem.icon} className="text-sm" />
                   </div>
                   <span
                     className={`text-xs font-medium ${
-                      index + 1 <= step ? (index + 1 === step ? 'text-primary-600' : 'text-green-600') : 'text-gray-400'
+                      index + 1 <= step
+                        ? index + 1 === step
+                          ? 'text-primary-700 dark:text-primary-300'
+                          : 'text-green-700 dark:text-green-300'
+                        : 'text-gray-500 dark:text-gray-400'
                     }`}
                   >
                     {stepItem.label}
                   </span>
                 </div>
                 {index < totalSteps - 1 && (
-                  <div className={`w-8 h-1 rounded mt-3 ${index + 1 < step ? 'bg-green-500' : 'bg-gray-200'}`}></div>
+                  <div
+                    className={`w-8 h-1 rounded mt-3 ${
+                      index + 1 < step ? 'bg-green-500 dark:bg-green-600' : 'bg-gray-200 dark:bg-gray-700'
+                    }`}
+                  ></div>
                 )}
               </React.Fragment>
             ))}
           </div>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-600 dark:text-gray-300">
             {t('stepIndicator', { step, totalSteps })}:{' '}
             {
               [
@@ -629,7 +642,7 @@ export const GoalCreateWizard: React.FC = () => {
                     </>
                   )}
                 </div>
-                <h1 className="text-3xl font-bold text-gray-800 mb-4">
+                <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">
                   {step === 3 && data.goalType === 'challenge'
                     ? t('titles.habitFormation')
                     : [
@@ -642,7 +655,7 @@ export const GoalCreateWizard: React.FC = () => {
                         ...(userId ? [] : [t('titles.createAccount')]),
                       ][step - 1]}
                 </h1>
-                <p className="text-lg text-gray-600 leading-relaxed">
+                <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                   {step === 3 && data.goalType === 'challenge'
                     ? t('descriptions.habitFormation')
                     : [
@@ -671,69 +684,81 @@ export const GoalCreateWizard: React.FC = () => {
               >
                 {step === 7 && !userId ? (
                   <div className="space-y-3">
-                    <div className="flex items-center space-x-3 text-gray-600">
-                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                        <FontAwesomeIcon icon={faRoute} className="text-green-600 text-sm" />
+                    <div className="flex items-center space-x-3 text-gray-600 dark:text-gray-300">
+                      <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                        <FontAwesomeIcon icon={faRoute} className="text-green-600 dark:text-green-400 text-sm" />
                       </div>
                       <span className="text-sm">{t('accountBenefits.progressTracking')}</span>
                     </div>
-                    <div className="flex items-center space-x-3 text-gray-600">
-                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <FontAwesomeIcon icon={faUsers} className="text-blue-600 text-sm" />
+                    <div className="flex items-center space-x-3 text-gray-600 dark:text-gray-300">
+                      <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                        <FontAwesomeIcon icon={faUsers} className="text-blue-600 dark:text-blue-400 text-sm" />
                       </div>
                       <span className="text-sm">{t('accountBenefits.communitySupport')}</span>
                     </div>
-                    <div className="flex items-center space-x-3 text-gray-600">
-                      <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                        <FontAwesomeIcon icon={faTrophy} className="text-purple-600 text-sm" />
+                    <div className="flex items-center space-x-3 text-gray-600 dark:text-gray-300">
+                      <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
+                        <FontAwesomeIcon icon={faTrophy} className="text-purple-600 dark:text-purple-400 text-sm" />
                       </div>
                       <span className="text-sm">{t('accountBenefits.achievementSystem')}</span>
                     </div>
                   </div>
                 ) : step === 3 && data.goalType === 'challenge' ? (
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-white/30 shadow-lg">
-                    <FontAwesomeIcon icon={faLightbulb} className="text-purple-400 text-xl mb-3" />
-                    <p className="text-purple-700 italic text-lg font-medium mb-2">{t('quotes.habitQuote')}</p>
-                    <p className="text-purple-600 text-sm">— {t('authors.aristotle')}</p>
+                  <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-white/30 dark:border-gray-700/30 shadow-lg">
+                    <FontAwesomeIcon icon={faLightbulb} className="text-purple-400 dark:text-purple-300 text-xl mb-3" />
+                    <p className="text-purple-700 dark:text-purple-300 italic text-lg font-medium mb-2">
+                      {t('quotes.habitQuote')}
+                    </p>
+                    <p className="text-purple-600 dark:text-purple-400 text-sm">— {t('authors.aristotle')}</p>
                   </div>
                 ) : step === 3 ? (
                   <>
                     <div className="text-center mb-6">
-                      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                      <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
                         <div className="flex items-center justify-center gap-2 mb-2">
-                          <FontAwesomeIcon icon={faLightbulb} className="text-amber-600" />
-                          <span className="text-sm font-semibold text-amber-800">{t('tips.canSkip')}</span>
+                          <FontAwesomeIcon icon={faLightbulb} className="text-amber-600 dark:text-amber-400" />
+                          <span className="text-sm font-semibold text-amber-800 dark:text-amber-200">
+                            {t('tips.canSkip')}
+                          </span>
                         </div>
-                        <p className="text-sm text-amber-700">{t('tips.canSkipDescription')}</p>
+                        <p className="text-sm text-amber-700 dark:text-amber-300">{t('tips.canSkipDescription')}</p>
                       </div>
                     </div>
-                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-white/30 shadow-lg">
-                      <FontAwesomeIcon icon={faLightbulb} className="text-yellow-500 text-xl mb-3" />
-                      <h3 className="text-lg font-semibold text-gray-800 mb-3">{t('tips.planningTips')}</h3>
-                      <ul className="text-sm text-gray-600 space-y-2 text-left">
+                    <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-white/30 dark:border-gray-700/30 shadow-lg">
+                      <FontAwesomeIcon
+                        icon={faLightbulb}
+                        className="text-yellow-500 dark:text-yellow-400 text-xl mb-3"
+                      />
+                      <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">
+                        {t('tips.planningTips')}
+                      </h3>
+                      <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-2 text-left">
                         <li className="flex items-start">
-                          <span className="text-primary-500 mr-2">•</span>
+                          <span className="text-primary-500 dark:text-primary-400 mr-2">•</span>
                           {t('tips.makeStepsSpecific')}
                         </li>
                         <li className="flex items-start">
-                          <span className="text-primary-500 mr-2">•</span>
+                          <span className="text-primary-500 dark:text-primary-400 mr-2">•</span>
                           {t('tips.startWithSimple')}
                         </li>
                         <li className="flex items-start">
-                          <span className="text-primary-500 mr-2">•</span>
+                          <span className="text-primary-500 dark:text-primary-400 mr-2">•</span>
                           {t('tips.stepsShouldBring')}
                         </li>
                         <li className="flex items-start">
-                          <span className="text-primary-500 mr-2">•</span>
+                          <span className="text-primary-500 dark:text-primary-400 mr-2">•</span>
                           {t('tips.dontFearDetails')}
                         </li>
                       </ul>
                     </div>
                   </>
                 ) : (
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-white/30 shadow-lg">
-                    <FontAwesomeIcon icon={faQuoteLeft} className="text-primary-400 text-xl mb-3" />
-                    <p className="text-primary-700 italic text-lg font-medium mb-2">
+                  <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-white/30 dark:border-gray-700/30 shadow-lg">
+                    <FontAwesomeIcon
+                      icon={faQuoteLeft}
+                      className="text-primary-400 dark:text-primary-300 text-xl mb-3"
+                    />
+                    <p className="text-primary-700 dark:text-primary-300 italic text-lg font-medium mb-2">
                       {
                         [
                           t('quotes.goalWithoutPlan'),
@@ -745,7 +770,7 @@ export const GoalCreateWizard: React.FC = () => {
                         ][step === 3 ? 2 : step - 1]
                       }
                     </p>
-                    <p className="text-primary-500 text-sm">
+                    <p className="text-primary-500 dark:text-primary-400 text-sm">
                       —{' '}
                       {
                         [
@@ -766,7 +791,7 @@ export const GoalCreateWizard: React.FC = () => {
 
           {/* Right Section - Form */}
           <div className="sticky top-24">
-            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
               <form className="space-y-6">
                 {/* Step Content */}
                 <AnimatePresence mode="wait" custom={direction}>
@@ -782,14 +807,16 @@ export const GoalCreateWizard: React.FC = () => {
                       <>
                         {/* Goal Type Selection */}
                         <div>
-                          <label className="block text-lg font-bold text-gray-800 mb-6">{t('goalTypes.title')}</label>
+                          <label className="block text-lg font-bold text-gray-800 dark:text-white mb-6">
+                            {t('goalTypes.title')}
+                          </label>
 
                           <div className="space-y-4">
                             <label
                               className={`cursor-pointer group block p-6 border-2 rounded-xl transition-all duration-300 hover:border-blue-300 hover:shadow-lg transform hover:-translate-y-1 ${
                                 data.goalType === 'deadline'
-                                  ? 'border-blue-500 bg-blue-50 shadow-lg'
-                                  : 'border-gray-200 bg-white'
+                                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 dark:border-blue-400 shadow-lg'
+                                  : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700'
                               }`}
                             >
                               <input
@@ -801,14 +828,19 @@ export const GoalCreateWizard: React.FC = () => {
                                 className="sr-only"
                               />
                               <div className="flex items-center">
-                                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors">
-                                  <FontAwesomeIcon icon={faCalendarCheck} className="text-blue-600 text-xl" />
+                                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-800 rounded-xl flex items-center justify-center mr-4 group-hover:bg-blue-200 dark:group-hover:bg-blue-700 transition-colors">
+                                  <FontAwesomeIcon
+                                    icon={faCalendarCheck}
+                                    className="text-blue-600 dark:text-blue-400 text-xl"
+                                  />
                                 </div>
                                 <div className="flex-1">
-                                  <h3 className="text-lg font-bold text-gray-800 mb-2">
+                                  <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">
                                     {t('goalTypes.deadlineGoal')}
                                   </h3>
-                                  <p className="text-sm text-gray-600">{t('goalTypes.deadlineGoalDescription')}</p>
+                                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                                    {t('goalTypes.deadlineGoalDescription')}
+                                  </p>
                                 </div>
                               </div>
                             </label>
@@ -816,8 +848,8 @@ export const GoalCreateWizard: React.FC = () => {
                             <label
                               className={`cursor-pointer group block p-6 border-2 rounded-xl transition-all duration-300 hover:border-orange-300 hover:shadow-lg transform hover:-translate-y-1 ${
                                 data.goalType === 'challenge'
-                                  ? 'border-orange-500 bg-orange-50 shadow-lg'
-                                  : 'border-gray-200 bg-white'
+                                  ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/30 dark:border-orange-400 shadow-lg'
+                                  : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700'
                               }`}
                             >
                               <input
@@ -829,18 +861,25 @@ export const GoalCreateWizard: React.FC = () => {
                                 className="sr-only"
                               />
                               <div className="flex items-center">
-                                <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-orange-200 transition-colors">
-                                  <FontAwesomeIcon icon={faFire} className="text-orange-600 text-xl" />
+                                <div className="w-12 h-12 bg-orange-100 dark:bg-orange-800 rounded-xl flex items-center justify-center mr-4 group-hover:bg-orange-200 dark:group-hover:bg-orange-700 transition-colors">
+                                  <FontAwesomeIcon
+                                    icon={faFire}
+                                    className="text-orange-600 dark:text-orange-400 text-xl"
+                                  />
                                 </div>
                                 <div className="flex-1">
-                                  <h3 className="text-lg font-bold text-gray-800 mb-2">{t('goalTypes.habitGoal')}</h3>
-                                  <p className="text-sm text-gray-600">{t('goalTypes.habitGoalDescription')}</p>
+                                  <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">
+                                    {t('goalTypes.habitGoal')}
+                                  </h3>
+                                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                                    {t('goalTypes.habitGoalDescription')}
+                                  </p>
                                 </div>
                               </div>
                             </label>
 
                             <label
-                              className={`group block p-6 border-2 rounded-xl transition-all duration-300 opacity-50 cursor-not-allowed border-gray-200 bg-gray-50`}
+                              className={`group block p-6 border-2 rounded-xl transition-all duration-300 opacity-50 cursor-not-allowed border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700`}
                             >
                               <input
                                 type="radio"
@@ -850,17 +889,24 @@ export const GoalCreateWizard: React.FC = () => {
                                 className="sr-only"
                               />
                               <div className="flex items-center">
-                                <div className="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center mr-4">
-                                  <FontAwesomeIcon icon={faUsers} className="text-gray-400 text-xl" />
+                                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-xl flex items-center justify-center mr-4">
+                                  <FontAwesomeIcon
+                                    icon={faUsers}
+                                    className="text-gray-400 dark:text-gray-500 text-xl"
+                                  />
                                 </div>
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-2">
-                                    <h3 className="text-lg font-bold text-gray-500">{t('goalTypes.groupChallenge')}</h3>
-                                    <span className="px-2 py-1 bg-gray-200 text-gray-500 text-xs font-semibold rounded-full">
+                                    <h3 className="text-lg font-bold text-gray-500 dark:text-gray-400">
+                                      {t('goalTypes.groupChallenge')}
+                                    </h3>
+                                    <span className="px-2 py-1 bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-400 text-xs font-semibold rounded-full">
                                       {t('goalTypes.comingSoon')}
                                     </span>
                                   </div>
-                                  <p className="text-sm text-gray-400">{t('goalTypes.groupChallengeDescription')}</p>
+                                  <p className="text-sm text-gray-400 dark:text-gray-500">
+                                    {t('goalTypes.groupChallengeDescription')}
+                                  </p>
                                 </div>
                               </div>
                             </label>
@@ -873,36 +919,40 @@ export const GoalCreateWizard: React.FC = () => {
                       <>
                         {/* Goal Title */}
                         <div>
-                          <label className="block text-lg font-bold text-gray-800 mb-3">
+                          <label className="block text-lg font-bold text-gray-800 dark:text-white mb-3">
                             {t('fields.goalNameRequired')}
                           </label>
                           <input
                             type="text"
                             value={data.goalName}
                             onChange={(e) => update('goalName', e.target.value)}
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200 placeholder-gray-400"
+                            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                             placeholder={t('fields.goalNamePlaceholder')}
                             maxLength={80}
                           />
                           <div className="flex justify-between items-center mt-2">
-                            <p className="text-sm text-gray-500">{t('fields.goalNameHelper')}</p>
-                            <span className="text-sm text-gray-400 font-medium">{data.goalName.length}/80</span>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{t('fields.goalNameHelper')}</p>
+                            <span className="text-sm text-gray-400 dark:text-gray-500 font-medium">
+                              {data.goalName.length}/80
+                            </span>
                           </div>
                         </div>
 
                         {/* Goal Description */}
                         <div>
-                          <label className="block text-lg font-bold text-gray-800 mb-3">
+                          <label className="block text-lg font-bold text-gray-800 dark:text-white mb-3">
                             {t('fields.whyThisGoal')}
                           </label>
                           <textarea
                             value={data.description}
                             onChange={(e) => update('description', e.target.value)}
                             rows={4}
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none text-base transition-all duration-200 placeholder-gray-400"
+                            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none text-base transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                             placeholder={t('fields.descriptionPlaceholder')}
                           />
-                          <p className="text-sm text-gray-500 mt-2">{t('fields.descriptionHelper')}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                            {t('fields.descriptionHelper')}
+                          </p>
                         </div>
                       </>
                     )}
@@ -931,33 +981,36 @@ export const GoalCreateWizard: React.FC = () => {
                         {/* Timing Section - только для обычных целей */}
                         {data.goalType !== 'challenge' && (
                           <div>
-                            <h3 className="text-lg font-bold text-gray-800 mb-4">
-                              <FontAwesomeIcon icon={faCalendarAlt} className="text-primary-500 mr-2" />
+                            <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
+                              <FontAwesomeIcon
+                                icon={faCalendarAlt}
+                                className="text-primary-500 dark:text-primary-400 mr-2"
+                              />
                               {t('fields.timeframe')}
                             </h3>
 
                             <div className={`grid gap-4 mb-4 ${noDeadline ? 'grid-cols-1' : 'grid-cols-2'}`}>
                               <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                   {t('fields.startDate')}
                                 </label>
                                 <input
                                   type="date"
                                   value={data.startDate}
                                   onChange={(e) => update('startDate', e.target.value)}
-                                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200"
+                                  className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                 />
                               </div>
                               {!noDeadline && (
                                 <div>
-                                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                     {t('fields.deadline')}
                                   </label>
                                   <input
                                     type="date"
                                     value={data.endDate}
                                     onChange={(e) => update('endDate', e.target.value)}
-                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200"
+                                    className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                                   />
                                 </div>
                               )}
@@ -976,7 +1029,7 @@ export const GoalCreateWizard: React.FC = () => {
                                 }}
                                 className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
                               />
-                              <label htmlFor="no-deadline" className="text-sm text-gray-600">
+                              <label htmlFor="no-deadline" className="text-sm text-gray-600 dark:text-gray-300">
                                 {t('fields.noDeadline')}
                               </label>
                             </div>
@@ -985,34 +1038,39 @@ export const GoalCreateWizard: React.FC = () => {
 
                         {/* Reward */}
                         <div>
-                          <label className="block text-lg font-bold text-gray-800 mb-3">
-                            <FontAwesomeIcon icon={faGift} className="mr-2 text-green-500" />
+                          <label className="block text-lg font-bold text-gray-800 dark:text-white mb-3">
+                            <FontAwesomeIcon icon={faGift} className="mr-2 text-green-500 dark:text-green-400" />
                             {t('fields.rewardForSuccess')}
                           </label>
                           <input
                             type="text"
                             value={data.reward}
                             onChange={(e) => update('reward', e.target.value)}
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200 placeholder-gray-400"
+                            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                             placeholder={t('fields.rewardPlaceholder')}
                           />
-                          <p className="text-sm text-gray-500 mt-2">{t('fields.rewardHelper')}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">{t('fields.rewardHelper')}</p>
                         </div>
 
                         {/* Consequence */}
                         <div>
-                          <label className="block text-lg font-bold text-gray-800 mb-3">
-                            <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2 text-red-500" />
+                          <label className="block text-lg font-bold text-gray-800 dark:text-white mb-3">
+                            <FontAwesomeIcon
+                              icon={faExclamationTriangle}
+                              className="mr-2 text-red-500 dark:text-red-400"
+                            />
                             {t('fields.consequenceForFailure')}
                           </label>
                           <input
                             type="text"
                             value={data.consequence}
                             onChange={(e) => update('consequence', e.target.value)}
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200 placeholder-gray-400"
+                            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                             placeholder={t('fields.consequencePlaceholder')}
                           />
-                          <p className="text-sm text-gray-500 mt-2">{t('fields.consequenceHelper')}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                            {t('fields.consequenceHelper')}
+                          </p>
                         </div>
                       </>
                     )}
@@ -1024,14 +1082,14 @@ export const GoalCreateWizard: React.FC = () => {
 
                         {/* Category */}
                         <div>
-                          <label className="block text-lg font-bold text-gray-800 mb-3">
-                            <FontAwesomeIcon icon={faTags} className="mr-2 text-primary-500" />
+                          <label className="block text-lg font-bold text-gray-800 dark:text-white mb-3">
+                            <FontAwesomeIcon icon={faTags} className="mr-2 text-primary-500 dark:text-primary-400" />
                             {tGoals('category')}
                           </label>
                           <select
                             value={data.category || ''}
                             onChange={(e) => update('category', e.target.value)}
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200"
+                            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-base transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                           >
                             <option value="">{tGoals('categories.selectCategory')}</option>
                             <option value="health">❤️ {tGoals('categories.health')}</option>
@@ -1043,7 +1101,7 @@ export const GoalCreateWizard: React.FC = () => {
                             <option value="sport">🏆 {tGoals('categories.sport')}</option>
                             <option value="custom">➕ {tGoals('categories.custom')}</option>
                           </select>
-                          <p className="text-sm text-gray-500 mt-2">{t('fields.categoryHelper')}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">{t('fields.categoryHelper')}</p>
                         </div>
                       </>
                     )}
@@ -1052,7 +1110,7 @@ export const GoalCreateWizard: React.FC = () => {
                       <>
                         {/* Goal Importance Slider */}
                         <div>
-                          <label className="block text-lg font-bold text-gray-800 mb-3">
+                          <label className="block text-lg font-bold text-gray-800 dark:text-white mb-3">
                             {t('fields.goalImportanceRequired')}
                           </label>
                           <div className="space-y-4">
@@ -1068,7 +1126,7 @@ export const GoalCreateWizard: React.FC = () => {
                                   background: 'linear-gradient(to right, #e5e7eb 0%, #fde047 50%, #ef4444 100%)',
                                 }}
                               />
-                              <div className="flex justify-between text-xs text-gray-500 mt-2">
+                              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
                                 {GOAL_VALUE_MARKS.map((mark) => (
                                   <span key={`goal-value-mark-${mark}`}>{mark}</span>
                                 ))}
@@ -1086,24 +1144,26 @@ export const GoalCreateWizard: React.FC = () => {
                                 onChange={(e) => handleValueChange(Number(e.target.value))}
                                 inputMode="numeric"
                                 pattern="[0-9]*"
-                                className="w-full text-3xl font-bold text-primary-600 text-center bg-transparent border-none focus:outline-none focus:ring-0"
+                                className="w-full text-3xl font-bold text-primary-600 dark:text-primary-400 text-center bg-transparent border-none focus:outline-none focus:ring-0"
                               />
-                              <p className="text-sm text-gray-500">{resolveImportanceLabel(data.value)}</p>
+                              <p className="text-sm text-gray-500 dark:text-gray-400">
+                                {resolveImportanceLabel(data.value)}
+                              </p>
                             </div>
                           </div>
                         </div>
 
                         {/* Privacy Settings */}
                         <div>
-                          <label className="block text-lg font-bold text-gray-800 mb-3">
+                          <label className="block text-lg font-bold text-gray-800 dark:text-white mb-3">
                             {t('fields.privacyLevelRequired')}
                           </label>
                           <div className="space-y-3">
                             <label
                               className={`flex items-center p-4 border-2 rounded-xl cursor-pointer hover:border-primary-300 transition-colors ${
                                 data.privacy === PrivacyStatus.Private
-                                  ? 'border-primary-500 bg-primary-50'
-                                  : 'border-gray-200'
+                                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 dark:border-primary-400'
+                                  : 'border-gray-200 dark:border-gray-600'
                               }`}
                             >
                               <input
@@ -1116,7 +1176,9 @@ export const GoalCreateWizard: React.FC = () => {
                               />
                               <div
                                 className={`w-5 h-5 border-2 rounded-full mr-3 flex items-center justify-center ${
-                                  data.privacy === PrivacyStatus.Private ? 'border-primary-500' : 'border-gray-300'
+                                  data.privacy === PrivacyStatus.Private
+                                    ? 'border-primary-500'
+                                    : 'border-gray-300 dark:border-gray-600'
                                 }`}
                               >
                                 {data.privacy === PrivacyStatus.Private && (
@@ -1125,18 +1187,22 @@ export const GoalCreateWizard: React.FC = () => {
                               </div>
                               <div className="flex-1">
                                 <div className="flex items-center">
-                                  <FontAwesomeIcon icon={faLock} className="text-gray-600 mr-2" />
-                                  <span className="font-semibold text-gray-800">{t('privacy.private')}</span>
+                                  <FontAwesomeIcon icon={faLock} className="text-gray-600 dark:text-gray-400 mr-2" />
+                                  <span className="font-semibold text-gray-800 dark:text-white">
+                                    {t('privacy.private')}
+                                  </span>
                                 </div>
-                                <p className="text-sm text-gray-500 mt-1">{t('privacy.privateDescription')}</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                  {t('privacy.privateDescription')}
+                                </p>
                               </div>
                             </label>
 
                             <label
                               className={`flex items-center p-4 border-2 rounded-xl cursor-pointer hover:border-primary-300 transition-colors ${
                                 data.privacy === PrivacyStatus.Friends
-                                  ? 'border-primary-500 bg-primary-50'
-                                  : 'border-gray-200'
+                                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 dark:border-primary-400'
+                                  : 'border-gray-200 dark:border-gray-600'
                               }`}
                             >
                               <input
@@ -1149,7 +1215,9 @@ export const GoalCreateWizard: React.FC = () => {
                               />
                               <div
                                 className={`w-5 h-5 border-2 rounded-full mr-3 flex items-center justify-center ${
-                                  data.privacy === PrivacyStatus.Friends ? 'border-primary-500' : 'border-gray-300'
+                                  data.privacy === PrivacyStatus.Friends
+                                    ? 'border-primary-500'
+                                    : 'border-gray-300 dark:border-gray-600'
                                 }`}
                               >
                                 {data.privacy === PrivacyStatus.Friends && (
@@ -1158,18 +1226,22 @@ export const GoalCreateWizard: React.FC = () => {
                               </div>
                               <div className="flex-1">
                                 <div className="flex items-center">
-                                  <FontAwesomeIcon icon={faUsers} className="text-gray-600 mr-2" />
-                                  <span className="font-semibold text-gray-800">{t('privacy.friends')}</span>
+                                  <FontAwesomeIcon icon={faUsers} className="text-gray-600 dark:text-gray-400 mr-2" />
+                                  <span className="font-semibold text-gray-800 dark:text-white">
+                                    {t('privacy.friends')}
+                                  </span>
                                 </div>
-                                <p className="text-sm text-gray-500 mt-1">{t('privacy.friendsDescription')}</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                  {t('privacy.friendsDescription')}
+                                </p>
                               </div>
                             </label>
 
                             <label
                               className={`flex items-center p-4 border-2 rounded-xl cursor-pointer hover:border-primary-300 transition-colors ${
                                 data.privacy === PrivacyStatus.Public
-                                  ? 'border-primary-500 bg-primary-50'
-                                  : 'border-gray-200'
+                                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 dark:border-primary-400'
+                                  : 'border-gray-200 dark:border-gray-600'
                               }`}
                             >
                               <input
@@ -1182,7 +1254,9 @@ export const GoalCreateWizard: React.FC = () => {
                               />
                               <div
                                 className={`w-5 h-5 border-2 rounded-full mr-3 flex items-center justify-center ${
-                                  data.privacy === PrivacyStatus.Public ? 'border-primary-500' : 'border-gray-300'
+                                  data.privacy === PrivacyStatus.Public
+                                    ? 'border-primary-500'
+                                    : 'border-gray-300 dark:border-gray-600'
                                 }`}
                               >
                                 {data.privacy === PrivacyStatus.Public && (
@@ -1191,10 +1265,14 @@ export const GoalCreateWizard: React.FC = () => {
                               </div>
                               <div className="flex-1">
                                 <div className="flex items-center">
-                                  <FontAwesomeIcon icon={faGlobe} className="text-gray-600 mr-2" />
-                                  <span className="font-semibold text-gray-800">{t('privacy.public')}</span>
+                                  <FontAwesomeIcon icon={faGlobe} className="text-gray-600 dark:text-gray-400 mr-2" />
+                                  <span className="font-semibold text-gray-800 dark:text-white">
+                                    {t('privacy.public')}
+                                  </span>
                                 </div>
-                                <p className="text-sm text-gray-500 mt-1">{t('privacy.publicDescription')}</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                  {t('privacy.publicDescription')}
+                                </p>
                               </div>
                             </label>
                           </div>
@@ -1210,8 +1288,8 @@ export const GoalCreateWizard: React.FC = () => {
                             type="button"
                             className={`flex-1 py-3 text-center font-medium border-b-2 transition-colors ${
                               !isLogin
-                                ? 'text-primary-600 border-primary-600'
-                                : 'text-gray-400 border-transparent hover:text-primary-600'
+                                ? 'text-primary-600 dark:text-primary-400 border-primary-600 dark:border-primary-400'
+                                : 'text-gray-400 dark:text-gray-500 border-transparent hover:text-primary-600 dark:hover:text-primary-400'
                             }`}
                             onClick={() => {
                               setIsLogin(false);
@@ -1231,8 +1309,8 @@ export const GoalCreateWizard: React.FC = () => {
                             type="button"
                             className={`flex-1 py-3 text-center font-medium border-b-2 transition-colors ${
                               isLogin
-                                ? 'text-primary-600 border-primary-600'
-                                : 'text-gray-400 border-transparent hover:text-primary-600'
+                                ? 'text-primary-600 dark:text-primary-400 border-primary-600 dark:border-primary-400'
+                                : 'text-gray-400 dark:text-gray-500 border-transparent hover:text-primary-600 dark:hover:text-primary-400'
                             }`}
                             onClick={() => {
                               setIsLogin(true);
@@ -1253,7 +1331,7 @@ export const GoalCreateWizard: React.FC = () => {
                         {/* Google Login */}
                         <div className="mb-6">
                           <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-                            <div className="w-full [&>button]:w-full [&>button]:bg-white [&>button]:border-2 [&>button]:border-gray-200 [&>button]:text-gray-700 [&>button]:py-3 [&>button]:px-6 [&>button]:rounded-xl [&>button]:font-semibold [&>button]:text-sm [&>button]:hover:border-gray-300 [&>button]:hover:bg-gray-50 [&>button]:transition-all [&>button]:duration-200 [&>button]:shadow-sm [&>button]:hover:shadow-md">
+                            <div className="w-full [&>button]:w-full [&>button]:bg-white dark:[&>button]:bg-gray-700 [&>button]:border-2 [&>button]:border-gray-200 dark:[&>button]:border-gray-600 [&>button]:text-gray-700 dark:[&>button]:text-gray-200 [&>button]:py-3 [&>button]:px-6 [&>button]:rounded-xl [&>button]:font-semibold [&>button]:text-sm [&>button]:hover:border-gray-300 dark:[&>button]:hover:border-gray-500 [&>button]:hover:bg-gray-50 dark:[&>button]:hover:bg-gray-600 [&>button]:transition-all [&>button]:duration-200 [&>button]:shadow-sm [&>button]:hover:shadow-md">
                               <GoogleLoginButton googleLogin={handleGoogleLogin} />
                             </div>
                           </GoogleOAuthProvider>
@@ -1261,27 +1339,29 @@ export const GoalCreateWizard: React.FC = () => {
 
                         <div className="relative mb-6">
                           <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-200"></div>
+                            <div className="w-full border-t border-gray-200 dark:border-gray-600"></div>
                           </div>
                           <div className="relative flex justify-center text-sm">
-                            <span className="px-3 bg-white text-gray-500 font-medium">{tCommon('or')}</span>
+                            <span className="px-3 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium">
+                              {tCommon('or')}
+                            </span>
                           </div>
                         </div>
 
                         {/* Email */}
                         <div className="mb-4">
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            <FontAwesomeIcon icon={faUsers} className="text-primary-500 mr-2" />
+                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            <FontAwesomeIcon icon={faUsers} className="text-primary-500 dark:text-primary-400 mr-2" />
                             {isLogin ? tAuth('emailOrUsername') : tAuth('email')}
                           </label>
                           <input
                             type={isLogin ? 'text' : 'email'}
                             value={authFormData.email}
                             onChange={(e) => handleAuthFormChange('email', e.target.value)}
-                            className={`w-full px-3 py-3 border-2 rounded-lg text-sm transition-all duration-200 placeholder-gray-400 ${
+                            className={`w-full px-3 py-3 border-2 rounded-lg text-sm transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
                               authErrors.email
                                 ? 'border-red-500'
-                                : 'border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
+                                : 'border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
                             }`}
                             placeholder={tAuth(`placeholders.${isLogin ? 'emailOrUsername' : 'email'}`)}
                             required
@@ -1292,18 +1372,18 @@ export const GoalCreateWizard: React.FC = () => {
                         {/* Username (only for registration) */}
                         {!isLogin && (
                           <div className="mb-4">
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                              <FontAwesomeIcon icon={faUsers} className="text-primary-500 mr-2" />
+                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                              <FontAwesomeIcon icon={faUsers} className="text-primary-500 dark:text-primary-400 mr-2" />
                               {tAuth('username')}
                             </label>
                             <input
                               type="text"
                               value={authFormData.username}
                               onChange={(e) => handleAuthFormChange('username', e.target.value)}
-                              className={`w-full px-3 py-3 border-2 rounded-lg text-sm transition-all duration-200 placeholder-gray-400 ${
+                              className={`w-full px-3 py-3 border-2 rounded-lg text-sm transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
                                 authErrors.username
                                   ? 'border-red-500'
-                                  : 'border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
+                                  : 'border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
                               }`}
                               placeholder={tAuth('placeholders.username')}
                               required
@@ -1314,18 +1394,18 @@ export const GoalCreateWizard: React.FC = () => {
 
                         {/* Password */}
                         <div className="mb-4">
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            <FontAwesomeIcon icon={faLock} className="text-primary-500 mr-2" />
+                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            <FontAwesomeIcon icon={faLock} className="text-primary-500 dark:text-primary-400 mr-2" />
                             {tAuth('password')}
                           </label>
                           <input
                             type="password"
                             value={authFormData.password}
                             onChange={(e) => handleAuthFormChange('password', e.target.value)}
-                            className={`w-full px-3 py-3 border-2 rounded-lg text-sm transition-all duration-200 placeholder-gray-400 ${
+                            className={`w-full px-3 py-3 border-2 rounded-lg text-sm transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
                               authErrors.password
                                 ? 'border-red-500'
-                                : 'border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
+                                : 'border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
                             }`}
                             placeholder="••••••••"
                             required
@@ -1336,18 +1416,18 @@ export const GoalCreateWizard: React.FC = () => {
                         {/* Confirm Password (only for registration) */}
                         {!isLogin && (
                           <div className="mb-4">
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                              <FontAwesomeIcon icon={faLock} className="text-primary-500 mr-2" />
+                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                              <FontAwesomeIcon icon={faLock} className="text-primary-500 dark:text-primary-400 mr-2" />
                               {tAuth('confirmPassword')}
                             </label>
                             <input
                               type="password"
                               value={authFormData.confirmPassword}
                               onChange={(e) => handleAuthFormChange('confirmPassword', e.target.value)}
-                              className={`w-full px-3 py-3 border-2 rounded-lg text-sm transition-all duration-200 placeholder-gray-400 ${
+                              className={`w-full px-3 py-3 border-2 rounded-lg text-sm transition-all duration-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
                                 authErrors.confirmPassword
                                   ? 'border-red-500'
-                                  : 'border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
+                                  : 'border-gray-200 dark:border-gray-600 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
                               }`}
                               placeholder="••••••••"
                               required
@@ -1372,7 +1452,7 @@ export const GoalCreateWizard: React.FC = () => {
                         type="button"
                         onClick={nextStep}
                         disabled={!canContinue()}
-                        className="w-full bg-primary-600 text-white py-3 px-6 rounded-xl font-bold text-base hover:bg-primary-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        className="w-full bg-primary-600 hover:bg-primary-700 dark:bg-primary-700 dark:hover:bg-primary-800 text-white py-3 px-6 rounded-xl font-bold text-base transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                       >
                         {t('buttons.continue')}
                         <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
@@ -1381,7 +1461,7 @@ export const GoalCreateWizard: React.FC = () => {
                         <button
                           type="button"
                           onClick={nextStep}
-                          className="w-full bg-gray-100 text-gray-600 py-3 px-6 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-colors"
+                          className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 py-3 px-6 rounded-xl font-semibold text-sm transition-colors"
                         >
                           <FontAwesomeIcon icon={faForward} className="mr-2" />
                           {t('buttons.skipStep')}
@@ -1392,7 +1472,7 @@ export const GoalCreateWizard: React.FC = () => {
                           <button
                             type="button"
                             onClick={prevStep}
-                            className="flex-1 bg-gray-100 text-gray-600 py-3 px-6 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-colors"
+                            className="flex-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 py-3 px-6 rounded-xl font-semibold text-sm transition-colors"
                           >
                             <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
                             {t('buttons.back')}
@@ -1407,7 +1487,7 @@ export const GoalCreateWizard: React.FC = () => {
                         type="button"
                         onClick={handleAuthSubmit}
                         disabled={authLoading}
-                        className="w-full bg-primary-600 text-white py-3 px-6 rounded-xl font-bold text-base hover:bg-primary-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        className="w-full bg-primary-600 hover:bg-primary-700 dark:bg-primary-700 dark:hover:bg-primary-800 text-white py-3 px-6 rounded-xl font-bold text-base transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                       >
                         {authLoading
                           ? tCommon('wait')
@@ -1420,7 +1500,7 @@ export const GoalCreateWizard: React.FC = () => {
                         <button
                           type="button"
                           onClick={prevStep}
-                          className="w-full bg-gray-100 text-gray-600 py-3 px-6 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-colors"
+                          className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 py-3 px-6 rounded-xl font-semibold text-sm transition-colors"
                         >
                           <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
                           Назад
@@ -1434,7 +1514,7 @@ export const GoalCreateWizard: React.FC = () => {
                         type="button"
                         onClick={handleSubmit}
                         disabled={!canContinue() || submitting}
-                        className="w-full bg-green-600 text-white py-3 px-6 rounded-xl font-bold text-base hover:bg-green-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white py-3 px-6 rounded-xl font-bold text-base transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                       >
                         {submitting ? t('buttons.creating') : t('buttons.createGoal')}
                         <FontAwesomeIcon icon={faCheck} className="ml-2" />
@@ -1443,7 +1523,7 @@ export const GoalCreateWizard: React.FC = () => {
                         <button
                           type="button"
                           onClick={prevStep}
-                          className="w-full bg-gray-100 text-gray-600 py-3 px-6 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-colors"
+                          className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 py-3 px-6 rounded-xl font-semibold text-sm transition-colors"
                         >
                           {t('buttons.back')}
                         </button>
@@ -1478,6 +1558,24 @@ export const GoalCreateWizard: React.FC = () => {
           cursor: pointer;
           border: 3px solid white;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (prefers-color-scheme: dark) {
+          input[type='range']::-webkit-slider-thumb {
+            border: 3px solid #374151;
+          }
+
+          input[type='range']::-moz-range-thumb {
+            border: 3px solid #374151;
+          }
+        }
+
+        .dark input[type='range']::-webkit-slider-thumb {
+          border: 3px solid #374151;
+        }
+
+        .dark input[type='range']::-moz-range-thumb {
+          border: 3px solid #374151;
         }
       `}</style>
     </div>

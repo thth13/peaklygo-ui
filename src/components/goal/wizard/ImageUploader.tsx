@@ -183,21 +183,21 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
 
   return (
     <div>
-      <label className="block text-lg font-bold text-gray-800 mb-3">
-        <FontAwesomeIcon icon={faCamera} className="mr-2 text-primary-500" />
+      <label className="block text-lg font-bold text-gray-800 dark:text-white mb-3">
+        <FontAwesomeIcon icon={faCamera} className="mr-2 text-primary-500 dark:text-primary-400" />
         {tImage('goalPhoto')}
       </label>
 
       {showCropper && cropperSrc ? (
-        <div className="border-2 border-primary-300 rounded-xl p-4 bg-primary-50">
+        <div className="border-2 border-primary-300 dark:border-primary-600 rounded-xl p-4 bg-primary-50 dark:bg-primary-900/30">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">{tImage('displaySettings')}</h3>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{tImage('displaySettings')}</h3>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={handleCropComplete}
                 disabled={!completedCrop}
-                className="px-4 py-2 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                className="px-4 py-2 bg-primary-600 hover:bg-primary-700 dark:bg-primary-700 dark:hover:bg-primary-800 text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               >
                 <FontAwesomeIcon icon={faCheck} className="mr-2" />
                 {tImage('applyCrop')}
@@ -205,14 +205,14 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
               <button
                 type="button"
                 onClick={handleCropCancel}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 transition-colors text-sm"
+                className="px-4 py-2 bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white rounded-lg font-semibold transition-colors text-sm"
               >
                 <FontAwesomeIcon icon={faTrash} className="mr-2" />
                 {tCommon('cancel')}
               </button>
             </div>
           </div>
-          <div className="bg-white rounded-lg p-4 flex justify-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 flex justify-center">
             <ReactCrop
               crop={crop}
               onChange={(_, percentCrop) => setCrop(percentCrop)}
@@ -238,7 +238,11 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
         <div
           className={`border-2 border-dashed rounded-xl transition-colors cursor-pointer relative overflow-hidden ${
             imagePreview ? 'h-64' : 'p-6'
-          } ${isDragging ? 'border-primary-500 bg-primary-50' : 'border-gray-300 hover:border-primary-400'}`}
+          } ${
+            isDragging
+              ? 'border-primary-500 bg-primary-50 dark:border-primary-400 dark:bg-primary-900/30'
+              : 'border-gray-300 dark:border-gray-600 hover:border-primary-400 dark:hover:border-primary-500'
+          }`}
           onClick={() => !imagePreview && document.getElementById('goal-image')?.click()}
           onDragOver={(e) => {
             e.preventDefault();
@@ -299,13 +303,15 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
             </>
           ) : (
             <div className="text-center">
-              <FontAwesomeIcon icon={faImage} className="text-4xl text-gray-400 mb-3" />
-              <p className="text-gray-600 mb-2">{tImage('dragPrompt')}</p>
-              <span className="cursor-pointer text-primary-600 font-semibold hover:text-primary-700">
+              <FontAwesomeIcon icon={faImage} className="text-4xl text-gray-400 dark:text-gray-500 mb-3" />
+              <p className="text-gray-600 dark:text-gray-300 mb-2">{tImage('dragPrompt')}</p>
+              <span className="cursor-pointer text-primary-600 dark:text-primary-400 font-semibold hover:text-primary-700 dark:hover:text-primary-300">
                 {tImage('chooseFile')}
               </span>
               {image && (
-                <p className="text-sm text-green-600 mt-2">{tImage('fileSelected', { fileName: image.name })}</p>
+                <p className="text-sm text-green-600 dark:text-green-400 mt-2">
+                  {tImage('fileSelected', { fileName: image.name })}
+                </p>
               )}
             </div>
           )}
@@ -313,7 +319,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
       )}
 
       <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="goal-image" />
-      <p className="text-sm text-gray-500 mt-2">
+      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
         {tImage('helperDescription', { formats: tImage('supportedFormats') })}
       </p>
 
