@@ -430,6 +430,34 @@
         "saturday": "Sat",
         "sunday": "Sun"
       }
+    },
+    "habitForm": {
+      "createTitle": "Create Habit",
+      "editTitle": "Edit Habit",
+      "createDescription": "Create a new habit for daily development",
+      "editDescription": "Modify your habit parameters",
+      "habitName": "Habit Name",
+      "habitNamePlaceholder": "For example: Exercise, read books...",
+      "habitNameHelper": "Give your habit a name",
+      "descriptionPlaceholder": "Why is this habit important to you? What benefits will it bring?",
+      "descriptionHelper": "Describe why you need this habit",
+      "habitSettings": "Habit Settings",
+      "habitImportance": "Habit Importance",
+      "creating": "Creating...",
+      "saving": "Saving...",
+      "createHabit": "Create Habit",
+      "saveChanges": "Save Changes",
+      "motivation": {
+        "title": "Motivation",
+        "quote": "\"We are what we repeatedly do. Excellence, then, is not an act, but a habit.\"",
+        "author": "— Aristotle"
+      },
+      "tips": {
+        "title": "Habit Tips",
+        "startSmall": "Start small and gradually increase the load",
+        "linkToExisting": "Link a new habit to an existing one",
+        "trackDaily": "Track progress every day"
+      }
     }
   },
   "habits": {
@@ -446,6 +474,7 @@
     "markAsIncomplete": "Mark as incomplete",
     "alreadyCompleted": "Already completed",
     "marking": "Marking...",
+    "clickToToggle": "click to toggle",
     "dayLabels": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
   },
   "profile": {

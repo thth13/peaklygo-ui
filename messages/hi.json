@@ -403,6 +403,34 @@
         "saturday": "शनि",
         "sunday": "रवि"
       }
+    },
+    "habitForm": {
+      "createTitle": "आदत बनाएं",
+      "editTitle": "आदत संपादित करें",
+      "createDescription": "दैनिक विकास के लिए एक नई आदत बनाएं",
+      "editDescription": "अपनी आदत के पैरामीटर बदलें",
+      "habitName": "आदत का नाम",
+      "habitNamePlaceholder": "उदाहरण: व्यायाम करना, किताबें पढ़ना...",
+      "habitNameHelper": "अपनी आदत को एक नाम दें",
+      "descriptionPlaceholder": "यह आदत आपके लिए क्यों महत्वपूर्ण है? इससे क्या लाभ होगा?",
+      "descriptionHelper": "बताएं कि आपको यह आदत क्यों चाहिए",
+      "habitSettings": "आदत सेटिंग्स",
+      "habitImportance": "आदत की महत्ता",
+      "creating": "बना रहे हैं...",
+      "saving": "सहेज रहे हैं...",
+      "createHabit": "आदत बनाएं",
+      "saveChanges": "परिवर्तन सहेजें",
+      "motivation": {
+        "title": "प्रेरणा",
+        "quote": "\"हम वही हैं जो हम बार-बार करते हैं। उत्कृष्टता इसलिए कोई कार्य नहीं, बल्कि एक आदत है।\"",
+        "author": "— अरस्तू"
+      },
+      "tips": {
+        "title": "आदतों के लिए सुझाव",
+        "startSmall": "छोटी शुरुआत करें और धीरे-धीरे भार बढ़ाएं",
+        "linkToExisting": "नई आदत को किसी मौजूदा आदत से जोड़ें",
+        "trackDaily": "रोजाना प्रगति ट्रैक करें"
+      }
     }
   },
   "habits": {
@@ -419,6 +447,7 @@
     "markAsIncomplete": "अधूरे के रूप में चिह्नित करें",
     "alreadyCompleted": "पहले से पूर्ण",
     "marking": "चिह्नित कर रहे हैं...",
+    "clickToToggle": "बदलने के लिए क्लिक करें",
     "dayLabels": ["सो", "मं", "बु", "गु", "शु", "श", "र"]
   },
   "profile": {

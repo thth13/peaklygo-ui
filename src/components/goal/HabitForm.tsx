@@ -76,7 +76,7 @@ export const HabitForm: React.FC<HabitFormProps> = ({
 }) => {
   const t = useTranslations('goals');
   const tCommon = useTranslations('common');
-  const tHabit = useTranslations('goals.habitSettings');
+  const tHabit = useTranslations('goals.habitForm');
 
   const categories = [
     { id: 'health', name: t('categories.health'), icon: faHeart, color: 'text-red-500' },
@@ -141,7 +141,9 @@ export const HabitForm: React.FC<HabitFormProps> = ({
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-300">{mode === 'edit' ? t('loading') : tCommon('loading')}</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-300">
+            {mode === 'edit' ? tCommon('loading') : tCommon('loading')}
+          </p>
         </div>
       </div>
     );
@@ -155,13 +157,11 @@ export const HabitForm: React.FC<HabitFormProps> = ({
             <div className="flex items-center gap-3 mb-2">
               <FontAwesomeIcon icon={faFire} className="text-orange-500 text-2xl" />
               <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                {mode === 'create' ? 'Создать привычку' : 'Редактировать привычку'}
+                {mode === 'create' ? tHabit('createTitle') : tHabit('editTitle')}
               </h1>
             </div>
             <p className="mt-2 text-gray-600 dark:text-gray-300">
-              {mode === 'create'
-                ? 'Создайте новую привычку для ежедневного развития'
-                : 'Измените параметры вашей привычки'}
+              {mode === 'create' ? tHabit('createDescription') : tHabit('editDescription')}
             </p>
           </div>
 
@@ -171,12 +171,12 @@ export const HabitForm: React.FC<HabitFormProps> = ({
                 {/* Goal Name */}
                 <div>
                   <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                    Название привычки
+                    {tHabit('habitName')}
                     <span className="text-red-500">*</span>
                   </label>
                   <input
                     className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-400 focus:border-transparent transition-colors"
-                    placeholder="Например: Заниматься спортом, читать книги..."
+                    placeholder={tHabit('habitNamePlaceholder')}
                     type="text"
                     maxLength={80}
                     value={formData.goalName}
@@ -185,7 +185,7 @@ export const HabitForm: React.FC<HabitFormProps> = ({
                     disabled={isSubmitting}
                   />
                   <div className="mt-2 flex justify-between text-sm text-gray-500 dark:text-gray-400">
-                    <span>Дайте название вашей привычке</span>
+                    <span>{tHabit('habitNameHelper')}</span>
                     <span>{formData.goalName.length}/80</span>
                   </div>
                 </div>
@@ -197,12 +197,12 @@ export const HabitForm: React.FC<HabitFormProps> = ({
                   </label>
                   <textarea
                     className="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:focus:ring-orange-400 focus:border-transparent min-h-[120px] transition-colors"
-                    placeholder="Почему эта привычка важна для вас? Какую пользу она принесет?"
+                    placeholder={tHabit('descriptionPlaceholder')}
                     value={formData.description}
                     onChange={(e) => handleInputChange('description', e.target.value)}
                     disabled={isSubmitting}
                   />
-                  <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">Опишите, зачем вам эта привычка</div>
+                  <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">{tHabit('descriptionHelper')}</div>
                 </div>
 
                 {/* Category */}
@@ -258,7 +258,7 @@ export const HabitForm: React.FC<HabitFormProps> = ({
                 <div>
                   <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6">
                     <FontAwesomeIcon icon={faFire} className="text-orange-500 mr-2" />
-                    Настройки привычки
+                    {tHabit('habitSettings')}
                   </label>
                   <div className="bg-orange-50 dark:bg-orange-900 rounded-lg p-6 border border-orange-200 dark:border-orange-700">
                     <HabitSettings
@@ -273,7 +273,7 @@ export const HabitForm: React.FC<HabitFormProps> = ({
                 {/* Start Date */}
                 <div>
                   <label className="block text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                    Дата начала
+                    {t('startDate')}
                   </label>
                   <input
                     type="date"
@@ -383,7 +383,7 @@ export const HabitForm: React.FC<HabitFormProps> = ({
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                        Важность привычки
+                        {tHabit('habitImportance')}
                       </label>
                       <div className="px-3">
                         <input
@@ -399,7 +399,7 @@ export const HabitForm: React.FC<HabitFormProps> = ({
                           <span>{t('valueLow')}</span>
                           <div className="text-center mt-2 space-y-1">
                             <label htmlFor="habit-form-value-input" className="sr-only">
-                              Важность привычки
+                              {tHabit('habitImportance')}
                             </label>
                             <div className="flex items-baseline justify-center gap-1">
                               <input
@@ -444,11 +444,11 @@ export const HabitForm: React.FC<HabitFormProps> = ({
                   >
                     {isSubmitting
                       ? mode === 'edit'
-                        ? 'Сохраняем...'
-                        : 'Создаем...'
+                        ? tHabit('saving')
+                        : tHabit('creating')
                       : mode === 'edit'
-                      ? 'Сохранить изменения'
-                      : 'Создать привычку'}
+                      ? tHabit('saveChanges')
+                      : tHabit('createHabit')}
                   </button>
                 </div>
               </div>
@@ -459,33 +459,35 @@ export const HabitForm: React.FC<HabitFormProps> = ({
                   <div className="p-6 bg-gradient-to-br from-orange-50 to-orange-50 dark:from-orange-900 dark:to-orange-900 rounded-lg border border-orange-100 dark:border-orange-800 transition-colors">
                     <div className="flex items-center gap-2 mb-3">
                       <FontAwesomeIcon icon={faQuoteLeft} className="text-orange-500 dark:text-orange-400" />
-                      <span className="text-sm font-medium text-orange-700 dark:text-orange-300">Мотивация</span>
+                      <span className="text-sm font-medium text-orange-700 dark:text-orange-300">
+                        {tHabit('motivation.title')}
+                      </span>
                     </div>
                     <p className="text-sm text-gray-700 dark:text-gray-300 italic leading-relaxed">
-                      "Мы есть то, что мы постоянно делаем. Совершенство, следовательно, не действие, а привычка."
+                      {tHabit('motivation.quote')}
                     </p>
-                    <p className="text-xs text-orange-600 dark:text-orange-400 mt-2">— Аристотель</p>
+                    <p className="text-xs text-orange-600 dark:text-orange-400 mt-2">{tHabit('motivation.author')}</p>
                   </div>
 
                   <div className="p-6 bg-yellow-50 dark:bg-yellow-900 rounded-lg border border-yellow-200 dark:border-yellow-700 transition-colors">
                     <div className="flex items-center gap-2 mb-3">
                       <FontAwesomeIcon icon={faLightbulb} className="text-yellow-600 dark:text-yellow-400" />
                       <span className="text-sm font-medium text-yellow-800 dark:text-yellow-300">
-                        Советы для привычек
+                        {tHabit('tips.title')}
                       </span>
                     </div>
                     <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2">
                       <li className="flex items-start gap-2">
                         <FontAwesomeIcon icon={faCheck} className="text-green-500 dark:text-green-400 text-xs mt-1" />
-                        <span>Начните с малого и постепенно увеличивайте нагрузку</span>
+                        <span>{tHabit('tips.startSmall')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <FontAwesomeIcon icon={faCheck} className="text-green-500 dark:text-green-400 text-xs mt-1" />
-                        <span>Свяжите новую привычку с уже существующей</span>
+                        <span>{tHabit('tips.linkToExisting')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <FontAwesomeIcon icon={faCheck} className="text-green-500 dark:text-green-400 text-xs mt-1" />
-                        <span>Отслеживайте прогресс каждый день</span>
+                        <span>{tHabit('tips.trackDaily')}</span>
                       </li>
                     </ul>
                   </div>

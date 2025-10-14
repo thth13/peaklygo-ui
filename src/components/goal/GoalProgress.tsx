@@ -10,6 +10,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useUserProfile } from '@/context/UserProfileContext';
 import { TodayHabitTracker } from './TodayHabitTracker';
 import { HabitProgressCalendar } from './HabitProgressCalendar';
+import { markHabitDay } from '@/lib/api';
 
 interface GoalProgressProps {
   goal: Goal;
@@ -109,6 +110,21 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
       }
     });
   }, []);
+
+  // Обработка кликов по дням календаря
+  const handleCalendarDayClick = useCallback(
+    async (date: Date, currentState: boolean | null) => {
+      try {
+        // Переключаем состояние: если не выполнено или null, то делаем выполненным
+        const newState = currentState !== true;
+
+        await markHabitDay(goalId, date, newState);
+      } catch (error) {
+        console.error('Failed to update habit day:', error);
+      }
+    },
+    [goalId, handleMarkComplete],
+  );
 
   useEffect(() => {
     setLocalHabitDays(goal.habitCompletedDays || []);
@@ -310,6 +326,8 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
             startDate={new Date(goal.startDate)}
             completedDates={completedDates}
             currentStreak={currentStreak}
+            onDayClick={handleCalendarDayClick}
+            isOwner={currentUserId === goal.userId}
           />
         )}
 
