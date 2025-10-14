@@ -175,14 +175,14 @@ export const HabitSettings: React.FC<HabitSettingsProps> = ({
 
               <div className="flex items-center space-x-3">
                 <label className="flex items-center cursor-pointer">
-                  <input
+                  {/* <input
                     type="radio"
                     name="duration-days"
                     value="custom"
                     checked={![7, 21, 30, 66].includes(customDays)}
                     onChange={() => {}}
                     className="w-4 h-4 text-primary-600 focus:ring-primary-500 mr-2"
-                  />
+                  /> */}
                   <span className="font-medium text-gray-700 dark:text-gray-300">{t('duration.customAmount')}:</span>
                 </label>
                 <input
