@@ -10,7 +10,7 @@ import { LeftSidebarContent } from './LeftSidebarContent';
 import { LeftSidebarSkeleton } from './LeftSidebarSkeleton';
 import { LeftSidebarError } from './LeftSidebarError';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBullseye, faArchive, faCrown, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { faBullseye, faArchive, faCrown, faCircleCheck, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'next-intl';
 import LinkWithProgress from '@/components/Link';
 
@@ -219,6 +219,19 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
                 >
                   <FontAwesomeIcon icon={faArchive} className="w-4 mr-3 text-base" />
                   <span>{t('archivedGoals')}</span>
+                </LinkWithProgress>
+              </li>
+              <li>
+                <LinkWithProgress
+                  href="/challenge"
+                  className={`flex items-center py-2 px-3 rounded-md font-medium cursor-pointer text-sm transition-colors ${
+                    isActivePage(`/challenge`)
+                      ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900 hover:bg-primary-100 dark:hover:bg-primary-800'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <FontAwesomeIcon icon={faTrophy} className="w-4 mr-3 text-base" />
+                  <span>{t('challenges')}</span>
                 </LinkWithProgress>
               </li>
               <li>
