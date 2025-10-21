@@ -257,3 +257,45 @@ export interface LandingGoal {
     };
   };
 }
+
+export interface Challenge {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  status: 'active' | 'completed' | 'upcoming';
+  currentDay: number;
+  totalDays: number;
+  participantsCount: number;
+  activeParticipantsCount: number;
+  overallSuccessRate: number;
+  createdAt: Date;
+}
+
+export interface ChallengeParticipant {
+  id: string;
+  name: string;
+  avatar: string;
+  completedDays: number;
+  totalDays: number;
+  successRate: number;
+  currentStreak: number;
+  isCurrentUser?: boolean;
+}
+
+export interface ChallengeDayProgress {
+  date: Date;
+  dayNumber: number;
+  isCompleted: boolean;
+  isPending: boolean;
+  isFailed: boolean;
+}
+
+export interface ChallengeMessage {
+  id: string;
+  userId: string;
+  userName: string;
+  userAvatar: string;
+  message: string;
+  createdAt: Date;
+}

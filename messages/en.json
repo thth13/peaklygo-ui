@@ -129,6 +129,7 @@
         "basics": "Basics",
         "steps": "Steps",
         "habit": "Habit",
+        "group": "Team",
         "motivation": "Motivation",
         "design": "Design",
         "finish": "Finish",
@@ -139,6 +140,7 @@
         "basicInfo": "Basic information",
         "planningSteps": "Planning steps",
         "habitSetup": "Habit parameters setup",
+        "groupSetup": "Team setup",
         "motivationRewards": "Motivation and rewards",
         "photoCategory": "Photo and category",
         "privacyComplexity": "Privacy and complexity",
@@ -149,6 +151,7 @@
         "createNewGoal": "Creating new goal",
         "breakIntoSteps": "Break goal into steps",
         "habitFormation": "Habit formation",
+        "groupSetup": "Build your team",
         "setDeadlines": "Set deadlines",
         "giveGoalImage": "Give goal an image",
         "finalSettings": "Final settings",
@@ -159,6 +162,7 @@
         "createStart": "This is where your journey begins. Formulate what you want to achieve — clearly and specifically. When a goal takes on words, it stops being just a thought and becomes the first step toward real action.",
         "breakIntoSteps": "Big goals are achieved with small steps. Divide your goal into concrete actions that will lead you to success. Each step is a small victory on the path to a big dream.",
         "habitFormation": "Set up frequency and progress tracking. Small daily actions lead to big life changes.",
+        "groupSetup": "Bring your teammates together, agree on rules, and set expectations so everyone moves in sync toward the goal.",
         "setTiming": "Define motivation and rewards. Clear motivation makes the goal meaningful, while rewards drive action.",
         "giveImage": "You can add an image and choose a category. Visualization is a powerful tool: it makes the result tangible and closer. When a goal has an image, it's easier to imagine and strive for daily.",
         "finalStep": "Last step! Configure additional parameters of your goal. You can create a challenge, invite friends, or just complete creation. Your goal is almost ready to launch!",
@@ -212,6 +216,26 @@
         "stepsShouldBring": "Each step should bring you closer to the goal",
         "dontFearDetails": "Don't be afraid to add details"
       },
+      "groupTips": {
+        "title": "Teamwork boosts progress",
+        "subtitle": "Invite people you trust and agree on how you'll collaborate.",
+        "benefits": {
+          "motivation": {
+            "title": "Mutual motivation",
+            "description": "Encourage and support one another to keep momentum high."
+          },
+          "progress": {
+            "title": "Shared progress",
+            "description": "Track the achievements of the whole team and celebrate milestones together."
+          },
+          "experience": {
+            "title": "Knowledge exchange",
+            "description": "Share insights, tips, and best practices directly inside the team."
+          }
+        },
+        "quote": "\"If you want to go fast — go alone. If you want to go far — go together.\"",
+        "quoteAuthor": "African proverb"
+      },
       "quotes": {
         "goalWithoutPlan": "\"A goal without a plan is just a wish\"",
         "thousandMilesJourney": "\"A journey of a thousand miles begins with a single step\"",
@@ -232,6 +256,25 @@
           "firstStep": "Add the first step...",
           "stepWithIndex": "Step {index}..."
         }
+      },
+      "groupSettings": {
+        "title": "Team settings",
+        "subtitle": "Define how participants join and interact.",
+        "maxParticipants": "Maximum number of participants",
+        "maxParticipantsOption": "{count} participants",
+        "maxParticipantsUnlimited": "Unlimited participants",
+        "maxParticipantsHint": "Start with a compact group to keep communication easy.",
+        "requireApproval": "Approval required to join",
+        "requireApprovalDescription": "New participants must receive your approval before joining the team.",
+        "allowInvites": "Members can invite others",
+        "allowInvitesDescription": "Allow current participants to invite new people directly.",
+        "participantsTitle": "Invite participants",
+        "participantsSubtitle": "Already invited: <highlight>{count}</highlight>",
+        "participantInputPlaceholder": "Email or user ID",
+        "addParticipant": "Add",
+        "participantInputHint": "Enter an identifier and press Add or Enter.",
+        "removeParticipant": "Remove participant",
+        "emptyParticipants": "No participants added yet — invite teammates when you're ready."
       },
       "authors": {
         "laoTzu": "Lao Tzu",
@@ -807,6 +850,7 @@
     "user": "User",
     "retry": "Try again",
     "addGoal": "Add goal",
+    "challenges": "Challenges",
     "closeSidebar": "Close sidebar",
     "error": {
       "dataLoadingError": "Data loading error",
@@ -814,7 +858,7 @@
       "tryAgain": "Try again",
       "profileNotFound": "Profile not found"
     },
-  "pricing": "PeaklyGo Pro"
+    "pricing": "PeaklyGo Pro"
   },
   "rightSidebar": {
     "title": "Statistics",
