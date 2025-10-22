@@ -8,12 +8,24 @@ import {
   LandingGoal,
   GoalFilterType,
   MarkHabitDayDto,
+  GroupGoalStats,
 } from '@/types';
 import { AxiosInstance } from 'axios';
 
 export const createGoal = async (goal: FormData) => {
   try {
     const res = await api.post(`${API_URL}/goals`, goal);
+
+    nProgress.start();
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const createGroupGoal = async (goal: FormData) => {
+  try {
+    const res = await api.post(`${API_URL}/goals/group`, goal);
 
     nProgress.start();
     return res.data;
@@ -185,6 +197,86 @@ export const markHabitDay = async (goalId: string, date: Date, isCompleted: bool
     const res = await api.put(`/goals/${goalId}/markHabitDay`, markHabitDayDto);
 
     return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export interface GroupGoalUserSearchResult {
+  userId: string;
+  username: string;
+  name: string;
+  avatar?: string;
+}
+
+interface GroupGoalUserSearchParams {
+  query: string;
+  limit?: number;
+  goalId?: string;
+  excludeUserIds?: string[];
+}
+
+export const searchGroupGoalUsers = async ({
+  query,
+  limit = 10,
+  goalId,
+  excludeUserIds = [],
+}: GroupGoalUserSearchParams): Promise<GroupGoalUserSearchResult[]> => {
+  try {
+    const params = new URLSearchParams({ query });
+    if (limit) {
+      params.append('limit', Math.min(limit, 50).toString());
+    }
+    if (goalId) {
+      params.append('goalId', goalId);
+    }
+    if (excludeUserIds.length > 0) {
+      params.append('excludeUserIds', excludeUserIds.join(','));
+    }
+
+    const res = await api.get(`${API_URL}/goals/group/users/search?${params.toString()}`);
+    return res.data as GroupGoalUserSearchResult[];
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const getMyGroupGoals = async (
+  pagination?: GetGoalsPaginationDto,
+  apiInstance?: AxiosInstance,
+): Promise<Goal[] | PaginatedGoalsResponse> => {
+  try {
+    const params = new URLSearchParams();
+    if (pagination?.page) {
+      params.append('page', pagination.page.toString());
+    }
+    if (pagination?.limit) {
+      params.append('limit', pagination.limit.toString());
+    }
+    if (pagination?.filter) {
+      params.append('filter', pagination.filter);
+    }
+
+    const query = params.toString();
+    const url = `${API_URL}/goals/group/my${query ? `?${query}` : ''}`;
+    const client = apiInstance ?? api;
+    const res = await client.get(url);
+
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const getGroupGoalStats = async (
+  goalId: string,
+  apiInstance?: AxiosInstance,
+): Promise<GroupGoalStats> => {
+  try {
+    const client = apiInstance ?? api;
+    const res = await client.get(`${API_URL}/goals/${goalId}/group/stats`);
+
+    return res.data as GroupGoalStats;
   } catch (err: any) {
     throw err;
   }

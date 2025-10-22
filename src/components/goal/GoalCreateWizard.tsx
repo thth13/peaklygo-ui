@@ -37,7 +37,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Cookies from 'js-cookie';
 
-import { createGoal } from '@/lib/api/goal';
+import { createGoal, createGroupGoal } from '@/lib/api/goal';
 import { useRouter } from 'next/navigation';
 import { AuthContext } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
@@ -174,14 +174,15 @@ export const GoalCreateWizard: React.FC = () => {
   const totalSteps = userId ? 6 : 7;
   const isHabitGoal = data.goalType === 'challenge';
   const isGroupGoal = data.goalType === 'group-challenge';
+  const isHabitBasedGoal = isHabitGoal || isGroupGoal;
 
   const resolveStepTitle = () => {
     if (step === 3) {
-      if (isHabitGoal) {
-        return t('titles.habitFormation');
-      }
       if (isGroupGoal) {
         return t('titles.groupSetup');
+      }
+      if (isHabitGoal) {
+        return t('titles.habitFormation');
       }
     }
 
@@ -200,11 +201,11 @@ export const GoalCreateWizard: React.FC = () => {
 
   const resolveStepDescription = () => {
     if (step === 3) {
-      if (isHabitGoal) {
-        return t('descriptions.habitFormation');
-      }
       if (isGroupGoal) {
         return t('descriptions.groupSetup');
+      }
+      if (isHabitGoal) {
+        return t('descriptions.habitFormation');
       }
     }
 
@@ -402,8 +403,8 @@ export const GoalCreateWizard: React.FC = () => {
     try {
       const formDataToSend = new FormData();
       const selectedGoalType = data.goalType;
-      const habitGoalSelected = selectedGoalType === 'challenge';
       const groupGoalSelected = selectedGoalType === 'group-challenge';
+      const habitLikeGoalSelected = selectedGoalType === 'challenge' || groupGoalSelected;
 
       // Основные поля (соответствуют DTO)
       formDataToSend.append('goalName', data.goalName.trim());
@@ -415,7 +416,7 @@ export const GoalCreateWizard: React.FC = () => {
       formDataToSend.append('tutorialCompleted', 'true');
 
       // Тип цели
-      if (habitGoalSelected) {
+      if (habitLikeGoalSelected) {
         formDataToSend.append('goalType', GoalType.Habit);
 
         // Параметры привычки
@@ -425,38 +426,37 @@ export const GoalCreateWizard: React.FC = () => {
         formDataToSend.append('goalType', GoalType.Regular);
       }
 
+      formDataToSend.append('isGroup', groupGoalSelected ? 'true' : 'false');
+
       if (groupGoalSelected) {
-        formDataToSend.append('isGroup', 'true');
+        formDataToSend.append('participantIds', JSON.stringify(data.participantIds ?? []));
 
-        if (data.participantIds.length > 0) {
-          formDataToSend.append('participantIds', JSON.stringify(data.participantIds));
+        const groupSettingsState: GroupSettingsState =
+          data.groupSettings ?? {
+            allowMembersToInvite: false,
+            requireApproval: true,
+          };
+        const { allowMembersToInvite, requireApproval, maxParticipants } = groupSettingsState;
+        const groupSettingsPayload: Partial<GroupSettingsState> = {
+          allowMembersToInvite,
+          requireApproval,
+        };
+
+        if (typeof maxParticipants === 'number') {
+          groupSettingsPayload.maxParticipants = maxParticipants;
         }
 
-        const groupSettingsPayload: Partial<GroupSettingsState> = {};
-
-        if (typeof data.groupSettings.allowMembersToInvite === 'boolean') {
-          groupSettingsPayload.allowMembersToInvite = data.groupSettings.allowMembersToInvite;
-        }
-        if (typeof data.groupSettings.requireApproval === 'boolean') {
-          groupSettingsPayload.requireApproval = data.groupSettings.requireApproval;
-        }
-        if (typeof data.groupSettings.maxParticipants === 'number') {
-          groupSettingsPayload.maxParticipants = data.groupSettings.maxParticipants;
-        }
-
-        if (Object.keys(groupSettingsPayload).length > 0) {
-          formDataToSend.append('groupSettings', JSON.stringify(groupSettingsPayload));
-        }
+        formDataToSend.append('groupSettings', JSON.stringify(groupSettingsPayload));
       }
 
       // Даты
       if (data.startDate) {
         formDataToSend.append('startDate', data.startDate);
       }
-      if (data.endDate && !noDeadline && !habitGoalSelected) {
+      if (data.endDate && !noDeadline && !habitLikeGoalSelected) {
         formDataToSend.append('endDate', data.endDate);
       }
-      if (noDeadline || habitGoalSelected) {
+      if (noDeadline || habitLikeGoalSelected) {
         formDataToSend.append('noDeadline', 'true');
       }
 
@@ -469,12 +469,10 @@ export const GoalCreateWizard: React.FC = () => {
       }
 
       // Шаги - форматируем под StepDto (только для обычных целей)
-      if (!habitGoalSelected) {
+      if (!habitLikeGoalSelected) {
         const validSteps = data.steps.filter((step) => step.trim().length > 0);
-        const formattedSteps = validSteps.map((step, index) => ({
-          id: `step-${index}`,
+        const formattedSteps = validSteps.map((step) => ({
           text: step.trim(),
-          isCompleted: false,
         }));
         formDataToSend.append('steps', JSON.stringify(formattedSteps));
       } else {
@@ -488,7 +486,9 @@ export const GoalCreateWizard: React.FC = () => {
       }
 
       console.log('Creating goal for user:', currentUserId);
-      const createdGoal = await createGoal(formDataToSend);
+      const createdGoal = groupGoalSelected
+        ? await createGroupGoal(formDataToSend)
+        : await createGoal(formDataToSend);
       console.log('Goal created successfully:', createdGoal._id);
 
       toast.success(t('notifications.goalCreated'));
@@ -536,7 +536,7 @@ export const GoalCreateWizard: React.FC = () => {
         return data.goalName.trim().length > 0;
       case 3:
         // Для привычек проверяем, что выбран хотя бы один день недели
-        if (data.goalType === 'challenge') {
+        if (isHabitBasedGoal) {
           return data.habitDaysOfWeek.length > 0;
         }
         return true; // Шаги теперь необязательны для обычных целей
@@ -574,17 +574,9 @@ export const GoalCreateWizard: React.FC = () => {
               { icon: faBullseye, label: t('steps.basics') },
               {
                 icon:
-                  data.goalType === 'challenge'
-                    ? faFire
-                    : data.goalType === 'group-challenge'
-                    ? faUsers
-                    : faListCheck,
+                  isGroupGoal ? faUsers : isHabitGoal ? faFire : faListCheck,
                 label:
-                  data.goalType === 'challenge'
-                    ? t('steps.habit')
-                    : data.goalType === 'group-challenge'
-                    ? t('steps.group')
-                    : t('steps.steps'),
+                  isGroupGoal ? t('steps.group') : isHabitGoal ? t('steps.habit') : t('steps.steps'),
               },
               { icon: faCalendarAlt, label: t('steps.motivation') },
               { icon: faImage, label: t('steps.design') },
@@ -628,15 +620,15 @@ export const GoalCreateWizard: React.FC = () => {
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-300">
             {t('stepIndicator', { step, totalSteps })}:{' '}
-            {
-              [
-                t('stepDescriptions.goalTypeSelection'),
-                t('stepDescriptions.basicInfo'),
-                data.goalType === 'challenge'
-                  ? t('stepDescriptions.habitSetup')
-                  : data.goalType === 'group-challenge'
-                  ? t('stepDescriptions.groupSetup')
-                  : t('stepDescriptions.planningSteps'),
+                {
+                  [
+                    t('stepDescriptions.goalTypeSelection'),
+                    t('stepDescriptions.basicInfo'),
+                    isGroupGoal
+                      ? t('stepDescriptions.groupSetup')
+                      : isHabitGoal
+                      ? t('stepDescriptions.habitSetup')
+                      : t('stepDescriptions.planningSteps'),
                 t('stepDescriptions.motivationRewards'),
                 t('stepDescriptions.photoCategory'),
                 t('stepDescriptions.privacyComplexity'),
@@ -1141,15 +1133,17 @@ export const GoalCreateWizard: React.FC = () => {
                     )}
 
                     {step === 3 && (
-                      <>
-                        {isHabitGoal ? (
+                      <div className="space-y-6">
+                        {isHabitBasedGoal && (
                           <HabitSettings
                             habitDuration={data.habitDuration}
                             habitDaysOfWeek={data.habitDaysOfWeek}
                             onHabitDurationChange={(duration) => update('habitDuration', duration)}
                             onHabitDaysOfWeekChange={(days) => update('habitDaysOfWeek', days)}
                           />
-                        ) : isGroupGoal ? (
+                        )}
+
+                        {isGroupGoal && (
                           <GroupGoalSettings
                             participantIds={data.participantIds}
                             groupSettings={data.groupSettings}
@@ -1157,20 +1151,22 @@ export const GoalCreateWizard: React.FC = () => {
                             onParticipantRemove={removeParticipant}
                             onGroupSettingsChange={updateGroupSettings}
                           />
-                        ) : (
+                        )}
+
+                        {!isHabitBasedGoal && (
                           <StepsManager
                             steps={data.steps}
                             onStepsChange={(steps) => update('steps', steps)}
                             goalName={data.goalName}
                           />
                         )}
-                      </>
+                      </div>
                     )}
 
                     {step === 4 && (
                       <>
                         {/* Timing Section - только для обычных целей */}
-                        {data.goalType !== 'challenge' && (
+                        {!isHabitBasedGoal && (
                           <div>
                             <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
                               <FontAwesomeIcon

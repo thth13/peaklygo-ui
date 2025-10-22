@@ -130,6 +130,14 @@ export interface Goal extends Document {
   image?: string;
   steps: Step[];
   activity: Activity[];
+  isGroup?: boolean;
+  participantIds?: string[];
+  participants?: GoalParticipant[];
+  groupSettings?: {
+    allowMembersToInvite?: boolean;
+    requireApproval?: boolean;
+    maxParticipants?: number;
+  };
   reward?: string;
   consequence?: string;
   privacy: PrivacyStatus;
@@ -140,6 +148,14 @@ export interface Goal extends Document {
   progress: number;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface GoalParticipant {
+  userId: string | { _id: string; username?: string };
+  role?: string;
+  invitationStatus?: string;
+  joinedAt?: Date;
+  contributionScore?: number;
 }
 
 export enum ReadCategory {
@@ -222,6 +238,16 @@ export interface PaginatedGoalsResponse {
   totalPages: number;
   hasNextPage: boolean;
   hasPrevPage: boolean;
+}
+
+export interface GroupGoalStats {
+  totalParticipants: number;
+  activeParticipants: number;
+  pendingInvitations: number;
+  topContributors: Array<{
+    userId: string | { _id: string; username?: string };
+    contributionScore: number;
+  }>;
 }
 
 export interface LandingGoal {

@@ -131,6 +131,7 @@
         "steps": "Кроки",
         "habit": "Звичка",
         "group": "Команда",
+        "habitGroup": "Звичка й команда",
         "motivation": "Мотивація",
         "design": "Оформлення",
         "finish": "Готово",
@@ -142,6 +143,7 @@
         "planningSteps": "Планування кроків",
         "habitSetup": "Налаштування параметрів звички",
         "groupSetup": "Налаштування команди",
+        "habitGroupSetup": "Налаштування звички та команди",
         "motivationRewards": "Мотивація та нагороди",
         "photoCategory": "Фото і категорія",
         "privacyComplexity": "Приватність та складність",
@@ -153,6 +155,7 @@
         "breakIntoSteps": "Розбийте ціль на кроки",
         "habitFormation": "Формування звички",
         "groupSetup": "Побудуйте команду",
+        "groupHabitSetup": "Налаштуйте звичку і команду",
         "setDeadlines": "Встановіть терміни",
         "giveGoalImage": "Надайте цілі образ",
         "finalSettings": "Фінальні налаштування",
@@ -164,6 +167,7 @@
         "breakIntoSteps": "Великі цілі досягаються маленькими кроками. Розділіть свою ціль на конкретні дії, які приведуть вас до успіху. Кожен крок — це маленька перемога на шляху до великої мрії.",
         "habitFormation": "Налаштуйте частоту виконання і відстеження прогресу. Маленькі щоденні дії приводять до великих змін у житті.",
         "groupSetup": "Зберіть команду однодумців, узгодьте правила взаємодії та рухайтеся до мети синхронно.",
+        "groupHabitSetup": "Задайте ритм звички і домовтеся з командою, як рухатиметесь до мети разом.",
         "setTiming": "Визначте мотивацію та нагороди. Чітка мотивація робить ціль значущою, а нагороди — спонукають до дії.",
         "giveImage": "Ви можете додати зображення і обрати категорію. Візуалізація — потужний інструмент: вона робить результат відчутним і ближчим. Коли у цілі є образ, її легше уявити і прагнути до неї щодня.",
         "finalStep": "Останній крок! Налаштуйте додаткові параметри вашої цілі. Ви можете створити челендж, запросити друзів або просто завершити створення. Ваша ціль майже готова до запуску!",
@@ -270,9 +274,12 @@
         "allowInvitesDescription": "Дозвольте поточним учасникам додавати нових людей безпосередньо.",
         "participantsTitle": "Запросити учасників",
         "participantsSubtitle": "Вже запрошено: <highlight>{count}</highlight>",
-        "participantInputPlaceholder": "Email або ID користувача",
-        "addParticipant": "Додати",
-        "participantInputHint": "Введіть ідентифікатор і натисніть «Додати» або Enter.",
+        "participantInputPlaceholder": "Email або імʼя користувача",
+        "participantInputHint": "Введіть щонайменше два символи, щоб увімкнути автопошук, або натисніть Enter для ручного додавання.",
+        "participantSearchLoading": "Пошук...",
+        "participantSearchNoResults": "Користувачів не знайдено. Спробуйте інший запит.",
+        "participantSearchError": "Не вдалося завантажити підказки.",
+        "participantInviteAction": "Запросити",
         "removeParticipant": "Видалити учасника",
         "emptyParticipants": "Учасників поки немає — запросіть команду, коли будете готові."
       },
@@ -835,7 +842,7 @@
     "user": "Користувач",
     "retry": "Спробувати знову",
     "addGoal": "Додати ціль",
-    "challenges": "Челенджі",
+    "groupGoals": "Групові цілі",
     "completedGoals": "Завершені цілі",
     "error": {
       "dataLoadingError": "Помилка завантаження даних",
@@ -996,6 +1003,101 @@
       "timeLeftDays": "Залишилось {count} дн.",
       "timeLeftHours": "Залишилось {count} год.",
       "expiresLabel": "Преміум закінчується: {date}"
+    }
+  },
+  "groupGoals": {
+    "metaTitle": "Групові цілі — PeaklyGo",
+    "metaDescription": "Керуйте груповими цілями та відстежуйте прогрес команди в PeaklyGo.",
+    "heading": "Групові цілі",
+    "subtitle": "Стежте за спільними цілями, діліться прогресом і запрошуйте команду до участі.",
+    "actions": {
+      "create": "Створити групову ціль"
+    }
+  },
+  "groupGoal": {
+    "meta": {
+      "title": "{name} — PeaklyGo",
+      "defaultDescription": "Переглядайте деталі групової цілі та відстежуйте прогрес команди в PeaklyGo.",
+      "notFoundTitle": "Групову ціль не знайдено — PeaklyGo",
+      "notFoundDescription": "Ця групова ціль недоступна або була видалена."
+    },
+    "notFound": {
+      "title": "Групову ціль не знайдено",
+      "description": "Ця групова ціль не існує або була видалена.",
+      "backToGoals": "Повернутися до групових цілей"
+    },
+    "breadcrumbs": {
+      "back": "Назад до груп"
+    },
+    "status": {
+      "completed": "Завершена",
+      "archived": "Архів",
+      "active": "Активна"
+    },
+    "privacy": {
+      "private": "Приватна",
+      "friends": "Лише для друзів",
+      "public": "Публічна"
+    },
+    "details": {
+      "createdAt": "Створено {date}",
+      "descriptionTitle": "Опис цілі",
+      "descriptionFallback": "Опис цілі ще не додано.",
+      "teamProgress": "Прогрес команди",
+      "startDate": "Дата старту",
+      "endDate": "Дата завершення",
+      "privacy": "Приватність",
+      "noDeadline": "Без дедлайну"
+    },
+    "participants": {
+      "fallbackName": "Учасник {suffix}",
+      "unknown": "Невідомий учасник",
+      "anonymous": "Учасник",
+      "title": "Учасники",
+      "count": "{accepted} / {total} у команді",
+      "empty": "Поки немає учасників. Запросіть команду, щоб розпочати спільний прогрес.",
+      "roles": {
+        "owner": "Власник",
+        "admin": "Адміністратор",
+        "member": "Учасник"
+      },
+      "status": {
+        "accepted": "У команді",
+        "pending": "Очікує запрошення",
+        "declined": "Відхилено",
+        "other": "Статус невідомий"
+      },
+      "joinedAt": "З {date}",
+      "noDate": "Дату не вказано"
+    },
+    "contributors": {
+      "title": "Лідери внеску"
+    },
+    "stats": {
+      "title": "Швидка статистика",
+      "progress": "Прогрес",
+      "participants": "Учасників",
+      "active": "Активних",
+      "pending": "Очікують"
+    },
+    "settings": {
+      "title": "Налаштування групи",
+      "owner": "Власник",
+      "memberInvites": "Запрошення від учасників",
+      "memberInvitesAllowed": "Дозволено",
+      "memberInvitesRestricted": "Лише адміністратори",
+      "approval": "Підтвердження заявок",
+      "approvalRequired": "Потрібно",
+      "approvalNotRequired": "Не потрібно",
+      "teamLimit": "Ліміт команди",
+      "teamLimitValue": "{count} осіб",
+      "teamLimitUnset": "Не вказано",
+      "goalValue": "Важливість цілі"
+    },
+    "motivation": {
+      "title": "Мотивація",
+      "reward": "Нагорода",
+      "consequence": "Наслідок"
     }
   }
 }

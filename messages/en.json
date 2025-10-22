@@ -130,6 +130,7 @@
         "steps": "Steps",
         "habit": "Habit",
         "group": "Team",
+        "habitGroup": "Habit & team",
         "motivation": "Motivation",
         "design": "Design",
         "finish": "Finish",
@@ -141,6 +142,7 @@
         "planningSteps": "Planning steps",
         "habitSetup": "Habit parameters setup",
         "groupSetup": "Team setup",
+        "habitGroupSetup": "Habit and team setup",
         "motivationRewards": "Motivation and rewards",
         "photoCategory": "Photo and category",
         "privacyComplexity": "Privacy and complexity",
@@ -152,6 +154,7 @@
         "breakIntoSteps": "Break goal into steps",
         "habitFormation": "Habit formation",
         "groupSetup": "Build your team",
+        "groupHabitSetup": "Align habit & team",
         "setDeadlines": "Set deadlines",
         "giveGoalImage": "Give goal an image",
         "finalSettings": "Final settings",
@@ -163,6 +166,7 @@
         "breakIntoSteps": "Big goals are achieved with small steps. Divide your goal into concrete actions that will lead you to success. Each step is a small victory on the path to a big dream.",
         "habitFormation": "Set up frequency and progress tracking. Small daily actions lead to big life changes.",
         "groupSetup": "Bring your teammates together, agree on rules, and set expectations so everyone moves in sync toward the goal.",
+        "groupHabitSetup": "Set the rhythm for the habit and sync the team on how you'll achieve it together.",
         "setTiming": "Define motivation and rewards. Clear motivation makes the goal meaningful, while rewards drive action.",
         "giveImage": "You can add an image and choose a category. Visualization is a powerful tool: it makes the result tangible and closer. When a goal has an image, it's easier to imagine and strive for daily.",
         "finalStep": "Last step! Configure additional parameters of your goal. You can create a challenge, invite friends, or just complete creation. Your goal is almost ready to launch!",
@@ -270,9 +274,12 @@
         "allowInvitesDescription": "Allow current participants to invite new people directly.",
         "participantsTitle": "Invite participants",
         "participantsSubtitle": "Already invited: <highlight>{count}</highlight>",
-        "participantInputPlaceholder": "Email or user ID",
-        "addParticipant": "Add",
-        "participantInputHint": "Enter an identifier and press Add or Enter.",
+        "participantInputPlaceholder": "Email or username",
+        "participantInputHint": "Type at least two characters to search automatically or press Enter to add manually.",
+        "participantSearchLoading": "Searching...",
+        "participantSearchNoResults": "No users found. Try another query.",
+        "participantSearchError": "Unable to load suggestions right now.",
+        "participantInviteAction": "Invite",
         "removeParticipant": "Remove participant",
         "emptyParticipants": "No participants added yet — invite teammates when you're ready."
       },
@@ -850,7 +857,7 @@
     "user": "User",
     "retry": "Try again",
     "addGoal": "Add goal",
-    "challenges": "Challenges",
+    "groupGoals": "Group goals",
     "closeSidebar": "Close sidebar",
     "error": {
       "dataLoadingError": "Data loading error",
@@ -1012,6 +1019,101 @@
       "timeLeftDays": "{count} days left",
       "timeLeftHours": "{count} hours left",
       "expiresLabel": "Premium expires: {date}"
+    }
+  },
+  "groupGoals": {
+    "metaTitle": "Group Goals — PeaklyGo",
+    "metaDescription": "Manage collaborative goals and track your team's progress in PeaklyGo.",
+    "heading": "Group Goals",
+    "subtitle": "Monitor shared goals, share progress, and invite your team to participate.",
+    "actions": {
+      "create": "Create group goal"
+    }
+  },
+  "groupGoal": {
+    "meta": {
+      "title": "{name} — PeaklyGo",
+      "defaultDescription": "Review group goal details and follow your team's progress on PeaklyGo.",
+      "notFoundTitle": "Group goal not found — PeaklyGo",
+      "notFoundDescription": "This group goal is unavailable or may have been removed."
+    },
+    "notFound": {
+      "title": "Group goal not found",
+      "description": "This group goal doesn't exist or was removed.",
+      "backToGoals": "Back to group goals"
+    },
+    "breadcrumbs": {
+      "back": "Back to groups"
+    },
+    "status": {
+      "completed": "Completed",
+      "archived": "Archived",
+      "active": "Active"
+    },
+    "privacy": {
+      "private": "Private",
+      "friends": "Friends only",
+      "public": "Public"
+    },
+    "details": {
+      "createdAt": "Created {date}",
+      "descriptionTitle": "Goal description",
+      "descriptionFallback": "Goal description has not been provided yet.",
+      "teamProgress": "Team progress",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "privacy": "Privacy",
+      "noDeadline": "No deadline"
+    },
+    "participants": {
+      "fallbackName": "Participant {suffix}",
+      "unknown": "Unknown participant",
+      "anonymous": "Participant",
+      "title": "Participants",
+      "count": "{accepted} / {total} in the team",
+      "empty": "No participants yet. Invite teammates to start collaborating.",
+      "roles": {
+        "owner": "Owner",
+        "admin": "Administrator",
+        "member": "Participant"
+      },
+      "status": {
+        "accepted": "In the team",
+        "pending": "Pending invitation",
+        "declined": "Declined",
+        "other": "Status unknown"
+      },
+      "joinedAt": "Since {date}",
+      "noDate": "Date not provided"
+    },
+    "contributors": {
+      "title": "Top contributors"
+    },
+    "stats": {
+      "title": "Quick stats",
+      "progress": "Progress",
+      "participants": "Participants",
+      "active": "Active",
+      "pending": "Pending"
+    },
+    "settings": {
+      "title": "Group settings",
+      "owner": "Owner",
+      "memberInvites": "Member invitations",
+      "memberInvitesAllowed": "Allowed",
+      "memberInvitesRestricted": "Admins only",
+      "approval": "Join requests",
+      "approvalRequired": "Required",
+      "approvalNotRequired": "Not required",
+      "teamLimit": "Team limit",
+      "teamLimitValue": "{count} people",
+      "teamLimitUnset": "Not specified",
+      "goalValue": "Goal importance"
+    },
+    "motivation": {
+      "title": "Motivation",
+      "reward": "Reward",
+      "consequence": "Consequence"
     }
   }
 }
