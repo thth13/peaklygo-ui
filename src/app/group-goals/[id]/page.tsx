@@ -5,9 +5,15 @@ import type { AxiosInstance } from 'axios';
 import { cookies } from 'next/headers';
 import { getLocale, getTranslations } from 'next-intl/server';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { LeftSidebar } from '@/components/layout/sidebar';
+import { ProgressBlog } from '@/components/goal/ProgressBlog';
+import { ProgressBlogProvider } from '@/context/ProgressBlogContext';
+import { ChallengeProgressTable, ChallengeStats, GroupGoalSteps } from '@/components/group-goal';
 import { getGoal, getGroupGoalStats } from '@/lib/api/goal';
-import type { GroupGoalStats, Goal } from '@/types';
+import type { GroupGoalStats, Goal, GroupSettings } from '@/types';
+import { InvitationStatus, ParticipantRole } from '@/types';
 import { createServerApi } from '@/lib/serverAxios';
 import { formatDate } from '@/lib/utils';
 import { IMAGE_URL } from '@/constants';
@@ -19,8 +25,8 @@ interface GroupGoalPageProps {
 interface ParticipantViewModel {
   id: string;
   name: string;
-  role: string;
-  invitationStatus: string;
+  role: ParticipantRole;
+  invitationStatus: InvitationStatus;
   joinedAt?: string | Date;
   contributionScore: number;
   isCurrentUser: boolean;
@@ -36,10 +42,6 @@ async function fetchGroupGoal(id: string, apiInstance?: AxiosInstance): Promise<
   try {
     const client = apiInstance ?? (await createServerApi());
     const goal = await getGoal(id, client);
-
-    if (!goal?.isGroup) {
-      return null;
-    }
 
     return goal;
   } catch (error) {
@@ -110,8 +112,33 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
 
   const placeholder = '—';
   const progressValue = Math.max(0, Math.min(100, Math.round(goal.progress ?? 0)));
+  const goalSteps = Array.isArray(goal.steps) ? goal.steps : [];
   const buildFallbackName = (userId: string) =>
     userId ? t('participants.fallbackName', { suffix: userId.slice(-6) }) : t('participants.unknown');
+  const normalizeRole = (role: ParticipantRole | string | undefined): ParticipantRole => {
+    switch (role) {
+      case ParticipantRole.Owner:
+        return ParticipantRole.Owner;
+      case ParticipantRole.Admin:
+        return ParticipantRole.Admin;
+      case ParticipantRole.Member:
+      default:
+        return ParticipantRole.Member;
+    }
+  };
+
+  const normalizeStatus = (status: InvitationStatus | string | undefined): InvitationStatus => {
+    switch (status) {
+      case InvitationStatus.Accepted:
+        return InvitationStatus.Accepted;
+      case InvitationStatus.Declined:
+        return InvitationStatus.Declined;
+      case InvitationStatus.Pending:
+      default:
+        return InvitationStatus.Pending;
+    }
+  };
+
   const participantsRaw =
     goal.participants?.map<ParticipantViewModel>((participant) => {
       const userEntity = participant.userId;
@@ -127,12 +154,18 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
           : undefined;
 
       const fallbackName = buildFallbackName(userId);
+      const normalizedRole = normalizeRole(participant.role);
+      let normalizedStatus = normalizeStatus(participant.invitationStatus);
+
+      if (normalizedRole === ParticipantRole.Owner || normalizedRole === ParticipantRole.Admin) {
+        normalizedStatus = InvitationStatus.Accepted;
+      }
 
       return {
         id: userId,
         name: username ?? fallbackName,
-        role: participant.role ?? 'member',
-        invitationStatus: participant.invitationStatus ?? 'pending',
+        role: normalizedRole,
+        invitationStatus: normalizedStatus,
         joinedAt: participant.joinedAt,
         contributionScore: participant.contributionScore ?? 0,
         isCurrentUser: Boolean(currentUserId && userId && currentUserId === userId),
@@ -140,14 +173,14 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
     }) ?? [];
 
   const participants = [...participantsRaw].sort((a, b) => {
-    const rolePriority = (role: string) => {
-      if (role === 'owner') return 0;
-      if (role === 'admin') return 1;
+    const rolePriority = (role: ParticipantRole) => {
+      if (role === ParticipantRole.Owner) return 0;
+      if (role === ParticipantRole.Admin) return 1;
       return 2;
     };
-    const statusPriority = (status: string) => {
-      if (status === 'accepted') return 0;
-      if (status === 'pending') return 1;
+    const statusPriority = (status: InvitationStatus) => {
+      if (status === InvitationStatus.Accepted) return 0;
+      if (status === InvitationStatus.Pending) return 1;
       return 2;
     };
 
@@ -160,14 +193,26 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
     return a.name.localeCompare(b.name, locale);
   });
 
+  const owner = participants.find((participant) => participant.role === ParticipantRole.Owner);
+  const currentParticipant =
+    participants.find((participant) => participant.isCurrentUser) ??
+    (owner && currentUserId && owner.id === currentUserId ? owner : undefined);
   const acceptedCount =
-    stats?.activeParticipants ?? participants.filter((participant) => participant.invitationStatus === 'accepted').length;
+    stats?.activeParticipants ??
+    participants.filter((participant) => participant.invitationStatus === InvitationStatus.Accepted).length;
   const pendingCount =
-    stats?.pendingInvitations ?? participants.filter((participant) => participant.invitationStatus === 'pending').length;
-  const totalParticipants =
-    stats?.totalParticipants ?? participants.length ?? goal.participantIds?.length ?? 0;
+    stats?.pendingInvitations ??
+    participants.filter((participant) => participant.invitationStatus === InvitationStatus.Pending).length;
+  const totalParticipants = stats?.totalParticipants ?? participants.length ?? 0;
 
-  const owner = participants.find((participant) => participant.role === 'owner');
+  const isProgressBlogOwner = Boolean(owner?.id && currentUserId && owner.id === currentUserId);
+  const canCompleteSteps =
+    Boolean(
+      currentParticipant &&
+        (currentParticipant.invitationStatus === InvitationStatus.Accepted ||
+          currentParticipant.role === ParticipantRole.Owner ||
+          currentParticipant.role === ParticipantRole.Admin),
+    ) || isProgressBlogOwner;
 
   const contributors: ContributorViewModel[] =
     stats?.topContributors.map((entry) => {
@@ -232,10 +277,14 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
     };
   })();
 
-  const groupSettings = goal.groupSettings ?? {};
-  const allowMembersToInvite = groupSettings.allowMembersToInvite ?? false;
-  const requireApproval = groupSettings.requireApproval ?? true;
-  const maxParticipants = groupSettings.maxParticipants ?? null;
+  const groupSettings: GroupSettings = {
+    allowMembersToInvite: goal.groupSettings?.allowMembersToInvite ?? false,
+    requireApproval: goal.groupSettings?.requireApproval ?? true,
+    maxParticipants: goal.groupSettings?.maxParticipants ?? null,
+  };
+  const allowMembersToInvite = groupSettings.allowMembersToInvite;
+  const requireApproval = groupSettings.requireApproval;
+  const maxParticipants = groupSettings.maxParticipants;
 
   return (
     <main className="mx-auto flex max-w-7xl flex-col gap-6 px-2 py-6 md:flex-row md:px-4">
@@ -249,7 +298,7 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
                 href="/group-goals"
                 className="inline-flex items-center text-sm text-gray-600 transition-colors hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
               >
-                <i className="fa-solid fa-arrow-left mr-2"></i>
+                <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
                 {t('breadcrumbs.back')}
               </Link>
             </div>
@@ -275,7 +324,9 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
           <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
             <div className="space-y-6 lg:col-span-2">
               <section className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-                <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">{t('details.descriptionTitle')}</h2>
+                <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">
+                  {t('details.descriptionTitle')}
+                </h2>
                 <p className="text-gray-600 dark:text-gray-300">
                   {goal.description?.trim() || t('details.descriptionFallback')}
                 </p>
@@ -315,6 +366,18 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
                 </div>
               </section>
 
+              {goalSteps.length > 0 && (
+                <section className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
+                  <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">Шаги цели</h2>
+                  <GroupGoalSteps
+                    goalId={goal._id ?? id}
+                    steps={goalSteps}
+                    canComplete={canCompleteSteps}
+                    invitationStatus={currentParticipant?.invitationStatus}
+                  />
+                </section>
+              )}
+
               <section className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
                 <div className="mb-4 flex items-center justify-between">
                   <h2 className="text-lg font-semibold text-gray-800 dark:text-white">{t('participants.title')}</h2>
@@ -329,23 +392,23 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
                   <div className="space-y-3">
                     {participants.map((participant, index) => {
                       const roleLabel =
-                        participant.role === 'owner'
+                        participant.role === ParticipantRole.Owner
                           ? t('participants.roles.owner')
-                          : participant.role === 'admin'
+                          : participant.role === ParticipantRole.Admin
                           ? t('participants.roles.admin')
                           : t('participants.roles.member');
                       const statusLabel =
-                        participant.invitationStatus === 'accepted'
+                        participant.invitationStatus === InvitationStatus.Accepted
                           ? t('participants.status.accepted')
-                          : participant.invitationStatus === 'pending'
+                          : participant.invitationStatus === InvitationStatus.Pending
                           ? t('participants.status.pending')
-                          : ['declined', 'rejected', 'cancelled'].includes(participant.invitationStatus)
+                          : participant.invitationStatus === InvitationStatus.Declined
                           ? t('participants.status.declined')
                           : t('participants.status.other');
                       const statusColor =
-                        participant.invitationStatus === 'accepted'
+                        participant.invitationStatus === InvitationStatus.Accepted
                           ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
-                          : participant.invitationStatus === 'pending'
+                          : participant.invitationStatus === InvitationStatus.Pending
                           ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
                           : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300';
                       const joinedText = participant.joinedAt
@@ -360,7 +423,9 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
                           }`}
                         >
                           <div>
-                            <div className="text-base font-semibold text-gray-900 dark:text-gray-100">{participant.name}</div>
+                            <div className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                              {participant.name}
+                            </div>
                             <div className="text-sm text-gray-500 dark:text-gray-400">{roleLabel}</div>
                           </div>
                           <div className="flex items-center gap-3">
@@ -378,7 +443,9 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
 
               {contributors.length > 0 && (
                 <section className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-                  <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">{t('contributors.title')}</h2>
+                  <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">
+                    {t('contributors.title')}
+                  </h2>
                   <ul className="space-y-3">
                     {contributors.map((contributor, index) => (
                       <li
@@ -397,30 +464,32 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
                   </ul>
                 </section>
               )}
+
+              <section id="progress-table">
+                <ChallengeProgressTable challengeId={goal._id ?? id} />
+              </section>
+
+              <section id="challenge-chat" className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
+                <ProgressBlogProvider goalId={id}>
+                  <div className="-mt-6">
+                    <ProgressBlog isOwner={isProgressBlogOwner} />
+                  </div>
+                </ProgressBlogProvider>
+              </section>
             </div>
 
             <aside className="space-y-6">
-              <section className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-                <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">{t('stats.title')}</h2>
-                <div className="space-y-4 text-sm text-gray-600 dark:text-gray-300">
-                  <div className="flex items-center justify-between">
-                    <span>{t('stats.progress')}</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">{progressValue}%</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>{t('stats.participants')}</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">{totalParticipants}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>{t('stats.active')}</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">{acceptedCount}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>{t('stats.pending')}</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">{pendingCount}</span>
-                  </div>
-                </div>
-              </section>
+              <ChallengeStats
+                challengeId={goal._id ?? id}
+                title={t('stats.title')}
+                stats={[
+                  { label: t('stats.progress'), value: `${progressValue}%`, emphasize: true },
+                  { label: t('stats.participants'), value: String(totalParticipants) },
+                  { label: t('stats.active'), value: String(acceptedCount) },
+                  { label: t('stats.pending'), value: String(pendingCount) },
+                ]}
+                highlight={null}
+              />
 
               <section className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
                 <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">{t('settings.title')}</h2>
@@ -432,7 +501,9 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
                   <div className="flex items-center justify-between">
                     <span>{t('settings.memberInvites')}</span>
                     <span className="font-semibold text-gray-900 dark:text-gray-100">
-                      {allowMembersToInvite ? t('settings.memberInvitesAllowed') : t('settings.memberInvitesRestricted')}
+                      {allowMembersToInvite
+                        ? t('settings.memberInvitesAllowed')
+                        : t('settings.memberInvitesRestricted')}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -444,7 +515,9 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
                   <div className="flex items-center justify-between">
                     <span>{t('settings.teamLimit')}</span>
                     <span className="font-semibold text-gray-900 dark:text-gray-100">
-                      {maxParticipants ? t('settings.teamLimitValue', { count: maxParticipants }) : t('settings.teamLimitUnset')}
+                      {maxParticipants
+                        ? t('settings.teamLimitValue', { count: maxParticipants })
+                        : t('settings.teamLimitUnset')}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -466,7 +539,9 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
                     )}
                     {goal.consequence && (
                       <div>
-                        <div className="font-semibold text-gray-900 dark:text-gray-100">{t('motivation.consequence')}</div>
+                        <div className="font-semibold text-gray-900 dark:text-gray-100">
+                          {t('motivation.consequence')}
+                        </div>
                         <p>{goal.consequence}</p>
                       </div>
                     )}

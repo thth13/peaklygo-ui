@@ -114,13 +114,48 @@ export interface HabitDay {
   isCompleted: boolean;
 }
 
+export enum ParticipantRole {
+  Owner = 'owner',
+  Admin = 'admin',
+  Member = 'member',
+}
+
+export enum InvitationStatus {
+  Pending = 'pending',
+  Accepted = 'accepted',
+  Declined = 'declined',
+}
+
+export interface GroupSettings {
+  allowMembersToInvite: boolean;
+  requireApproval: boolean;
+  maxParticipants?: number | null;
+}
+
+export type CheckInStatus = 'completed' | 'missed' | 'pending';
+
+export interface CheckIn {
+  userId: string;
+  date: Date;
+  status: CheckInStatus;
+  createdAt: Date;
+}
+
+export interface Participant {
+  userId: string | { _id: string; username?: string };
+  role?: ParticipantRole | string;
+  invitationStatus?: InvitationStatus | string;
+  joinedAt?: Date;
+  contributionScore?: number;
+}
+
 export interface Goal extends Document {
   _id: string;
   goalName: string;
-  category: string;
+  category?: string;
   description?: string;
-  goalType: GoalType;
-  startDate: Date;
+  goalType?: GoalType;
+  startDate?: Date;
   endDate?: Date;
   completedDate?: Date;
   noDeadline?: boolean;
@@ -128,35 +163,26 @@ export interface Goal extends Document {
   habitDaysOfWeek?: DayOfWeek[];
   habitCompletedDays?: HabitDay[];
   image?: string;
-  steps: Step[];
-  activity: Activity[];
+  steps?: Step[];
+  activity?: Activity[];
   isGroup?: boolean;
   participantIds?: string[];
   participants?: GoalParticipant[];
-  groupSettings?: {
-    allowMembersToInvite?: boolean;
-    requireApproval?: boolean;
-    maxParticipants?: number;
-  };
+  groupSettings?: GroupSettings;
+  checkIns?: CheckIn[];
   reward?: string;
   consequence?: string;
-  privacy: PrivacyStatus;
-  isCompleted: boolean;
-  isArchived: boolean;
-  value: number;
-  userId: string;
-  progress: number;
-  createdAt: Date;
-  updatedAt: Date;
+  privacy?: PrivacyStatus;
+  isCompleted?: boolean;
+  isArchived?: boolean;
+  value?: number;
+  userId?: string;
+  progress?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-export interface GoalParticipant {
-  userId: string | { _id: string; username?: string };
-  role?: string;
-  invitationStatus?: string;
-  joinedAt?: Date;
-  contributionScore?: number;
-}
+export type GoalParticipant = Participant;
 
 export enum ReadCategory {
   READING = 'reading',

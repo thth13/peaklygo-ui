@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faTimes, faClock } from '@fortawesome/free-solid-svg-icons';
 
 interface ParticipantProgress {
   id: string;
@@ -116,11 +118,11 @@ export default function ChallengeProgressTable({ challengeId }: ChallengeProgres
                       key={day}
                       className={`px-1 py-3 text-center ${day === currentDay ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
                     >
-                      {status === 'completed' && <i className="fa-solid fa-check text-green-500"></i>}
-                      {status === 'failed' && <i className="fa-solid fa-times text-red-500"></i>}
+                      {status === 'completed' && <FontAwesomeIcon icon={faCheck} className="text-green-500" />}
+                      {status === 'failed' && <FontAwesomeIcon icon={faTimes} className="text-red-500" />}
                       {status === 'pending' && (
                         <span className="text-gray-400">
-                          <i className="fa-solid fa-clock"></i>
+                          <FontAwesomeIcon icon={faClock} />
                         </span>
                       )}
                       {!status && <span className="text-gray-300 dark:text-gray-600">-</span>}
@@ -139,15 +141,15 @@ export default function ChallengeProgressTable({ challengeId }: ChallengeProgres
       <div className="mt-4 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
-            <i className="fa-solid fa-check mr-1 text-green-500"></i>
+            <FontAwesomeIcon icon={faCheck} className="mr-1 text-green-500" />
             <span>Выполнено</span>
           </div>
           <div className="flex items-center">
-            <i className="fa-solid fa-times mr-1 text-red-500"></i>
+            <FontAwesomeIcon icon={faTimes} className="mr-1 text-red-500" />
             <span>Не выполнено</span>
           </div>
           <div className="flex items-center">
-            <i className="fa-solid fa-clock mr-1 text-gray-400"></i>
+            <FontAwesomeIcon icon={faClock} className="mr-1 text-gray-400" />
             <span>Ожидание</span>
           </div>
         </div>

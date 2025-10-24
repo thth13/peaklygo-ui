@@ -85,6 +85,20 @@ export const updateStepStatus = async (goalId: string, stepId: string, isComplet
   }
 };
 
+export const markGroupStepCompleted = async (
+  goalId: string,
+  stepId: string,
+  isCompleted: boolean,
+): Promise<void> => {
+  try {
+    await api.put(`${API_URL}/goals/group/${goalId}/steps/${stepId}/complete`, {
+      isCompleted,
+    });
+  } catch (err: any) {
+    throw err;
+  }
+};
+
 export const createStep = async (goalId: string, stepText: string): Promise<void> => {
   try {
     await api.post(`${API_URL}/goals/${goalId}/steps`, {
