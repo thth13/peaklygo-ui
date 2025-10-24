@@ -1,557 +1,471 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import type { AxiosInstance } from 'axios';
 import { cookies } from 'next/headers';
-import { getLocale, getTranslations } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { getTranslations, getLocale } from 'next-intl/server';
+import { isSameDay, subDays } from 'date-fns';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { LeftSidebar } from '@/components/layout/sidebar';
-import { ProgressBlog } from '@/components/goal/ProgressBlog';
-import { ProgressBlogProvider } from '@/context/ProgressBlogContext';
-import { ChallengeProgressTable, ChallengeStats, GroupGoalSteps } from '@/components/group-goal';
+import { GroupGoalHeader } from '@/components/group-goals/GroupGoalHeader';
+import { GroupGoalHero } from '@/components/group-goals/GroupGoalHero';
+import { TodayProgress } from '@/components/group-goals/TodayProgress';
+import { ProgressTable } from '@/components/group-goals/ProgressTable';
+import { ParticipantsList } from '@/components/group-goals/ParticipantsList';
+import { GroupChat } from '@/components/group-goals/GroupChat';
+import { GroupGoalStats as GroupGoalStatsComponent } from '@/components/group-goals/GroupGoalStats';
+import { ActivityFeed } from '@/components/group-goals/ActivityFeed';
+import { TopContributors } from '@/components/group-goals/TopContributors';
+import { MotivationSection } from '@/components/group-goals/MotivationSection';
+import { GroupSettings } from '@/components/group-goals/GroupSettings';
+import { GroupActions } from '@/components/group-goals/GroupActions';
 import { getGoal, getGroupGoalStats } from '@/lib/api/goal';
-import type { GroupGoalStats, Goal, GroupSettings } from '@/types';
-import { InvitationStatus, ParticipantRole } from '@/types';
-import { createServerApi } from '@/lib/serverAxios';
-import { formatDate } from '@/lib/utils';
+import { formatDate, formatDateWithTime } from '@/lib/utils';
+import type { CheckIn, CheckInStatus, Goal, GoalParticipant, GroupGoalStats } from '@/types';
 import { IMAGE_URL } from '@/constants';
 
 interface GroupGoalPageProps {
   params: Promise<{ id: string }>;
 }
 
-interface ParticipantViewModel {
-  id: string;
-  name: string;
-  role: ParticipantRole;
-  invitationStatus: InvitationStatus;
-  joinedAt?: string | Date;
-  contributionScore: number;
-  isCurrentUser: boolean;
+interface ParticipantProfile {
+  name?: string;
+  avatar?: string;
+  user?: string;
+  username?: string;
 }
 
-interface ContributorViewModel {
+interface ParticipantView {
   id: string;
   name: string;
-  contributionScore: number;
+  avatarUrl: string | null;
+  roleLabel: string;
+  statusLabel: string;
+  joinedLabel: string;
+  completionRate: number | null;
+  todaysStatus: CheckInStatus | null;
+  statusesByDate: (CheckInStatus | null)[];
 }
 
-async function fetchGroupGoal(id: string, apiInstance?: AxiosInstance): Promise<Goal | null> {
+const HERO_FALLBACK = 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80';
+
+const formatDateKey = (date: Date | string): string => {
+  const normalized = typeof date === 'string' ? new Date(date) : date;
+  return normalized.toISOString().split('T')[0];
+};
+
+const resolveImageUrl = (image?: string | null): string | null => {
+  if (!image) {
+    return null;
+  }
+  return image.startsWith('http') ? image : `${IMAGE_URL}/${image}`;
+};
+
+const fetchGoal = async (goalId: string): Promise<Goal | null> => {
   try {
-    const client = apiInstance ?? (await createServerApi());
-    const goal = await getGoal(id, client);
-
+    const goal = await getGoal(goalId);
     return goal;
   } catch (error) {
-    console.error('Failed to fetch group goal:', error);
+    console.error('[GroupGoal] Failed to fetch goal', error);
     return null;
   }
-}
+};
 
-async function fetchGroupGoalStats(goalId: string, apiInstance: AxiosInstance): Promise<GroupGoalStats | null> {
+const fetchGroupStats = async (goalId: string): Promise<GroupGoalStats | null> => {
   try {
-    return await getGroupGoalStats(goalId, apiInstance);
+    const stats = await getGroupGoalStats(goalId);
+    return stats;
   } catch (error) {
-    console.error('Failed to fetch group goal stats:', error);
+    console.warn('[GroupGoal] Failed to fetch stats', error);
     return null;
   }
-}
+};
 
 export async function generateMetadata({ params }: GroupGoalPageProps): Promise<Metadata> {
   const { id } = await params;
-  const t = await getTranslations('groupGoal.meta');
-  const goal = await fetchGroupGoal(id);
+  const t = await getTranslations('groupGoal');
 
-  if (!goal) {
+  try {
+    const goal = await getGoal(id);
+    const title = t('meta.title', { name: goal.goalName });
+    const description = goal.description?.trim()?.slice(0, 200) || t('meta.defaultDescription');
+
     return {
-      title: t('notFoundTitle'),
-      description: t('notFoundDescription'),
+      title,
+      description,
+      alternates: { canonical: `/group-goals/${id}` },
+      openGraph: {
+        title,
+        description,
+        url: `/group-goals/${id}`,
+        type: 'article',
+      },
+      twitter: {
+        title,
+        description,
+      },
+    };
+  } catch {
+    return {
+      title: t('meta.notFoundTitle'),
+      description: t('meta.notFoundDescription'),
       alternates: { canonical: `/group-goals/${id}` },
     };
   }
-
-  const title = t('title', { name: goal.goalName });
-  const description = goal.description?.trim()?.slice(0, 200) || t('defaultDescription');
-  const imageUrl =
-    goal.image && goal.image.startsWith('http') ? goal.image : goal.image ? `${IMAGE_URL}/${goal.image}` : undefined;
-
-  return {
-    title,
-    description,
-    alternates: { canonical: `/group-goals/${id}` },
-    openGraph: {
-      title,
-      description,
-      url: `/group-goals/${id}`,
-      type: 'article',
-      images: imageUrl ? [{ url: imageUrl, alt: `${goal.goalName} cover` }] : undefined,
-    },
-    twitter: {
-      title,
-      description,
-      images: imageUrl ? [imageUrl] : undefined,
-    },
-  };
 }
 
 export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
   const { id } = await params;
-  const locale = await getLocale();
   const t = await getTranslations('groupGoal');
+  const locale = await getLocale();
   const cookieStore = await cookies();
-  const currentUserId = cookieStore.get('userId')?.value ?? null;
+  const currentUserId = cookieStore.get('userId')?.value;
 
-  const serverApi = await createServerApi();
-  const [goal, stats] = await Promise.all([fetchGroupGoal(id, serverApi), fetchGroupGoalStats(id, serverApi)]);
-
+  const goal = await fetchGoal(id);
   if (!goal) {
     notFound();
   }
 
-  const placeholder = '—';
-  const progressValue = Math.max(0, Math.min(100, Math.round(goal.progress ?? 0)));
-  const goalSteps = Array.isArray(goal.steps) ? goal.steps : [];
-  const buildFallbackName = (userId: string) =>
-    userId ? t('participants.fallbackName', { suffix: userId.slice(-6) }) : t('participants.unknown');
-  const normalizeRole = (role: ParticipantRole | string | undefined): ParticipantRole => {
-    switch (role) {
-      case ParticipantRole.Owner:
-        return ParticipantRole.Owner;
-      case ParticipantRole.Admin:
-        return ParticipantRole.Admin;
-      case ParticipantRole.Member:
-      default:
-        return ParticipantRole.Member;
+  const [stats] = await Promise.all([fetchGroupStats(id)]);
+
+  const participants = (goal.participants ?? []) as Array<GoalParticipant & { profile?: ParticipantProfile }>;
+  const allCheckIns = (goal.checkIns ?? []) as CheckIn[];
+  const today = new Date();
+  const todayKey = formatDateKey(today);
+
+  const uniqueDateKeys = Array.from(new Set(allCheckIns.map((entry) => formatDateKey(entry.date)))).sort();
+  const lastSevenDates = uniqueDateKeys.slice(-7);
+  const fallbackDates =
+    lastSevenDates.length > 0
+      ? lastSevenDates
+      : Array.from({ length: 5 }, (_, index) => formatDateKey(subDays(today, 4 - index)));
+  const displayedDates = fallbackDates.sort();
+
+  const checkInByDate = new Map<string, Map<string, CheckInStatus>>();
+  for (const checkIn of allCheckIns) {
+    const dateKey = formatDateKey(checkIn.date);
+    const mapForDate = checkInByDate.get(dateKey) ?? new Map<string, CheckInStatus>();
+    mapForDate.set(checkIn.userId, checkIn.status);
+    checkInByDate.set(dateKey, mapForDate);
+  }
+
+  const getParticipantId = (participant: GoalParticipant, fallbackIndex: number): string => {
+    if (typeof participant.userId === 'string' && participant.userId) {
+      return participant.userId;
     }
+    if (participant.userId && typeof participant.userId === 'object' && '_id' in participant.userId) {
+      return participant.userId._id;
+    }
+    return `participant-${fallbackIndex}`;
   };
 
-  const normalizeStatus = (status: InvitationStatus | string | undefined): InvitationStatus => {
-    switch (status) {
-      case InvitationStatus.Accepted:
-        return InvitationStatus.Accepted;
-      case InvitationStatus.Declined:
-        return InvitationStatus.Declined;
-      case InvitationStatus.Pending:
-      default:
-        return InvitationStatus.Pending;
+  const resolveParticipantName = (
+    participant: GoalParticipant & { profile?: ParticipantProfile },
+    index: number,
+  ): string => {
+    if (participant.profile?.name) {
+      return participant.profile.name;
     }
+    if (participant.profile?.username) {
+      return participant.profile.username;
+    }
+    if (typeof participant.userId === 'object' && participant.userId?.username) {
+      return participant.userId.username;
+    }
+    if (participant.profile?.user) {
+      return participant.profile.user;
+    }
+    return t('participants.fallbackName', { suffix: index + 1 });
   };
 
-  const participantsRaw =
-    goal.participants?.map<ParticipantViewModel>((participant) => {
-      const userEntity = participant.userId;
-      const userId =
-        typeof userEntity === 'string'
-          ? userEntity
-          : typeof userEntity === 'object' && userEntity !== null && '_id' in userEntity
-          ? (userEntity._id as string)
-          : '';
-      const username =
-        typeof userEntity === 'object' && userEntity !== null && 'username' in userEntity
-          ? (userEntity.username as string | undefined)
-          : undefined;
+  const resolveParticipantAvatar = (participant: GoalParticipant & { profile?: ParticipantProfile }): string | null => {
+    const avatarCandidate = participant.profile?.avatar;
+    return resolveImageUrl(avatarCandidate);
+  };
 
-      const fallbackName = buildFallbackName(userId);
-      const normalizedRole = normalizeRole(participant.role);
-      let normalizedStatus = normalizeStatus(participant.invitationStatus);
+  const resolveRoleLabel = (participant: GoalParticipant): string => {
+    const roleValue = typeof participant.role === 'string' ? participant.role.toLowerCase() : '';
+    if (roleValue === 'owner') {
+      return t('participants.roles.owner');
+    }
+    if (roleValue === 'admin') {
+      return t('participants.roles.admin');
+    }
+    return t('participants.roles.member');
+  };
 
-      if (normalizedRole === ParticipantRole.Owner || normalizedRole === ParticipantRole.Admin) {
-        normalizedStatus = InvitationStatus.Accepted;
-      }
+  const resolveStatusLabel = (participant: GoalParticipant): string => {
+    const statusValue =
+      typeof participant.invitationStatus === 'string' ? participant.invitationStatus.toLowerCase() : '';
+    if (statusValue === 'accepted') {
+      return t('participants.status.accepted');
+    }
+    if (statusValue === 'pending') {
+      return t('participants.status.pending');
+    }
+    if (statusValue === 'declined') {
+      return t('participants.status.declined');
+    }
+    return t('participants.status.other');
+  };
 
-      return {
-        id: userId,
-        name: username ?? fallbackName,
-        role: normalizedRole,
-        invitationStatus: normalizedStatus,
-        joinedAt: participant.joinedAt,
-        contributionScore: participant.contributionScore ?? 0,
-        isCurrentUser: Boolean(currentUserId && userId && currentUserId === userId),
-      };
-    }) ?? [];
+  const resolveJoinedLabel = (participant: GoalParticipant): string => {
+    if (!participant.joinedAt) {
+      return t('participants.noDate');
+    }
+    return t('participants.joinedAt', { date: formatDate(participant.joinedAt, locale) });
+  };
 
-  const participants = [...participantsRaw].sort((a, b) => {
-    const rolePriority = (role: ParticipantRole) => {
-      if (role === ParticipantRole.Owner) return 0;
-      if (role === ParticipantRole.Admin) return 1;
-      return 2;
+  const participantViews: ParticipantView[] = participants.map((participant, index) => {
+    const participantId = getParticipantId(participant, index);
+    const statusesByDate = displayedDates.map((dateKey) => checkInByDate.get(dateKey)?.get(participantId) ?? null);
+    const totalCompleted = statusesByDate.filter((status) => status === 'completed').length;
+    const totalTracked = statusesByDate.filter((status) => Boolean(status)).length;
+    const todaysStatus = checkInByDate.get(todayKey)?.get(participantId) ?? null;
+
+    return {
+      id: participantId,
+      name: resolveParticipantName(participant, index),
+      avatarUrl: resolveParticipantAvatar(participant),
+      roleLabel: resolveRoleLabel(participant),
+      statusLabel: resolveStatusLabel(participant),
+      joinedLabel: resolveJoinedLabel(participant),
+      completionRate: totalTracked > 0 ? Math.round((totalCompleted / totalTracked) * 100) : null,
+      todaysStatus,
+      statusesByDate,
     };
-    const statusPriority = (status: InvitationStatus) => {
-      if (status === InvitationStatus.Accepted) return 0;
-      if (status === InvitationStatus.Pending) return 1;
-      return 2;
-    };
-
-    const roleDiff = rolePriority(a.role) - rolePriority(b.role);
-    if (roleDiff !== 0) return roleDiff;
-
-    const statusDiff = statusPriority(a.invitationStatus) - statusPriority(b.invitationStatus);
-    if (statusDiff !== 0) return statusDiff;
-
-    return a.name.localeCompare(b.name, locale);
   });
 
-  const owner = participants.find((participant) => participant.role === ParticipantRole.Owner);
-  const currentParticipant =
-    participants.find((participant) => participant.isCurrentUser) ??
-    (owner && currentUserId && owner.id === currentUserId ? owner : undefined);
-  const acceptedCount =
-    stats?.activeParticipants ??
-    participants.filter((participant) => participant.invitationStatus === InvitationStatus.Accepted).length;
-  const pendingCount =
-    stats?.pendingInvitations ??
-    participants.filter((participant) => participant.invitationStatus === InvitationStatus.Pending).length;
-  const totalParticipants = stats?.totalParticipants ?? participants.length ?? 0;
+  const acceptedCount = participants.filter(
+    (participant) =>
+      typeof participant.invitationStatus === 'string' && participant.invitationStatus.toLowerCase() === 'accepted',
+  ).length;
+  const pendingCount = participants.filter(
+    (participant) =>
+      typeof participant.invitationStatus === 'string' && participant.invitationStatus.toLowerCase() === 'pending',
+  ).length;
 
-  const isProgressBlogOwner = Boolean(owner?.id && currentUserId && owner.id === currentUserId);
-  const canCompleteSteps =
-    Boolean(
-      currentParticipant &&
-        (currentParticipant.invitationStatus === InvitationStatus.Accepted ||
-          currentParticipant.role === ParticipantRole.Owner ||
-          currentParticipant.role === ParticipantRole.Admin),
-    ) || isProgressBlogOwner;
+  const totalParticipants = stats?.totalParticipants ?? participants.length;
+  const activeParticipants = stats?.activeParticipants ?? acceptedCount;
+  const pendingInvitations = stats?.pendingInvitations ?? pendingCount;
 
-  const contributors: ContributorViewModel[] =
-    stats?.topContributors.map((entry) => {
-      const rawId =
-        typeof entry.userId === 'string'
-          ? entry.userId
-          : entry.userId && typeof entry.userId === 'object' && '_id' in entry.userId
-          ? (entry.userId._id as string)
-          : '';
-      const existingParticipant = participants.find((participant) => participant.id === rawId);
-      const username =
-        typeof entry.userId === 'object' && entry.userId !== null && 'username' in entry.userId
-          ? (entry.userId.username as string | undefined)
-          : undefined;
+  const heroImage = resolveImageUrl(goal.image) ?? HERO_FALLBACK;
+  const progressValue = Math.max(0, Math.min(100, Math.round(goal.progress ?? 0)));
 
-      const fallbackName = rawId ? buildFallbackName(rawId) : t('participants.anonymous');
-      const name = existingParticipant?.name ?? username ?? fallbackName;
+  const todaysCheckIns = allCheckIns.filter((checkIn) => isSameDay(new Date(checkIn.date), today));
+  const todaysCompleted = todaysCheckIns.filter((checkIn) => checkIn.status === 'completed').length;
+  const todaysTotal = todaysCheckIns.length || participants.length || totalParticipants || 1;
+  const todaysCompletion = Math.round((todaysCompleted / todaysTotal) * 100);
 
-      return {
-        id: rawId || name,
-        name,
-        contributionScore: entry.contributionScore,
-      };
-    }) ?? [];
+  const topContributors = (stats?.topContributors ?? []).map((entry, index) => {
+    const contributorId =
+      typeof entry.userId === 'string'
+        ? entry.userId
+        : entry.userId && typeof entry.userId === 'object' && '_id' in entry.userId
+        ? entry.userId._id
+        : `contributor-${index}`;
+    const participantView = participantViews.find((view) => view.id === contributorId);
 
-  const startDateLabel = goal.startDate ? formatDate(goal.startDate, locale) : placeholder;
-  const endDateLabel = goal.endDate
-    ? formatDate(goal.endDate, locale)
-    : goal.noDeadline
-    ? t('details.noDeadline')
-    : placeholder;
-  const createdAtLabel = goal.createdAt ? formatDate(goal.createdAt, locale) : startDateLabel;
-
-  const privacyLabel = (() => {
-    switch (goal.privacy) {
-      case 'private':
-        return t('privacy.private');
-      case 'friends':
-        return t('privacy.friends');
-      case 'public':
-      default:
-        return t('privacy.public');
-    }
-  })();
-
-  const statusBadge = (() => {
-    if (goal.isCompleted) {
-      return {
-        label: t('status.completed'),
-        className: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
-      };
-    }
-    if (goal.isArchived) {
-      return {
-        label: t('status.archived'),
-        className: 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300',
-      };
-    }
     return {
-      label: t('status.active'),
-      className: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+      id: contributorId,
+      name: participantView?.name ?? t('participants.anonymous'),
+      avatarUrl: participantView?.avatarUrl ?? null,
+      contributionScore: entry.contributionScore ?? 0,
     };
-  })();
+  });
 
-  const groupSettings: GroupSettings = {
-    allowMembersToInvite: goal.groupSettings?.allowMembersToInvite ?? false,
-    requireApproval: goal.groupSettings?.requireApproval ?? true,
-    maxParticipants: goal.groupSettings?.maxParticipants ?? null,
-  };
-  const allowMembersToInvite = groupSettings.allowMembersToInvite;
-  const requireApproval = groupSettings.requireApproval;
-  const maxParticipants = groupSettings.maxParticipants;
+  const activityFeed = todaysCheckIns
+    .slice()
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .map((checkIn) => {
+      const participantView = participantViews.find((view) => view.id === checkIn.userId);
+      let statusText = 'отметился';
+      if (checkIn.status === 'missed') {
+        statusText = 'пропустил отметку';
+      } else if (checkIn.status === 'pending') {
+        statusText = 'ожидает подтверждение';
+      }
+      return {
+        id: `${checkIn.userId}-${formatDateKey(checkIn.date)}`,
+        text: `${participantView?.name ?? t('participants.anonymous')} ${statusText}`,
+        date: formatDateWithTime(checkIn.date, locale),
+      };
+    });
+
+  const privacyLabel = goal.privacy ? t(`privacy.${goal.privacy}`) : t('privacy.public');
+  const statusLabel = goal.isCompleted
+    ? t('status.completed')
+    : goal.isArchived
+    ? t('status.archived')
+    : t('status.active');
+
+  const startDateLabel = goal.startDate ? formatDate(goal.startDate, locale) : '—';
+  const endDateLabel = goal.noDeadline
+    ? t('details.noDeadline')
+    : goal.endDate
+    ? formatDate(goal.endDate, locale)
+    : '—';
+  const createdLabel = goal.createdAt
+    ? t('details.createdAt', { date: formatDate(goal.createdAt, locale) })
+    : goal.startDate
+    ? t('details.createdAt', { date: formatDate(goal.startDate, locale) })
+    : '';
 
   return (
-    <main className="mx-auto flex max-w-7xl flex-col gap-6 px-2 py-6 md:flex-row md:px-4">
-      <LeftSidebar userId={currentUserId ?? undefined} />
+    <main className="mx-auto mt-6 flex max-w-7xl flex-col gap-6 px-2 md:flex-row md:px-4">
+      <LeftSidebar userId={currentUserId} />
 
-      <section className="flex-1">
-        <div className="mx-auto max-w-6xl px-4 py-6">
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <Link
-                href="/group-goals"
-                className="inline-flex items-center text-sm text-gray-600 transition-colors hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-              >
-                <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
-                {t('breadcrumbs.back')}
-              </Link>
-            </div>
+      <div className="flex-1 space-y-6 md:px-2 lg:px-6">
+        <GroupGoalHeader
+          goalName={goal.goalName}
+          statusLabel={statusLabel}
+          privacyLabel={privacyLabel}
+          createdLabel={createdLabel}
+          backText={t('breadcrumbs.back')}
+          inviteText="Пригласить"
+          settingsText="Настройки"
+        />
 
-            <div>
-              <div className="mb-2 flex flex-wrap items-center gap-2">
-                <span className={`rounded-full px-3 py-1 text-xs font-medium ${statusBadge.className}`}>
-                  {statusBadge.label}
-                </span>
-                {goal.category && (
-                  <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700 dark:bg-purple-900 dark:text-purple-300">
-                    {goal.category}
-                  </span>
-                )}
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {t('details.createdAt', { date: createdAtLabel })}
-                </span>
-              </div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{goal.goalName}</h1>
-            </div>
+        <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+          <div className="space-y-6 xl:col-span-2">
+            <GroupGoalHero
+              heroImage={heroImage}
+              goalName={goal.goalName}
+              totalParticipants={totalParticipants}
+              progressValue={progressValue}
+              progressText={t('details.teamProgress')}
+              description={goal.description}
+              descriptionTitle={t('details.descriptionTitle')}
+              descriptionFallback={t('details.descriptionFallback')}
+              startDateLabel={startDateLabel}
+              endDateLabel={endDateLabel}
+              privacyLabel={privacyLabel}
+              startDateTitle={t('details.startDate')}
+              endDateTitle={t('details.endDate')}
+              privacyTitle={t('details.privacy')}
+            />
+
+            <TodayProgress
+              todayLabel={`Сегодня, ${formatDate(today, locale)}`}
+              todaysCompleted={todaysCompleted}
+              todaysTotal={todaysTotal}
+              todaysCompletion={todaysCompletion}
+              completionLabel="выполнение"
+              completedText="из"
+              checkInButtonText="Отметить участие"
+              reward={goal.reward}
+              consequence={goal.consequence}
+              rewardTitle="Групповая награда"
+              rewardFallback="Добавьте награду, чтобы мотивировать команду"
+              consequenceTitle="Штраф за пропуск"
+              consequenceFallback="Опишите, что происходит при пропуске"
+            />
+
+            <ProgressTable
+              title="Таблица прогресса участников"
+              subtitle={`Последние ${displayedDates.length} дней`}
+              emptyText={t('participants.empty')}
+              displayedDates={displayedDates}
+              todayKey={todayKey}
+              participantViews={participantViews}
+              completedText="Выполнено"
+              missedText="Пропуск"
+              pendingText="Ожидание"
+              showAllText="Показать все дни"
+            />
+
+            <ParticipantsList
+              title={`${t('participants.title')} (${totalParticipants})`}
+              subtitle={t('participants.count', { accepted: acceptedCount, total: totalParticipants })}
+              emptyText={t('participants.empty')}
+              inviteText="Пригласить еще"
+              showAllText="Показать всех участников"
+              participantViews={participantViews}
+            />
+
+            <GroupChat
+              title="Чат участников"
+              subtitle="Обсуждайте прогресс, делитесь советами и поддерживайте друг друга."
+              emptyText="Добавьте первых участников, чтобы начать общение."
+              inputPlaceholder="Написать сообщение..."
+              participantViews={participantViews}
+            />
           </div>
 
-          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
-            <div className="space-y-6 lg:col-span-2">
-              <section className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-                <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">
-                  {t('details.descriptionTitle')}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-300">
-                  {goal.description?.trim() || t('details.descriptionFallback')}
-                </p>
+          <div className="space-y-6">
+            <GroupGoalStatsComponent
+              title={t('stats.title')}
+              progressLabel={t('stats.progress')}
+              participantsLabel={t('stats.participants')}
+              activeLabel={t('stats.active')}
+              pendingLabel={t('stats.pending')}
+              progressValue={progressValue}
+              totalParticipants={totalParticipants}
+              activeParticipants={activeParticipants}
+              pendingInvitations={pendingInvitations}
+            />
 
-                <div className="mt-6">
-                  <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-400">{t('details.teamProgress')}</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">{progressValue}%</span>
-                  </div>
-                  <div className="h-3 w-full rounded-full bg-gray-200 dark:bg-gray-700">
-                    <div
-                      className="h-3 rounded-full bg-primary-500 transition-all dark:bg-primary-400"
-                      style={{ width: `${progressValue}%` }}
-                    ></div>
-                  </div>
-                </div>
+            <ActivityFeed
+              title="Текущая активность"
+              emptyText="Пока нет отметок за сегодня."
+              showAllText="Показать всю активность"
+              activityItems={activityFeed}
+            />
 
-                <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                  <div className="rounded-lg bg-indigo-50 p-4 text-sm text-indigo-900 dark:bg-indigo-900/20 dark:text-indigo-200">
-                    <div className="text-xs uppercase tracking-wide text-indigo-500 dark:text-indigo-300">
-                      {t('details.startDate')}
-                    </div>
-                    <div className="mt-1 text-base font-semibold">{startDateLabel}</div>
-                  </div>
-                  <div className="rounded-lg bg-emerald-50 p-4 text-sm text-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-200">
-                    <div className="text-xs uppercase tracking-wide text-emerald-500 dark:text-emerald-300">
-                      {t('details.endDate')}
-                    </div>
-                    <div className="mt-1 text-base font-semibold">{endDateLabel}</div>
-                  </div>
-                  <div className="rounded-lg bg-amber-50 p-4 text-sm text-amber-900 dark:bg-amber-900/20 dark:text-amber-200">
-                    <div className="text-xs uppercase tracking-wide text-amber-500 dark:text-amber-300">
-                      {t('details.privacy')}
-                    </div>
-                    <div className="mt-1 text-base font-semibold">{privacyLabel}</div>
-                  </div>
-                </div>
-              </section>
+            <TopContributors
+              title={t('contributors.title')}
+              emptyText="Лидеры появятся после первых отметок."
+              subtitleText="Вклад в команду"
+              contributors={topContributors}
+              locale={locale}
+            />
 
-              {goalSteps.length > 0 && (
-                <section className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-                  <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">Шаги цели</h2>
-                  <GroupGoalSteps
-                    goalId={goal._id ?? id}
-                    steps={goalSteps}
-                    canComplete={canCompleteSteps}
-                    invitationStatus={currentParticipant?.invitationStatus}
-                  />
-                </section>
-              )}
+            <MotivationSection
+              title={t('motivation.title')}
+              rewardTitle={t('motivation.reward')}
+              consequenceTitle={t('motivation.consequence')}
+              reward={goal.reward}
+              consequence={goal.consequence}
+              rewardFallback="Добавьте награду за общее выполнение цели."
+              consequenceFallback="Опишите, что случится при невыполнении цели."
+            />
 
-              <section className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white">{t('participants.title')}</h2>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                    {t('participants.count', { accepted: acceptedCount, total: totalParticipants })}
-                  </span>
-                </div>
+            <GroupSettings
+              title={t('settings.title')}
+              ownerLabel={t('settings.owner')}
+              memberInvitesLabel={t('settings.memberInvites')}
+              approvalLabel={t('settings.approval')}
+              teamLimitLabel={t('settings.teamLimit')}
+              goalValueLabel={t('settings.goalValue')}
+              ownerName={
+                participantViews.find((participant) => participant.roleLabel === t('participants.roles.owner'))?.name ||
+                t('participants.anonymous')
+              }
+              memberInvitesValue={
+                goal.groupSettings?.allowMembersToInvite
+                  ? t('settings.memberInvitesAllowed')
+                  : t('settings.memberInvitesRestricted')
+              }
+              approvalValue={
+                goal.groupSettings?.requireApproval ? t('settings.approvalRequired') : t('settings.approvalNotRequired')
+              }
+              teamLimitValue={
+                goal.groupSettings?.maxParticipants
+                  ? t('settings.teamLimitValue', { count: goal.groupSettings.maxParticipants })
+                  : t('settings.teamLimitUnset')
+              }
+              goalValue={goal.value ?? '—'}
+              editButtonText="Изменить настройки"
+            />
 
-                {participants.length === 0 ? (
-                  <p className="text-gray-600 dark:text-gray-400">{t('participants.empty')}</p>
-                ) : (
-                  <div className="space-y-3">
-                    {participants.map((participant, index) => {
-                      const roleLabel =
-                        participant.role === ParticipantRole.Owner
-                          ? t('participants.roles.owner')
-                          : participant.role === ParticipantRole.Admin
-                          ? t('participants.roles.admin')
-                          : t('participants.roles.member');
-                      const statusLabel =
-                        participant.invitationStatus === InvitationStatus.Accepted
-                          ? t('participants.status.accepted')
-                          : participant.invitationStatus === InvitationStatus.Pending
-                          ? t('participants.status.pending')
-                          : participant.invitationStatus === InvitationStatus.Declined
-                          ? t('participants.status.declined')
-                          : t('participants.status.other');
-                      const statusColor =
-                        participant.invitationStatus === InvitationStatus.Accepted
-                          ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
-                          : participant.invitationStatus === InvitationStatus.Pending
-                          ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
-                          : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300';
-                      const joinedText = participant.joinedAt
-                        ? t('participants.joinedAt', { date: formatDate(participant.joinedAt, locale) })
-                        : t('participants.noDate');
-
-                      return (
-                        <div
-                          key={participant.id || `participant-${index}`}
-                          className={`flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gray-100 px-4 py-3 dark:border-gray-700 ${
-                            participant.isCurrentUser ? 'border-primary-200 dark:border-primary-600' : ''
-                          }`}
-                        >
-                          <div>
-                            <div className="text-base font-semibold text-gray-900 dark:text-gray-100">
-                              {participant.name}
-                            </div>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">{roleLabel}</div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span className={`rounded-full px-3 py-1 text-xs font-medium ${statusColor}`}>
-                              {statusLabel}
-                            </span>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">{joinedText}</div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </section>
-
-              {contributors.length > 0 && (
-                <section className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-                  <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">
-                    {t('contributors.title')}
-                  </h2>
-                  <ul className="space-y-3">
-                    {contributors.map((contributor, index) => (
-                      <li
-                        key={`${contributor.id}-${index}`}
-                        className="flex items-center justify-between rounded-lg border border-gray-100 px-4 py-3 dark:border-gray-700"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">#{index + 1}</span>
-                          <span className="font-medium text-gray-900 dark:text-gray-100">{contributor.name}</span>
-                        </div>
-                        <span className="text-sm font-semibold text-primary-600 dark:text-primary-400">
-                          {contributor.contributionScore.toFixed(0)}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-
-              <section id="progress-table">
-                <ChallengeProgressTable challengeId={goal._id ?? id} />
-              </section>
-
-              <section id="challenge-chat" className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-                <ProgressBlogProvider goalId={id}>
-                  <div className="-mt-6">
-                    <ProgressBlog isOwner={isProgressBlogOwner} />
-                  </div>
-                </ProgressBlogProvider>
-              </section>
-            </div>
-
-            <aside className="space-y-6">
-              <ChallengeStats
-                challengeId={goal._id ?? id}
-                title={t('stats.title')}
-                stats={[
-                  { label: t('stats.progress'), value: `${progressValue}%`, emphasize: true },
-                  { label: t('stats.participants'), value: String(totalParticipants) },
-                  { label: t('stats.active'), value: String(acceptedCount) },
-                  { label: t('stats.pending'), value: String(pendingCount) },
-                ]}
-                highlight={null}
-              />
-
-              <section className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-                <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">{t('settings.title')}</h2>
-                <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
-                  <div className="flex items-center justify-between">
-                    <span>{t('settings.owner')}</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">{owner?.name ?? placeholder}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>{t('settings.memberInvites')}</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">
-                      {allowMembersToInvite
-                        ? t('settings.memberInvitesAllowed')
-                        : t('settings.memberInvitesRestricted')}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>{t('settings.approval')}</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">
-                      {requireApproval ? t('settings.approvalRequired') : t('settings.approvalNotRequired')}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>{t('settings.teamLimit')}</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">
-                      {maxParticipants
-                        ? t('settings.teamLimitValue', { count: maxParticipants })
-                        : t('settings.teamLimitUnset')}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>{t('settings.goalValue')}</span>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">{goal.value ?? placeholder}</span>
-                  </div>
-                </div>
-              </section>
-
-              {(goal.reward || goal.consequence) && (
-                <section className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-                  <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">{t('motivation.title')}</h2>
-                  <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
-                    {goal.reward && (
-                      <div>
-                        <div className="font-semibold text-gray-900 dark:text-gray-100">{t('motivation.reward')}</div>
-                        <p>{goal.reward}</p>
-                      </div>
-                    )}
-                    {goal.consequence && (
-                      <div>
-                        <div className="font-semibold text-gray-900 dark:text-gray-100">
-                          {t('motivation.consequence')}
-                        </div>
-                        <p>{goal.consequence}</p>
-                      </div>
-                    )}
-                  </div>
-                </section>
-              )}
-            </aside>
+            <GroupActions
+              title="Действия"
+              createPostText="Создать пост"
+              shareText="Поделиться группой"
+              exportText="Экспорт статистики"
+              leaveText="Покинуть группу"
+            />
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
   );
 }
