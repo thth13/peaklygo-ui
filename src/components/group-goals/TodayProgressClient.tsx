@@ -1,23 +1,53 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+'use client';
 
-interface TodayProgressProps {
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from '@/lib/navigation';
+import { markGroupCheckIn } from '@/lib/api/goal';
+import type { CheckInStatus } from '@/types';
+
+interface TodayProgressClientProps {
   todayLabel: string;
   todaysCompleted: number;
   todaysTotal: number;
   todaysCompletion: number;
   reward?: string;
   consequence?: string;
+  goalId: string;
+  currentUserStatus: CheckInStatus | null;
 }
 
-export function TodayProgress({
+export function TodayProgressClient({
   todayLabel,
   todaysCompleted,
   todaysTotal,
   todaysCompletion,
   reward,
   consequence,
-}: TodayProgressProps) {
+  goalId,
+  currentUserStatus,
+}: TodayProgressClientProps) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const isCompleted = currentUserStatus === 'completed';
+
+  const handleMarkParticipation = async () => {
+    if (isLoading) return;
+
+    setIsLoading(true);
+    try {
+      const today = new Date();
+      await markGroupCheckIn(goalId, today, !isCompleted);
+      router.refresh();
+    } catch (error) {
+      console.error('Ошибка при отметке участия:', error);
+      alert('Не удалось отметить участие. Попробуйте снова.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="rounded-2xl bg-gradient-to-r from-blue-50 to-purple-50 p-6 dark:from-blue-950/50 dark:to-purple-950/40">
@@ -41,12 +71,28 @@ export function TodayProgress({
           ></div>
         </div>
 
+        {isCompleted && (
+          <div className="mb-3 flex items-center justify-center gap-2 rounded-lg bg-green-100 py-2 text-sm font-medium text-green-700 dark:bg-green-900/30 dark:text-green-300">
+            <FontAwesomeIcon icon={faCheckCircle} />
+            Вы уже отметились сегодня
+          </div>
+        )}
+
         <button
           type="button"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-500 px-6 py-3 text-lg font-semibold text-white shadow-sm transition-transform hover:scale-[1.01] hover:bg-green-600"
+          onClick={handleMarkParticipation}
+          disabled={isLoading}
+          className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-lg font-semibold text-white shadow-sm transition-all ${
+            isCompleted
+              ? 'bg-gray-400 hover:bg-gray-500 dark:bg-gray-600 dark:hover:bg-gray-700'
+              : 'bg-green-500 hover:scale-[1.01] hover:bg-green-600'
+          } disabled:cursor-not-allowed disabled:opacity-60`}
         >
-          <FontAwesomeIcon icon={faCheckCircle} className="text-xl" />
-          Отметить участие
+          <FontAwesomeIcon
+            icon={isLoading ? faSpinner : faCheckCircle}
+            className={`text-xl ${isLoading ? 'animate-spin' : ''}`}
+          />
+          {isLoading ? 'Обработка...' : isCompleted ? 'Отменить отметку' : 'Отметить участие'}
         </button>
       </div>
 

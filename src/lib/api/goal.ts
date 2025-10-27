@@ -25,7 +25,7 @@ export const createGoal = async (goal: FormData) => {
 
 export const createGroupGoal = async (goal: FormData) => {
   try {
-    const res = await api.post(`${API_URL}/group-goals/group`, goal);
+    const res = await api.post(`${API_URL}/goals/group`, goal);
 
     nProgress.start();
     return res.data;
@@ -67,7 +67,7 @@ export const getLandingGoals = async (apiInstance?: AxiosInstance): Promise<Land
 export const getGoal = async (id: string, apiInstance?: AxiosInstance): Promise<Goal> => {
   try {
     const client = apiInstance ?? api;
-    const res = await client.get(`${API_URL}/group-goals/group/${id}`);
+    const res = await client.get(`${API_URL}/goals/group/${id}`);
 
     return res.data;
   } catch (err: any) {
@@ -85,9 +85,10 @@ export const updateStepStatus = async (goalId: string, stepId: string, isComplet
   }
 };
 
-export const markGroupStepCompleted = async (goalId: string, stepId: string, isCompleted: boolean): Promise<void> => {
+export const markGroupCheckIn = async (goalId: string, date: Date, isCompleted: boolean): Promise<void> => {
   try {
-    await api.put(`${API_URL}/goals/group/${goalId}/steps/${stepId}/complete`, {
+    await api.patch(`${API_URL}/goals/group/${goalId}/check-in`, {
+      date,
       isCompleted,
     });
   } catch (err: any) {

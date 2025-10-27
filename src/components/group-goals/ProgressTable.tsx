@@ -78,8 +78,24 @@ export function ProgressTable({
               </tr>
             ) : (
               participantViews.map((participant) => {
-                const totalCompleted = participant.statusesByDate.filter((status) => status === 'completed').length;
-                const totalTracked = participant.statusesByDate.filter((status) => Boolean(status)).length;
+                // Подсчет статусов с учетом пропущенных дней
+                let totalCompleted = 0;
+                let totalMissed = 0;
+                let totalPending = 0;
+
+                participant.statusesByDate.forEach((status, index) => {
+                  const dateKey = displayedDates[index];
+                  const isPastDay = new Date(dateKey) < new Date(todayKey);
+                  const displayStatus = isPastDay && !status ? 'missed' : status;
+
+                  if (displayStatus === 'completed') totalCompleted++;
+                  else if (displayStatus === 'missed') totalMissed++;
+                  else if (displayStatus === 'pending') totalPending++;
+                });
+
+                const totalTracked = totalCompleted + totalMissed + totalPending;
+                const successRate = totalTracked > 0 ? Math.round((totalCompleted / totalTracked) * 100) : 0;
+
                 return (
                   <tr
                     key={participant.id}
@@ -111,16 +127,29 @@ export function ProgressTable({
                     {participant.statusesByDate.map((status, index) => {
                       const dateKey = displayedDates[index];
                       const isToday = dateKey === todayKey;
+                      const isPastDay = new Date(dateKey) < new Date(todayKey);
+
+                      // Если день прошел и не выполнен, показываем как пропуск
+                      const displayStatus = isPastDay && !status ? 'missed' : status;
+
+                      const getTooltip = () => {
+                        if (displayStatus === 'completed') return completedText;
+                        if (displayStatus === 'missed') return missedText;
+                        if (displayStatus === 'pending') return pendingText;
+                        return '';
+                      };
+
                       return (
                         <td
                           key={`${participant.id}-${dateKey}`}
                           className={`px-2 py-3 text-center text-sm ${isToday ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}
+                          title={getTooltip()}
                         >
-                          {status === 'completed' ? (
+                          {displayStatus === 'completed' ? (
                             <FontAwesomeIcon icon={faCheck} className="text-green-500" />
-                          ) : status === 'missed' ? (
+                          ) : displayStatus === 'missed' ? (
                             <FontAwesomeIcon icon={faXmark} className="text-red-500" />
-                          ) : status === 'pending' ? (
+                          ) : displayStatus === 'pending' ? (
                             <FontAwesomeIcon icon={faClock} className="text-gray-400" />
                           ) : (
                             <span className="text-gray-300">—</span>
@@ -128,8 +157,25 @@ export function ProgressTable({
                         </td>
                       );
                     })}
-                    <td className="px-2 py-3 text-center text-sm font-semibold">
-                      {totalTracked > 0 ? `${totalCompleted}/${totalTracked}` : '—'}
+                    <td className="px-2 py-3 text-center">
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-sm font-semibold">
+                          {totalCompleted}/{totalTracked}
+                        </span>
+                        {totalTracked > 0 && (
+                          <span
+                            className={`text-xs font-medium ${
+                              successRate >= 80
+                                ? 'text-green-600 dark:text-green-400'
+                                : successRate >= 50
+                                ? 'text-yellow-600 dark:text-yellow-400'
+                                : 'text-red-600 dark:text-red-400'
+                            }`}
+                          >
+                            {successRate}%
+                          </span>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );

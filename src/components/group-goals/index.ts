@@ -1,6 +1,7 @@
 export { GroupGoalHeader } from './GroupGoalHeader';
 export { GroupGoalHero } from './GroupGoalHero';
 export { TodayProgress } from './TodayProgress';
+export { TodayProgressClient } from './TodayProgressClient';
 export { ProgressTable } from './ProgressTable';
 export { ParticipantsList } from './ParticipantsList';
 export { GroupChat } from './GroupChat';
