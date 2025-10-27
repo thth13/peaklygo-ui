@@ -5,13 +5,13 @@ interface ActivityItem {
 }
 
 interface ActivityFeedProps {
-  title: string;
-  emptyText: string;
-  showAllText: string;
   activityItems: ActivityItem[];
 }
 
-export function ActivityFeed({ title, emptyText, showAllText, activityItems }: ActivityFeedProps) {
+export function ActivityFeed({ activityItems }: ActivityFeedProps) {
+  const title = 'Текущая активность';
+  const emptyText = 'Пока нет отметок за сегодня.';
+  const showAllText = 'Показать всю активность';
   return (
     <section className="rounded-2xl bg-white p-6 shadow-sm transition-colors dark:bg-gray-900">
       <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>

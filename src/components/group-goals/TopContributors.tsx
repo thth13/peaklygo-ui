@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 interface Contributor {
   id: string;
@@ -8,14 +9,15 @@ interface Contributor {
 }
 
 interface TopContributorsProps {
-  title: string;
-  emptyText: string;
-  subtitleText: string;
   contributors: Contributor[];
   locale: string;
 }
 
-export function TopContributors({ title, emptyText, subtitleText, contributors, locale }: TopContributorsProps) {
+export function TopContributors({ contributors, locale }: TopContributorsProps) {
+  const t = useTranslations('groupGoal.contributors');
+  const title = t('title');
+  const emptyText = 'Лидеры появятся после первых отметок.';
+  const subtitleText = 'Вклад в команду';
   return (
     <section className="rounded-2xl bg-white p-6 shadow-sm transition-colors dark:bg-gray-900">
       <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>

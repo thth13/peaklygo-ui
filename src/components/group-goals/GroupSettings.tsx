@@ -1,32 +1,32 @@
+import { useTranslations } from 'next-intl';
+
 interface GroupSettingsProps {
-  title: string;
-  ownerLabel: string;
-  memberInvitesLabel: string;
-  approvalLabel: string;
-  teamLimitLabel: string;
-  goalValueLabel: string;
   ownerName: string;
-  memberInvitesValue: string;
-  approvalValue: string;
-  teamLimitValue: string;
+  allowMembersToInvite: boolean;
+  requireApproval: boolean;
+  maxParticipants?: number;
   goalValue: string | number;
-  editButtonText: string;
 }
 
 export function GroupSettings({
-  title,
-  ownerLabel,
-  memberInvitesLabel,
-  approvalLabel,
-  teamLimitLabel,
-  goalValueLabel,
   ownerName,
-  memberInvitesValue,
-  approvalValue,
-  teamLimitValue,
+  allowMembersToInvite,
+  requireApproval,
+  maxParticipants,
   goalValue,
-  editButtonText,
 }: GroupSettingsProps) {
+  const t = useTranslations('groupGoal.settings');
+  const title = t('title');
+  const ownerLabel = t('owner');
+  const memberInvitesLabel = t('memberInvites');
+  const approvalLabel = t('approval');
+  const teamLimitLabel = t('teamLimit');
+  const goalValueLabel = t('goalValue');
+  const editButtonText = 'Изменить настройки';
+
+  const memberInvitesValue = allowMembersToInvite ? t('memberInvitesAllowed') : t('memberInvitesRestricted');
+  const approvalValue = requireApproval ? t('approvalRequired') : t('approvalNotRequired');
+  const teamLimitValue = maxParticipants ? t('teamLimitValue', { count: maxParticipants }) : t('teamLimitUnset');
   return (
     <section className="rounded-2xl bg-white p-6 shadow-sm transition-colors dark:bg-gray-900">
       <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>

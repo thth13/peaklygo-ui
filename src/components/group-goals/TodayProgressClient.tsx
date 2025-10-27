@@ -6,9 +6,10 @@ import { faCheckCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from '@/lib/navigation';
 import { markGroupCheckIn } from '@/lib/api/goal';
 import type { CheckInStatus } from '@/types';
+import { formatDate } from '@/lib/utils';
+import { useLocale } from 'next-intl';
 
 interface TodayProgressClientProps {
-  todayLabel: string;
   todaysCompleted: number;
   todaysTotal: number;
   todaysCompletion: number;
@@ -19,7 +20,6 @@ interface TodayProgressClientProps {
 }
 
 export function TodayProgressClient({
-  todayLabel,
   todaysCompleted,
   todaysTotal,
   todaysCompletion,
@@ -29,8 +29,12 @@ export function TodayProgressClient({
   currentUserStatus,
 }: TodayProgressClientProps) {
   const router = useRouter();
+  const locale = useLocale();
   const [isLoading, setIsLoading] = useState(false);
   const isCompleted = currentUserStatus === 'completed';
+
+  const today = new Date();
+  const todayLabel = `Сегодня, ${formatDate(today, locale)}`;
 
   const handleMarkParticipation = async () => {
     if (isLoading) return;

@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import { faCheck, faClock, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 import type { CheckInStatus } from '@/types';
 
 interface ParticipantView {
@@ -12,30 +13,20 @@ interface ParticipantView {
 }
 
 interface ProgressTableProps {
-  title: string;
-  subtitle: string;
-  emptyText: string;
   displayedDates: string[];
   todayKey: string;
   participantViews: ParticipantView[];
-  completedText: string;
-  missedText: string;
-  pendingText: string;
-  showAllText: string;
 }
 
-export function ProgressTable({
-  title,
-  subtitle,
-  emptyText,
-  displayedDates,
-  todayKey,
-  participantViews,
-  completedText,
-  missedText,
-  pendingText,
-  showAllText,
-}: ProgressTableProps) {
+export function ProgressTable({ displayedDates, todayKey, participantViews }: ProgressTableProps) {
+  const t = useTranslations('groupGoal.participants');
+  const emptyText = t('empty');
+  const title = 'Таблица прогресса участников';
+  const subtitle = `Последние ${displayedDates.length} дней`;
+  const completedText = 'Выполнено';
+  const missedText = 'Пропуск';
+  const pendingText = 'Ожидание';
+  const showAllText = 'Показать все дни';
   return (
     <article className="rounded-2xl bg-white p-6 shadow-sm transition-colors dark:bg-gray-900">
       <div className="mb-6 flex items-center justify-between">

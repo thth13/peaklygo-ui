@@ -177,9 +177,6 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
           statusLabel={labels.status}
           privacyLabel={labels.privacy}
           createdLabel={labels.created}
-          backText={t('breadcrumbs.back')}
-          inviteText="Пригласить"
-          settingsText="Настройки"
         />
 
         <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
@@ -189,20 +186,13 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
               goalName={goal.goalName}
               totalParticipants={totalParticipants}
               progressValue={progressValue}
-              progressText={t('details.teamProgress')}
               description={goal.description}
-              descriptionTitle={t('details.descriptionTitle')}
-              descriptionFallback={t('details.descriptionFallback')}
               startDateLabel={labels.startDate}
               endDateLabel={labels.endDate}
               privacyLabel={labels.privacy}
-              startDateTitle={t('details.startDate')}
-              endDateTitle={t('details.endDate')}
-              privacyTitle={t('details.privacy')}
             />
 
             <TodayProgressClient
-              todayLabel={`Сегодня, ${formatDate(today, locale)}`}
               todaysCompleted={todayProgress.completed}
               todaysTotal={todayProgress.total}
               todaysCompletion={todayProgress.percentage}
@@ -212,107 +202,40 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
               currentUserStatus={currentUserTodayStatus}
             />
 
-            <ProgressTable
-              title="Таблица прогресса участников"
-              subtitle={`Последние ${displayedDates.length} дней`}
-              emptyText={t('participants.empty')}
-              displayedDates={displayedDates}
-              todayKey={todayKey}
-              participantViews={participantViews}
-              completedText="Выполнено"
-              missedText="Пропуск"
-              pendingText="Ожидание"
-              showAllText="Показать все дни"
-            />
+            <ProgressTable displayedDates={displayedDates} todayKey={todayKey} participantViews={participantViews} />
 
             <ParticipantsList
-              title={`${t('participants.title')} (${totalParticipants})`}
-              subtitle={t('participants.count', { accepted: acceptedCount, total: totalParticipants })}
-              emptyText={t('participants.empty')}
-              inviteText="Пригласить еще"
-              showAllText="Показать всех участников"
               participantViews={participantViews}
+              totalParticipants={totalParticipants}
+              acceptedCount={acceptedCount}
             />
 
-            <GroupChat
-              title="Чат участников"
-              subtitle="Обсуждайте прогресс, делитесь советами и поддерживайте друг друга."
-              emptyText="Добавьте первых участников, чтобы начать общение."
-              inputPlaceholder="Написать сообщение..."
-              participantViews={participantViews}
-            />
+            <GroupChat participantViews={participantViews} />
           </div>
 
           <div className="space-y-6">
             <GroupGoalStatsComponent
-              title={t('stats.title')}
-              progressLabel={t('stats.progress')}
-              participantsLabel={t('stats.participants')}
-              activeLabel={t('stats.active')}
-              pendingLabel={t('stats.pending')}
               progressValue={progressValue}
               totalParticipants={totalParticipants}
               activeParticipants={activeParticipants}
               pendingInvitations={pendingInvitations}
             />
 
-            <ActivityFeed
-              title="Текущая активность"
-              emptyText="Пока нет отметок за сегодня."
-              showAllText="Показать всю активность"
-              activityItems={activityFeed}
-            />
+            <ActivityFeed activityItems={activityFeed} />
 
-            <TopContributors
-              title={t('contributors.title')}
-              emptyText="Лидеры появятся после первых отметок."
-              subtitleText="Вклад в команду"
-              contributors={topContributors}
-              locale={locale}
-            />
+            <TopContributors contributors={topContributors} locale={locale} />
 
-            <MotivationSection
-              title={t('motivation.title')}
-              rewardTitle={t('motivation.reward')}
-              consequenceTitle={t('motivation.consequence')}
-              reward={goal.reward}
-              consequence={goal.consequence}
-              rewardFallback="Добавьте награду за общее выполнение цели."
-              consequenceFallback="Опишите, что случится при невыполнении цели."
-            />
+            <MotivationSection reward={goal.reward} consequence={goal.consequence} />
 
             <GroupSettings
-              title={t('settings.title')}
-              ownerLabel={t('settings.owner')}
-              memberInvitesLabel={t('settings.memberInvites')}
-              approvalLabel={t('settings.approval')}
-              teamLimitLabel={t('settings.teamLimit')}
-              goalValueLabel={t('settings.goalValue')}
               ownerName={ownerName}
-              memberInvitesValue={
-                goal.groupSettings?.allowMembersToInvite
-                  ? t('settings.memberInvitesAllowed')
-                  : t('settings.memberInvitesRestricted')
-              }
-              approvalValue={
-                goal.groupSettings?.requireApproval ? t('settings.approvalRequired') : t('settings.approvalNotRequired')
-              }
-              teamLimitValue={
-                goal.groupSettings?.maxParticipants
-                  ? t('settings.teamLimitValue', { count: goal.groupSettings.maxParticipants })
-                  : t('settings.teamLimitUnset')
-              }
+              allowMembersToInvite={goal.groupSettings?.allowMembersToInvite ?? false}
+              requireApproval={goal.groupSettings?.requireApproval ?? false}
+              maxParticipants={goal.groupSettings?.maxParticipants ?? undefined}
               goalValue={goal.value ?? '—'}
-              editButtonText="Изменить настройки"
             />
 
-            <GroupActions
-              title="Действия"
-              createPostText="Создать пост"
-              shareText="Поделиться группой"
-              exportText="Экспорт статистики"
-              leaveText="Покинуть группу"
-            />
+            <GroupActions />
           </div>
         </section>
       </div>

@@ -1,9 +1,6 @@
+import { useTranslations } from 'next-intl';
+
 interface GroupGoalStatsProps {
-  title: string;
-  progressLabel: string;
-  participantsLabel: string;
-  activeLabel: string;
-  pendingLabel: string;
   progressValue: number;
   totalParticipants: number;
   activeParticipants: number;
@@ -11,16 +8,17 @@ interface GroupGoalStatsProps {
 }
 
 export function GroupGoalStats({
-  title,
-  progressLabel,
-  participantsLabel,
-  activeLabel,
-  pendingLabel,
   progressValue,
   totalParticipants,
   activeParticipants,
   pendingInvitations,
 }: GroupGoalStatsProps) {
+  const t = useTranslations('groupGoal.stats');
+  const title = t('title');
+  const progressLabel = t('progress');
+  const participantsLabel = t('participants');
+  const activeLabel = t('active');
+  const pendingLabel = t('pending');
   return (
     <section className="rounded-2xl bg-white p-6 shadow-sm transition-colors dark:bg-gray-900">
       <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>

@@ -9,14 +9,14 @@ interface ParticipantView {
 }
 
 interface GroupChatProps {
-  title: string;
-  subtitle: string;
-  emptyText: string;
-  inputPlaceholder: string;
   participantViews: ParticipantView[];
 }
 
-export function GroupChat({ title, subtitle, emptyText, inputPlaceholder, participantViews }: GroupChatProps) {
+export function GroupChat({ participantViews }: GroupChatProps) {
+  const title = 'Чат участников';
+  const subtitle = 'Обсуждайте прогресс, делитесь советами и поддерживайте друг друга.';
+  const emptyText = 'Добавьте первых участников, чтобы начать общение.';
+  const inputPlaceholder = 'Написать сообщение...';
   return (
     <article className="rounded-2xl bg-white p-6 shadow-sm transition-colors dark:bg-gray-900">
       <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>

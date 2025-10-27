@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { useTranslations } from 'next-intl';
 import type { CheckInStatus } from '@/types';
 
 interface ParticipantView {
@@ -14,22 +15,18 @@ interface ParticipantView {
 }
 
 interface ParticipantsListProps {
-  title: string;
-  subtitle: string;
-  emptyText: string;
-  inviteText: string;
-  showAllText: string;
   participantViews: ParticipantView[];
+  totalParticipants: number;
+  acceptedCount: number;
 }
 
-export function ParticipantsList({
-  title,
-  subtitle,
-  emptyText,
-  inviteText,
-  showAllText,
-  participantViews,
-}: ParticipantsListProps) {
+export function ParticipantsList({ participantViews, totalParticipants, acceptedCount }: ParticipantsListProps) {
+  const t = useTranslations('groupGoal.participants');
+  const subtitle = t('count', { accepted: acceptedCount, total: totalParticipants });
+  const emptyText = t('empty');
+  const title = `${t('title')} (${totalParticipants})`;
+  const inviteText = 'Пригласить еще';
+  const showAllText = 'Показать всех участников';
   return (
     <article className="rounded-2xl bg-white p-6 shadow-sm transition-colors dark:bg-gray-900">
       <div className="mb-6 flex items-center justify-between">

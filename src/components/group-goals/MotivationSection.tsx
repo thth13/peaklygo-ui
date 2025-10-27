@@ -1,22 +1,17 @@
+import { useTranslations } from 'next-intl';
+
 interface MotivationSectionProps {
-  title: string;
-  rewardTitle: string;
-  consequenceTitle: string;
   reward?: string;
   consequence?: string;
-  rewardFallback: string;
-  consequenceFallback: string;
 }
 
-export function MotivationSection({
-  title,
-  rewardTitle,
-  consequenceTitle,
-  reward,
-  consequence,
-  rewardFallback,
-  consequenceFallback,
-}: MotivationSectionProps) {
+export function MotivationSection({ reward, consequence }: MotivationSectionProps) {
+  const t = useTranslations('groupGoal.motivation');
+  const title = t('title');
+  const rewardTitle = t('reward');
+  const consequenceTitle = t('consequence');
+  const rewardFallback = 'Добавьте награду за общее выполнение цели.';
+  const consequenceFallback = 'Опишите, что случится при невыполнении цели.';
   return (
     <section className="rounded-2xl bg-white p-6 shadow-sm transition-colors dark:bg-gray-900">
       <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>

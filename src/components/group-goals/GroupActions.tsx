@@ -1,12 +1,11 @@
-interface GroupActionsProps {
-  title: string;
-  createPostText: string;
-  shareText: string;
-  exportText: string;
-  leaveText: string;
-}
+interface GroupActionsProps {}
 
-export function GroupActions({ title, createPostText, shareText, exportText, leaveText }: GroupActionsProps) {
+export function GroupActions({}: GroupActionsProps) {
+  const title = 'Действия';
+  const createPostText = 'Создать пост';
+  const shareText = 'Поделиться группой';
+  const exportText = 'Экспорт статистики';
+  const leaveText = 'Покинуть группу';
   return (
     <section className="rounded-2xl bg-white p-6 shadow-sm transition-colors dark:bg-gray-900">
       <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>

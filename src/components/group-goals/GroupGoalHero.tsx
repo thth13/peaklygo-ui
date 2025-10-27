@@ -1,20 +1,15 @@
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 interface GroupGoalHeroProps {
   heroImage: string;
   goalName: string;
   totalParticipants: number;
   progressValue: number;
-  progressText: string;
   description?: string;
-  descriptionTitle: string;
-  descriptionFallback: string;
   startDateLabel: string;
   endDateLabel: string;
   privacyLabel: string;
-  startDateTitle: string;
-  endDateTitle: string;
-  privacyTitle: string;
 }
 
 export function GroupGoalHero({
@@ -22,17 +17,18 @@ export function GroupGoalHero({
   goalName,
   totalParticipants,
   progressValue,
-  progressText,
   description,
-  descriptionTitle,
-  descriptionFallback,
   startDateLabel,
   endDateLabel,
   privacyLabel,
-  startDateTitle,
-  endDateTitle,
-  privacyTitle,
 }: GroupGoalHeroProps) {
+  const t = useTranslations('groupGoal.details');
+  const progressText = t('teamProgress');
+  const descriptionTitle = t('descriptionTitle');
+  const descriptionFallback = t('descriptionFallback');
+  const startDateTitle = t('startDate');
+  const endDateTitle = t('endDate');
+  const privacyTitle = t('privacy');
   return (
     <article className="overflow-hidden rounded-2xl bg-white shadow-sm transition-colors dark:bg-gray-900">
       <div className="relative h-64">
