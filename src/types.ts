@@ -212,22 +212,28 @@ export enum ReadCategory {
 
 export interface ProgressEntry {
   _id: string;
-  goalId: string;
-  userId: string;
-  content: string;
-  day: number;
-  likes: { _id: string }[];
-  comments: number;
-  isEdited: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  commentCount: number;
+  goalId?: string;
+  groupGoalId?: string;
+  userId?: {
+    _id: string;
+    username: string;
+    avatar?: string;
+    user: string;
+  };
   profile?: {
     _id: string;
     name: string;
     avatar?: string;
     user: string;
   };
+  content: string;
+  day: number;
+  likes: { _id: string }[];
+  comments?: number;
+  isEdited: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  commentCount?: number;
 }
 
 export interface CreateProgressEntryDto {

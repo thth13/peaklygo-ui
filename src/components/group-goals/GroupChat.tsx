@@ -9,6 +9,7 @@ import { getGroupProgressEntries, createGroupProgressEntry } from '@/lib/api/gro
 import { formatTimeAgo } from '@/lib/utils';
 import { IMAGE_URL } from '@/constants';
 import { useTranslations } from 'next-intl';
+import { useUserProfile } from '@/context/UserProfileContext';
 
 interface ParticipantView {
   id: string;
@@ -27,6 +28,7 @@ export function GroupChat({ participantViews, goalId }: GroupChatProps) {
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
   const t = useTranslations('timeAgo');
+  const { profile } = useUserProfile();
 
   const title = 'Чат участников';
   const subtitle = 'Обсуждайте прогресс, делитесь советами и поддерживайте друг друга.';
@@ -59,7 +61,21 @@ export function GroupChat({ participantViews, goalId }: GroupChatProps) {
     setSending(true);
     try {
       const newEntry = await createGroupProgressEntry(goalId, inputText);
-      setMessages((prev) => [...prev, newEntry]);
+
+      // Добавляем профиль пользователя к новому сообщению
+      const entryWithProfile: ProgressEntry = {
+        ...newEntry,
+        profile: profile
+          ? {
+              _id: profile._id,
+              name: profile.name,
+              avatar: profile.avatar,
+              user: typeof profile.user === 'string' ? profile.user : profile.user._id,
+            }
+          : undefined,
+      };
+
+      setMessages((prev) => [...prev, entryWithProfile]);
       setInputText('');
 
       // Прокрутка вниз после отправки
@@ -103,15 +119,15 @@ export function GroupChat({ participantViews, goalId }: GroupChatProps) {
               <div className="h-8 w-8 overflow-hidden rounded-full bg-gray-200 flex-shrink-0">
                 {message.profile?.avatar ? (
                   <Image
-                    src={`${IMAGE_URL}${message.profile.avatar}`}
-                    alt={message.profile.name}
+                    src={`${IMAGE_URL}/${message.profile.avatar}`}
+                    alt={message.profile.name || 'User avatar'}
                     width={32}
                     height={32}
                     className="h-8 w-8 object-cover"
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-gray-600">
-                    {message.profile?.name.slice(0, 1).toUpperCase() || '?'}
+                    {message.profile?.name?.slice(0, 1).toUpperCase() || '?'}
                   </div>
                 )}
               </div>
