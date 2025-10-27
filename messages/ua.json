@@ -1099,5 +1099,52 @@
       "reward": "Нагорода",
       "consequence": "Наслідок"
     }
+  },
+  "groupGoalEdit": {
+    "meta": {
+      "title": "Редагування {name} — PeaklyGo",
+      "defaultDescription": "Налаштуйте розклад, мотивацію та правила участі для групової цілі.",
+      "notFoundTitle": "Групова ціль недоступна",
+      "notFoundDescription": "Не вдалося завантажити цю групову ціль."
+    },
+    "title": "Редагування групової цілі",
+    "subtitle": "Оновлюйте правила челенджу й підтримуйте команду в тонусі.",
+    "form": {
+      "goalName": "Назва цілі",
+      "description": "Опис",
+      "category": "Категорія",
+      "categoryPlaceholder": "Оберіть категорію",
+      "startDate": "Дата старту",
+      "endDate": "Дата завершення",
+      "habitSectionTitle": "Режим звички",
+      "habitSectionDescription": "Визначте, як часто команда відмічається та що її мотивує.",
+      "habitDuration": "Тривалість звички (днів)",
+      "habitDurationHint": "Мінімум один день. Учасники бачать це у своїх трекерах.",
+      "reward": "Нагорода",
+      "consequence": "Наслідок",
+      "habitDays": "Дні тижня",
+      "habitDaysHint": "Оберіть дні, коли команда звітує про прогрес.",
+      "groupSettingsTitle": "Налаштування команди",
+      "groupSettingsDescription": "Керуйте запрошеннями та лімітами учасників.",
+      "allowMembersToInvite": "Дозволити учасникам запрошувати інших",
+      "requireApproval": "Потрібне схвалення нових учасників",
+      "maxParticipants": "Максимум учасників",
+      "maxParticipantsPlaceholder": "Без обмежень",
+      "maxParticipantsHint": "Залиште порожнім, щоб зняти ліміт.",
+      "actionsTitle": "Збереження змін",
+      "actionsDescription": "Зміни одразу будуть доступні всім.",
+      "saveChanges": "Зберегти зміни",
+      "saving": "Зберігаємо..."
+    },
+    "notifications": {
+      "updated": "Групову ціль оновлено",
+      "noChanges": "Немає змін для збереження",
+      "failed": "Не вдалося оновити групову ціль"
+    },
+    "errors": {
+      "goalNameRequired": "Введіть назву цілі",
+      "habitDurationInvalid": "Тривалість має бути щонайменше 1 день",
+      "habitDaysRequired": "Оберіть хоча б один день"
+    }
   }
 }

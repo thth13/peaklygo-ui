@@ -1115,5 +1115,52 @@
       "reward": "Reward",
       "consequence": "Consequence"
     }
+  },
+  "groupGoalEdit": {
+    "meta": {
+      "title": "Edit {name} — PeaklyGo",
+      "defaultDescription": "Adjust schedule, motivation, and team settings for your group goal.",
+      "notFoundTitle": "Group goal not available",
+      "notFoundDescription": "We could not load this group goal."
+    },
+    "title": "Edit group goal",
+    "subtitle": "Keep the challenge fresh by refining its details and rules.",
+    "form": {
+      "goalName": "Goal name",
+      "description": "Description",
+      "category": "Category",
+      "categoryPlaceholder": "Select category",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "habitSectionTitle": "Habit cadence",
+      "habitSectionDescription": "Configure how often the team checks in and what keeps everyone motivated.",
+      "habitDuration": "Habit duration (days)",
+      "habitDurationHint": "Set at least one day. Participants see this in their trackers.",
+      "reward": "Reward",
+      "consequence": "Consequence",
+      "habitDays": "Days of the week",
+      "habitDaysHint": "Pick the days when the group reports progress.",
+      "groupSettingsTitle": "Group settings",
+      "groupSettingsDescription": "Control invitations and participation limits.",
+      "allowMembersToInvite": "Allow members to invite others",
+      "requireApproval": "Require approval for new members",
+      "maxParticipants": "Maximum participants",
+      "maxParticipantsPlaceholder": "Unlimited",
+      "maxParticipantsHint": "Leave empty for no limit.",
+      "actionsTitle": "Save changes",
+      "actionsDescription": "Apply updates instantly for everyone.",
+      "saveChanges": "Save changes",
+      "saving": "Saving..."
+    },
+    "notifications": {
+      "updated": "Group goal updated",
+      "noChanges": "No changes to save",
+      "failed": "Failed to update group goal"
+    },
+    "errors": {
+      "goalNameRequired": "Enter the goal name",
+      "habitDurationInvalid": "Duration must be at least 1 day",
+      "habitDaysRequired": "Select at least one day"
+    }
   }
 }

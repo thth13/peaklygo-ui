@@ -1090,5 +1090,52 @@
       "reward": "पुरस्कार",
       "consequence": "परिणाम"
     }
+  },
+  "groupGoalEdit": {
+    "meta": {
+      "title": "{name} को संपादित करें — PeaklyGo",
+      "defaultDescription": "समूह लक्ष्य के शेड्यूल, प्रेरणा और टीम नियमों को अपडेट करें।",
+      "notFoundTitle": "समूह लक्ष्य उपलब्ध नहीं",
+      "notFoundDescription": "हम इस समूह लक्ष्य को लोड नहीं कर सके।"
+    },
+    "title": "समूह लक्ष्य संपादित करें",
+    "subtitle": "चुनौती के नियम और गति को अद्यतन रखें।",
+    "form": {
+      "goalName": "लक्ष्य का नाम",
+      "description": "विवरण",
+      "category": "श्रेणी",
+      "categoryPlaceholder": "श्रेणी चुनें",
+      "startDate": "प्रारंभ तिथि",
+      "endDate": "समाप्ति तिथि",
+      "habitSectionTitle": "आदत ताल",
+      "habitSectionDescription": "टीम कितनी बार रिपोर्ट करेगी और प्रेरित रहेगी इसे समायोजित करें।",
+      "habitDuration": "आदत अवधि (दिन)",
+      "habitDurationHint": "कम से कम एक दिन। प्रतिभागी इसे अपने ट्रैकर्स में देखते हैं।",
+      "reward": "पुरस्कार",
+      "consequence": "परिणाम",
+      "habitDays": "सप्ताह के दिन",
+      "habitDaysHint": "वे दिन चुनें जब टीम प्रगति साझा करेगी।",
+      "groupSettingsTitle": "समूह सेटिंग्स",
+      "groupSettingsDescription": "निमंत्रण और प्रतिभागी सीमा नियंत्रित करें।",
+      "allowMembersToInvite": "सदस्यों को दूसरों को आमंत्रित करने दें",
+      "requireApproval": "नए सदस्यों के लिए स्वीकृति आवश्यक",
+      "maxParticipants": "अधिकतम प्रतिभागी",
+      "maxParticipantsPlaceholder": "असीमित",
+      "maxParticipantsHint": "कोई सीमा न रखने के लिए खाली छोड़ें।",
+      "actionsTitle": "परिवर्तन सहेजें",
+      "actionsDescription": "अद्यतन तुरंत सभी पर लागू होंगे।",
+      "saveChanges": "परिवर्तन सहेजें",
+      "saving": "सहेजा जा रहा है..."
+    },
+    "notifications": {
+      "updated": "समूह लक्ष्य अपडेट हुआ",
+      "noChanges": "सहेजने के लिए कोई परिवर्तन नहीं",
+      "failed": "समूह लक्ष्य अपडेट नहीं हो सका"
+    },
+    "errors": {
+      "goalNameRequired": "कृपया लक्ष्य का नाम दर्ज करें",
+      "habitDurationInvalid": "अवधि कम से कम 1 दिन होनी चाहिए",
+      "habitDaysRequired": "कम से कम एक दिन चुनें"
+    }
   }
 }

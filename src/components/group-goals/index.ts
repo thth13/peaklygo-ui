@@ -11,3 +11,5 @@ export { TopContributors } from './TopContributors';
 export { MotivationSection } from './MotivationSection';
 export { GroupSettings } from './GroupSettings';
 export { GroupActions } from './GroupActions';
+export { GroupGoalUpdateForm } from './GroupGoalUpdateForm';
+export type { GroupGoalUpdateFormValues } from './GroupGoalUpdateForm';

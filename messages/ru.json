@@ -1168,5 +1168,52 @@
       "reward": "Награда",
       "consequence": "Последствие"
     }
+  },
+  "groupGoalEdit": {
+    "meta": {
+      "title": "Редактирование {name} — PeaklyGo",
+      "defaultDescription": "Настройте расписание, мотивацию и правила участия для групповой цели.",
+      "notFoundTitle": "Групповая цель недоступна",
+      "notFoundDescription": "Не получилось загрузить эту групповую цель."
+    },
+    "title": "Редактирование групповой цели",
+    "subtitle": "Обновите регламент челленджа и условия участия.",
+    "form": {
+      "goalName": "Название цели",
+      "description": "Описание",
+      "category": "Категория",
+      "categoryPlaceholder": "Выберите категорию",
+      "startDate": "Дата старта",
+      "endDate": "Дата завершения",
+      "habitSectionTitle": "Режим привычки",
+      "habitSectionDescription": "Настройте частоту чек-инов и то, что удерживает участников в тонусе.",
+      "habitDuration": "Длительность привычки (дней)",
+      "habitDurationHint": "Минимум один день. Участники видят это в своих трекерах.",
+      "reward": "Награда",
+      "consequence": "Последствие",
+      "habitDays": "Дни недели",
+      "habitDaysHint": "Выберите дни, когда команда отчитывается о прогрессе.",
+      "groupSettingsTitle": "Настройки команды",
+      "groupSettingsDescription": "Управляйте приглашениями и лимитами участников.",
+      "allowMembersToInvite": "Разрешить участникам приглашать других",
+      "requireApproval": "Требовать подтверждение новых участников",
+      "maxParticipants": "Максимум участников",
+      "maxParticipantsPlaceholder": "Без ограничений",
+      "maxParticipantsHint": "Оставьте пустым, чтобы убрать лимит.",
+      "actionsTitle": "Сохранение изменений",
+      "actionsDescription": "Изменения сразу применятся для всех участников.",
+      "saveChanges": "Сохранить изменения",
+      "saving": "Сохраняем..."
+    },
+    "notifications": {
+      "updated": "Групповая цель обновлена",
+      "noChanges": "Изменений нет",
+      "failed": "Не удалось обновить групповую цель"
+    },
+    "errors": {
+      "goalNameRequired": "Введите название цели",
+      "habitDurationInvalid": "Длительность должна быть минимум один день",
+      "habitDaysRequired": "Выберите хотя бы один день"
+    }
   }
 }

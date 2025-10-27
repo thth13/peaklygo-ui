@@ -35,6 +35,17 @@ export const createGroupGoal = async (goal: FormData) => {
   }
 };
 
+export const updateGroupGoal = async (goalId: string, goal: FormData) => {
+  try {
+    const res = await api.put(`${API_URL}/goals/group/${goalId}`, goal);
+
+    nProgress.start();
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
 export const updateGoal = async (id: string, goal: FormData) => {
   try {
     const res = await api.put(`${API_URL}/goals/${id}`, goal);

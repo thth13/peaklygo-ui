@@ -177,6 +177,7 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
           statusLabel={labels.status}
           privacyLabel={labels.privacy}
           createdLabel={labels.created}
+          goalId={id}
         />
 
         <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">

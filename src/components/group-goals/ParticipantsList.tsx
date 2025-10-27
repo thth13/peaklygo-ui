@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'next-intl';
 import type { CheckInStatus } from '@/types';
+import { IMAGE_URL } from '@/constants';
 
 interface ParticipantView {
   id: string;
@@ -65,7 +66,7 @@ export function ParticipantsList({ participantViews, totalParticipants, accepted
                   <div className="h-12 w-12 overflow-hidden rounded-xl bg-gray-200">
                     {participant.avatarUrl ? (
                       <Image
-                        src={participant.avatarUrl}
+                        src={`${IMAGE_URL}/${participant.avatarUrl}`}
                         alt={participant.name}
                         width={48}
                         height={48}

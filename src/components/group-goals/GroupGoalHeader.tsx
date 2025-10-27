@@ -8,6 +8,7 @@ interface GroupGoalHeaderProps {
   privacyLabel: string;
   createdLabel: string;
   backHref?: string;
+  goalId: string;
 }
 
 export function GroupGoalHeader({
@@ -16,6 +17,7 @@ export function GroupGoalHeader({
   privacyLabel,
   createdLabel,
   backHref = '/group-goals',
+  goalId,
 }: GroupGoalHeaderProps) {
   return (
     <header className="rounded-2xl bg-white px-4 py-5 shadow-sm transition-colors dark:bg-gray-900 md:px-6">
@@ -51,13 +53,13 @@ export function GroupGoalHeader({
             <FontAwesomeIcon icon={faUserPlus} className="mr-2 text-xs" />
             Пригласить
           </button>
-          <button
-            type="button"
+          <Link
+            href={`/group-goals/${goalId}/edit`}
             className="inline-flex items-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-800 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
           >
             <FontAwesomeIcon icon={faGear} className="mr-2 text-xs" />
             Настройки
-          </button>
+          </Link>
         </div>
       </div>
     </header>
