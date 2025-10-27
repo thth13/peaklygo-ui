@@ -16,9 +16,9 @@ import { TopContributors } from '@/components/group-goals/TopContributors';
 import { MotivationSection } from '@/components/group-goals/MotivationSection';
 import { GroupSettings } from '@/components/group-goals/GroupSettings';
 import { GroupActions } from '@/components/group-goals/GroupActions';
-import { getGoal, getGroupGoalStats } from '@/lib/api/goal';
+import { getGroupGoal, getGroupGoalStats } from '@/lib/api/goal';
 import { formatDate } from '@/lib/utils';
-import type { CheckIn, Goal } from '@/types';
+import type { CheckIn, GroupGoal } from '@/types';
 import { IMAGE_URL } from '@/constants';
 import {
   buildCheckInMap,
@@ -43,9 +43,9 @@ interface GroupGoalPageProps {
   params: Promise<{ id: string }>;
 }
 
-const fetchGoal = async (goalId: string): Promise<Goal | null> => {
+const fetchGoal = async (goalId: string): Promise<GroupGoal | null> => {
   try {
-    const goal = await getGoal(goalId);
+    const goal = await getGroupGoal(goalId);
     return goal;
   } catch (error) {
     console.error('[GroupGoal] Failed to fetch goal', error);
@@ -68,7 +68,7 @@ export async function generateMetadata({ params }: GroupGoalPageProps): Promise<
   const t = await getTranslations('groupGoal');
 
   try {
-    const goal = await getGoal(id);
+    const goal = await getGroupGoal(id);
     const title = t('meta.title', { name: goal.goalName });
     const description = goal.description?.trim()?.slice(0, 200) || t('meta.defaultDescription');
 
@@ -210,7 +210,7 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
               acceptedCount={acceptedCount}
             />
 
-            <GroupChat participantViews={participantViews} />
+            <GroupChat participantViews={participantViews} goalId={id} />
           </div>
 
           <div className="space-y-6">

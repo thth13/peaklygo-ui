@@ -150,12 +150,11 @@ export interface Participant {
 }
 
 export interface Goal extends Document {
-  _id: string;
   goalName: string;
-  category?: string;
+  category: string;
   description?: string;
-  goalType?: GoalType;
-  startDate?: Date;
+  goalType: GoalType;
+  startDate: Date;
   endDate?: Date;
   completedDate?: Date;
   noDeadline?: boolean;
@@ -163,26 +162,46 @@ export interface Goal extends Document {
   habitDaysOfWeek?: DayOfWeek[];
   habitCompletedDays?: HabitDay[];
   image?: string;
-  steps?: Step[];
-  activity?: Activity[];
-  isGroup?: boolean;
-  participantIds?: string[];
-  participants?: GoalParticipant[];
-  groupSettings?: GroupSettings;
-  checkIns?: CheckIn[];
+  steps: Step[];
+  activity: Activity[];
   reward?: string;
   consequence?: string;
-  privacy?: PrivacyStatus;
-  isCompleted?: boolean;
-  isArchived?: boolean;
-  value?: number;
-  userId?: string;
-  progress?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  privacy: PrivacyStatus;
+  isCompleted: boolean;
+  isArchived: boolean;
+  value: number;
+  userId: string;
+  progress: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type GoalParticipant = Participant;
+
+export interface GroupGoal {
+  _id: string;
+  goalName: string;
+  category: string;
+  description?: string;
+  startDate: Date;
+  endDate?: Date;
+  habitDuration?: number;
+  habitDaysOfWeek?: DayOfWeek[];
+  image?: string;
+  isCompleted: boolean;
+  isArchived: boolean;
+  userId: string;
+  participants: Participant[];
+  checkIns: CheckIn[];
+  groupSettings: GroupSettings;
+  reward?: string;
+  consequence?: string;
+  value?: number;
+  progress?: number;
+  privacy?: PrivacyStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export enum ReadCategory {
   READING = 'reading',
@@ -203,6 +222,12 @@ export interface ProgressEntry {
   createdAt: Date;
   updatedAt: Date;
   commentCount: number;
+  profile?: {
+    _id: string;
+    name: string;
+    avatar?: string;
+    user: string;
+  };
 }
 
 export interface CreateProgressEntryDto {

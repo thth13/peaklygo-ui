@@ -1,4 +1,4 @@
-import type { Goal } from '@/types';
+import type { GroupGoal } from '@/types';
 
 type TranslationFn = (key: string, params?: Record<string, unknown>) => string;
 
@@ -11,7 +11,7 @@ interface GoalLabels {
 }
 
 export const getGoalLabels = (
-  goal: Goal,
+  goal: GroupGoal,
   t: TranslationFn,
   formatDate: (date: Date | string, locale: string) => string,
   locale: string,
@@ -22,7 +22,7 @@ export const getGoalLabels = (
 
   const startDate = goal.startDate ? formatDate(goal.startDate, locale) : '—';
 
-  const endDate = goal.noDeadline ? t('details.noDeadline') : goal.endDate ? formatDate(goal.endDate, locale) : '—';
+  const endDate = goal.endDate ? formatDate(goal.endDate, locale) : '—';
 
   const created = goal.createdAt
     ? t('details.createdAt', { date: formatDate(goal.createdAt, locale) })

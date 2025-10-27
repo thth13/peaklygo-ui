@@ -20,15 +20,7 @@ export const buildCheckInMap = (checkIns: CheckIn[]) => {
 };
 
 export const getDisplayDates = (checkIns: CheckIn[], today: Date, count = 7): string[] => {
-  const uniqueDateKeys = Array.from(new Set(checkIns.map((entry) => formatDateKey(entry.date)))).sort();
-  const lastDates = uniqueDateKeys.slice(-count);
-
-  if (lastDates.length > 0) {
-    return lastDates.sort();
-  }
-
-  // Fallback: последние N дней
-  return Array.from({ length: 5 }, (_, index) => formatDateKey(subDays(today, 4 - index))).sort();
+  return Array.from({ length: count }, (_, index) => formatDateKey(subDays(today, count - 1 - index)));
 };
 
 export const getTodayCheckIns = (checkIns: CheckIn[], today: Date) => {
@@ -37,7 +29,8 @@ export const getTodayCheckIns = (checkIns: CheckIn[], today: Date) => {
 
 export const calculateTodayCompletion = (todayCheckIns: CheckIn[], totalParticipants: number) => {
   const completed = todayCheckIns.filter((checkIn) => checkIn.status === 'completed').length;
-  const total = todayCheckIns.length || totalParticipants || 1;
+  // Используем общее количество участников, а не количество чекинов
+  const total = totalParticipants || 1;
 
   return {
     completed,
@@ -48,5 +41,6 @@ export const calculateTodayCompletion = (todayCheckIns: CheckIn[], totalParticip
 
 export const getUserTodayStatus = (todayCheckIns: CheckIn[], userId: string | undefined): CheckInStatus | null => {
   if (!userId) return null;
+
   return todayCheckIns.find((checkIn) => checkIn.userId === userId)?.status ?? null;
 };

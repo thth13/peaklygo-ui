@@ -3,6 +3,7 @@ import api from '../clientAxios';
 import nProgress from 'nprogress';
 import {
   Goal,
+  GroupGoal,
   GetGoalsPaginationDto,
   PaginatedGoalsResponse,
   LandingGoal,
@@ -65,6 +66,17 @@ export const getLandingGoals = async (apiInstance?: AxiosInstance): Promise<Land
 };
 
 export const getGoal = async (id: string, apiInstance?: AxiosInstance): Promise<Goal> => {
+  try {
+    const client = apiInstance ?? api;
+    const res = await client.get(`${API_URL}/goals/${id}`);
+
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const getGroupGoal = async (id: string, apiInstance?: AxiosInstance): Promise<GroupGoal> => {
   try {
     const client = apiInstance ?? api;
     const res = await client.get(`${API_URL}/goals/group/${id}`);
