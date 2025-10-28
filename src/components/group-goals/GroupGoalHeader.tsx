@@ -1,6 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import { faArrowLeft, faGear, faLayerGroup, faUsers, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import dynamic from 'next/dynamic';
+
+const InviteParticipantsButton = dynamic(() =>
+  import('./InviteParticipantsButton').then((mod) => mod.InviteParticipantsButton),
+);
 
 interface GroupGoalHeaderProps {
   goalName: string;
@@ -46,13 +51,10 @@ export function GroupGoalHeader({
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            className="inline-flex items-center rounded-lg bg-green-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-green-600"
-          >
+          <InviteParticipantsButton goalId={goalId}>
             <FontAwesomeIcon icon={faUserPlus} className="mr-2 text-xs" />
             Пригласить
-          </button>
+          </InviteParticipantsButton>
           <Link
             href={`/group-goals/${goalId}/edit`}
             className="inline-flex items-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-800 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"

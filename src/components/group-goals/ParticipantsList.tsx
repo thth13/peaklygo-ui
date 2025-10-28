@@ -2,8 +2,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'next-intl';
+import dynamic from 'next/dynamic';
 import type { CheckInStatus } from '@/types';
 import { IMAGE_URL } from '@/constants';
+
+const InviteParticipantsButton = dynamic(() =>
+  import('./InviteParticipantsButton').then((mod) => mod.InviteParticipantsButton),
+);
 
 interface ParticipantView {
   id: string;
@@ -19,14 +24,20 @@ interface ParticipantsListProps {
   participantViews: ParticipantView[];
   totalParticipants: number;
   acceptedCount: number;
+  goalId: string;
 }
 
-export function ParticipantsList({ participantViews, totalParticipants, acceptedCount }: ParticipantsListProps) {
+export function ParticipantsList({
+  participantViews,
+  totalParticipants,
+  acceptedCount,
+  goalId,
+}: ParticipantsListProps) {
   const t = useTranslations('groupGoal.participants');
   const subtitle = t('count', { accepted: acceptedCount, total: totalParticipants });
   const emptyText = t('empty');
   const title = `${t('title')} (${totalParticipants})`;
-  const inviteText = 'Пригласить еще';
+  const inviteText = t('inviteMore');
   const showAllText = 'Показать всех участников';
   return (
     <article className="rounded-2xl bg-white p-6 shadow-sm transition-colors dark:bg-gray-900">
@@ -35,10 +46,10 @@ export function ParticipantsList({ participantViews, totalParticipants, accepted
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h2>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{subtitle}</p>
         </div>
-        <button type="button" className="text-sm font-medium text-primary-600 transition-colors hover:text-primary-700">
+        <InviteParticipantsButton goalId={goalId} variant="text" ariaLabel={inviteText}>
           <FontAwesomeIcon icon={faUserPlus} className="mr-2 text-xs" />
           {inviteText}
-        </button>
+        </InviteParticipantsButton>
       </div>
 
       <div className="space-y-4">

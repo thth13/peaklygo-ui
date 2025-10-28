@@ -13,3 +13,4 @@ export { GroupSettings } from './GroupSettings';
 export { GroupActions } from './GroupActions';
 export { GroupGoalUpdateForm } from './GroupGoalUpdateForm';
 export type { GroupGoalUpdateFormValues } from './GroupGoalUpdateForm';
+export { InviteParticipantsButton } from './InviteParticipantsButton';

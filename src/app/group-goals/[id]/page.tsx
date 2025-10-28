@@ -209,6 +209,7 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
               participantViews={participantViews}
               totalParticipants={totalParticipants}
               acceptedCount={acceptedCount}
+              goalId={id}
             />
 
             <GroupChat participantViews={participantViews} goalId={id} />

@@ -1125,6 +1125,7 @@
       "title": "Участники",
       "count": "{accepted} / {total} в команде",
       "empty": "Пока нет участников. Пригласите друзей, чтобы начать совместный прогресс.",
+      "inviteMore": "Пригласить ещё",
       "roles": {
         "owner": "Владелец",
         "admin": "Администратор",
@@ -1138,6 +1139,33 @@
       },
       "joinedAt": "С {date}",
       "noDate": "Дата не указана"
+    },
+    "invite": {
+      "title": "Пригласить участников",
+      "subtitle": "Найдите людей по имени, нику или email. Уже добавленные пользователи скрыты автоматически.",
+      "inputLabel": "Найти участников",
+      "searchPlaceholder": "Введите имя, ник или email",
+      "searchHint": "Лайфхак: выберите всех нужных и отправьте приглашения одним кликом.",
+      "searchError": "Не удалось загрузить подсказки. Попробуйте ещё раз.",
+      "searchEmpty": "Совпадений пока нет",
+      "searchPlaceholderHint": "Начните вводить, чтобы увидеть подсказки",
+      "resultsTitle": "Подсказки",
+      "resultsCount": "{count} вариант{count, plural, one {} few {а} many {ов} other {ов}}",
+      "resultsIdle": "Ждём ввода",
+      "addAction": "Добавить",
+      "removeAction": "Убрать",
+      "roleLabel": "Роль",
+      "roleMember": "Участник",
+      "roleAdmin": "Админ",
+      "selectedTitle": "Выбрано",
+      "selectionCount": "{count} выбрано",
+      "emptySelected": "Ещё никто не выбран",
+      "selectionEmpty": "Выберите хотя бы одного человека",
+      "submit": "Отправить приглашения",
+      "submitting": "Отправляем...",
+      "success": "{count, plural, one {Отправили {count} приглашение} few {Отправили {count} приглашения} many {Отправили {count} приглашений} other {Отправили {count} приглашения}}",
+      "error": "Не удалось отправить приглашения",
+      "alreadyAdded": "Уже добавлен"
     },
     "contributors": {
       "title": "Лидеры вклада"

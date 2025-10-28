@@ -1072,6 +1072,7 @@
       "title": "Participants",
       "count": "{accepted} / {total} in the team",
       "empty": "No participants yet. Invite teammates to start collaborating.",
+      "inviteMore": "Invite more teammates",
       "roles": {
         "owner": "Owner",
         "admin": "Administrator",
@@ -1085,6 +1086,33 @@
       },
       "joinedAt": "Since {date}",
       "noDate": "Date not provided"
+    },
+    "invite": {
+      "title": "Invite teammates",
+      "subtitle": "Search by name, username, or email. People already in the goal are hidden automatically.",
+      "inputLabel": "Find participants",
+      "searchPlaceholder": "Type a name, username, or email",
+      "searchHint": "Tip: select everyone you need and send invites in one go.",
+      "searchError": "We could not load suggestions. Try again.",
+      "searchEmpty": "No matching people yet",
+      "searchPlaceholderHint": "Start typing to see suggestions",
+      "resultsTitle": "Suggestions",
+      "resultsCount": "{count} results",
+      "resultsIdle": "Waiting for input",
+      "addAction": "Add",
+      "removeAction": "Remove",
+      "roleLabel": "Role",
+      "roleMember": "Member",
+      "roleAdmin": "Admin",
+      "selectedTitle": "Selected",
+      "selectionCount": "{count} selected",
+      "emptySelected": "Nobody selected yet",
+      "selectionEmpty": "Pick at least one person",
+      "submit": "Send invites",
+      "submitting": "Sending...",
+      "success": "Sent {count} invite{count, plural, one {} other {s}}",
+      "error": "Could not send invitations",
+      "alreadyAdded": "Already selected"
     },
     "contributors": {
       "title": "Top contributors"

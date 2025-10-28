@@ -46,6 +46,8 @@ const dayOrder: DayOfWeek[] = [
 
 export const GroupGoalUpdateForm = ({ goalId, initialValues }: GroupGoalUpdateFormProps) => {
   const t = useTranslations('groupGoalEdit.form');
+  const tNotifications = useTranslations('groupGoalEdit.notifications');
+  const tErrors = useTranslations('groupGoalEdit.errors');
   const tCommon = useTranslations('common');
   const tCategories = useTranslations('goals.categories');
   const tWeekDays = useTranslations('goals.habitSettings.weekDayLabels');
@@ -132,17 +134,17 @@ export const GroupGoalUpdateForm = ({ goalId, initialValues }: GroupGoalUpdateFo
 
     const trimmedName = formState.goalName.trim();
     if (!trimmedName) {
-      toast.error(t('errors.goalNameRequired'));
+      toast.error(tErrors('goalNameRequired'));
       return;
     }
 
     if (formState.habitDuration < 1) {
-      toast.error(t('errors.habitDurationInvalid'));
+      toast.error(tErrors('habitDurationInvalid'));
       return;
     }
 
     if (formState.habitDaysOfWeek.length === 0) {
-      toast.error(t('errors.habitDaysRequired'));
+      toast.error(tErrors('habitDaysRequired'));
       return;
     }
 
@@ -202,19 +204,19 @@ export const GroupGoalUpdateForm = ({ goalId, initialValues }: GroupGoalUpdateFo
     }
 
     if (Array.from(formData.keys()).length === 0) {
-      toast(t('notifications.noChanges'));
+      toast(tNotifications('noChanges'));
       return;
     }
 
     try {
       setIsSubmitting(true);
       await updateGroupGoal(goalId, formData);
-      toast.success(t('notifications.updated'));
+      toast.success(tNotifications('updated'));
       router.replace(`/group-goals/${goalId}`);
       router.refresh();
     } catch (error) {
       console.error('[GroupGoalUpdateForm] failed to update goal', error);
-      toast.error(t('notifications.failed'));
+      toast.error(tNotifications('failed'));
     } finally {
       setIsSubmitting(false);
     }

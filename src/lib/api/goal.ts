@@ -10,6 +10,7 @@ import {
   GoalFilterType,
   MarkHabitDayDto,
   GroupGoalStats,
+  ParticipantRole,
 } from '@/types';
 import { AxiosInstance } from 'axios';
 
@@ -308,6 +309,20 @@ export const getGroupGoalStats = async (goalId: string, apiInstance?: AxiosInsta
     const res = await client.get(`${API_URL}/goals/${goalId}/group/stats`);
 
     return res.data as GroupGoalStats;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export interface AddGroupParticipantsPayload {
+  userIds: string[];
+  role?: ParticipantRole | 'owner' | 'admin' | 'member';
+}
+
+export const addGroupParticipants = async (goalId: string, payload: AddGroupParticipantsPayload): Promise<any> => {
+  try {
+    const res = await api.post(`${API_URL}/goals/${goalId}/participants`, payload);
+    return res.data;
   } catch (err: any) {
     throw err;
   }
