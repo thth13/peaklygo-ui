@@ -152,7 +152,7 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
     t: t as unknown as (key: string, params?: Record<string, unknown>) => string,
   });
   const activityFeed = transformActivityFeed({
-    todayCheckIns: todaysCheckIns,
+    allCheckIns: allCheckIns,
     participantViews,
     t: t as unknown as (key: string, params?: Record<string, unknown>) => string,
     locale,
@@ -203,14 +203,19 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
               currentUserStatus={currentUserTodayStatus}
             />
 
-            <ProgressTable displayedDates={displayedDates} todayKey={todayKey} participantViews={participantViews} />
+            <ProgressTable
+              displayedDates={displayedDates}
+              todayKey={todayKey}
+              participantViews={participantViews}
+              challengeStartDate={goal.startDate}
+            />
 
-            <ParticipantsList
+            {/* <ParticipantsList
               participantViews={participantViews}
               totalParticipants={totalParticipants}
               acceptedCount={acceptedCount}
               goalId={id}
-            />
+            /> */}
 
             <GroupChat participantViews={participantViews} goalId={id} />
           </div>
@@ -225,9 +230,9 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
 
             <ActivityFeed activityItems={activityFeed} />
 
-            <TopContributors contributors={topContributors} locale={locale} />
+            {/* <TopContributors contributors={topContributors} locale={locale} /> */}
 
-            <MotivationSection reward={goal.reward} consequence={goal.consequence} />
+            {/* <MotivationSection reward={goal.reward} consequence={goal.consequence} /> */}
 
             <GroupSettings
               ownerName={ownerName}

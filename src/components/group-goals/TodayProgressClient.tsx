@@ -100,20 +100,22 @@ export function TodayProgressClient({
         </button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-xl bg-green-50 p-4 dark:bg-emerald-900/20">
-          <div className="text-sm text-gray-500 dark:text-gray-300">Групповая награда</div>
-          <div className="mt-2 font-medium text-green-700 dark:text-green-300">
-            {reward?.trim() || 'Добавьте награду, чтобы мотивировать команду'}
-          </div>
+      {(reward?.trim() || consequence?.trim()) && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {reward?.trim() && (
+            <div className="rounded-xl bg-green-50 p-4 dark:bg-emerald-900/20">
+              <div className="text-sm text-gray-500 dark:text-gray-300">Групповая награда</div>
+              <div className="mt-2 font-medium text-green-700 dark:text-green-300">{reward}</div>
+            </div>
+          )}
+          {consequence?.trim() && (
+            <div className="rounded-xl bg-red-50 p-4 dark:bg-red-900/20">
+              <div className="text-sm text-gray-500 dark:text-gray-300">Штраф за пропуск</div>
+              <div className="mt-2 font-medium text-red-600 dark:text-red-300">{consequence}</div>
+            </div>
+          )}
         </div>
-        <div className="rounded-xl bg-red-50 p-4 dark:bg-red-900/20">
-          <div className="text-sm text-gray-500 dark:text-gray-300">Штраф за пропуск</div>
-          <div className="mt-2 font-medium text-red-600 dark:text-red-300">
-            {consequence?.trim() || 'Опишите, что происходит при пропуске'}
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

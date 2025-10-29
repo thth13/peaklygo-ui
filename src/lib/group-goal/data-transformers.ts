@@ -76,13 +76,20 @@ export const transformTopContributors = ({ stats, participantViews, t }: Transfo
 };
 
 interface TransformActivityFeedParams {
-  todayCheckIns: CheckIn[];
+  allCheckIns: CheckIn[];
   participantViews: ParticipantView[];
   t: (key: string, params?: Record<string, unknown>) => string;
   locale: string;
+  limit?: number;
 }
 
-export const transformActivityFeed = ({ todayCheckIns, participantViews, t, locale }: TransformActivityFeedParams) => {
+export const transformActivityFeed = ({
+  allCheckIns,
+  participantViews,
+  t,
+  locale,
+  limit = 5,
+}: TransformActivityFeedParams) => {
   const getStatusText = (status: CheckInStatus): string => {
     const statusMap: Record<CheckInStatus, string> = {
       completed: 'отметился',
@@ -92,9 +99,10 @@ export const transformActivityFeed = ({ todayCheckIns, participantViews, t, loca
     return statusMap[status] ?? 'отметился';
   };
 
-  return todayCheckIns
+  return allCheckIns
     .slice()
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, limit)
     .map((checkIn) => {
       const participantView = participantViews.find((view) => view.id === checkIn.userId);
       const name = participantView?.name ?? t('participants.anonymous');

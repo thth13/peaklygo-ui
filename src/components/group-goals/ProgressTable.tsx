@@ -16,9 +16,10 @@ interface ProgressTableProps {
   displayedDates: string[];
   todayKey: string;
   participantViews: ParticipantView[];
+  challengeStartDate: Date;
 }
 
-export function ProgressTable({ displayedDates, todayKey, participantViews }: ProgressTableProps) {
+export function ProgressTable({ displayedDates, todayKey, participantViews, challengeStartDate }: ProgressTableProps) {
   const t = useTranslations('groupGoal.participants');
   const emptyText = t('empty');
   const title = 'Таблица прогресса участников';
@@ -74,9 +75,22 @@ export function ProgressTable({ displayedDates, todayKey, participantViews }: Pr
                 let totalMissed = 0;
                 let totalPending = 0;
 
+                // Вычисляем количество дней с момента старта челленджа до сегодня
+                const challengeStart = new Date(challengeStartDate);
+                const today = new Date(todayKey);
+                const totalTracked = Math.max(
+                  0,
+                  Math.floor((today.getTime() - challengeStart.getTime()) / (1000 * 60 * 60 * 24)) + 1,
+                );
+
                 participant.statusesByDate.forEach((status, index) => {
                   const dateKey = displayedDates[index];
                   const isPastDay = new Date(dateKey) < new Date(todayKey);
+                  const isBeforeChallenge = new Date(dateKey) < new Date(challengeStartDate);
+
+                  // Не учитываем дни до начала челленджа
+                  if (isBeforeChallenge) return;
+
                   const displayStatus = isPastDay && !status ? 'missed' : status;
 
                   if (displayStatus === 'completed') totalCompleted++;
@@ -84,7 +98,6 @@ export function ProgressTable({ displayedDates, todayKey, participantViews }: Pr
                   else if (displayStatus === 'pending') totalPending++;
                 });
 
-                const totalTracked = totalCompleted + totalMissed + totalPending;
                 const successRate = totalTracked > 0 ? Math.round((totalCompleted / totalTracked) * 100) : 0;
 
                 return (
@@ -119,6 +132,21 @@ export function ProgressTable({ displayedDates, todayKey, participantViews }: Pr
                       const dateKey = displayedDates[index];
                       const isToday = dateKey === todayKey;
                       const isPastDay = new Date(dateKey) < new Date(todayKey);
+                      const isBeforeChallenge = new Date(dateKey) < new Date(challengeStartDate);
+
+                      // Если день до начала челленджа, показываем точку
+                      if (isBeforeChallenge) {
+                        return (
+                          <td
+                            key={`${participant.id}-${dateKey}`}
+                            className={`px-2 py-3 text-center text-sm ${
+                              isToday ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                            }`}
+                          >
+                            <span className="inline-block h-1.5 w-1.5 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                          </td>
+                        );
+                      }
 
                       // Если день прошел и не выполнен, показываем как пропуск
                       const displayStatus = isPastDay && !status ? 'missed' : status;
