@@ -8,18 +8,14 @@ import { GroupGoalHeader } from '@/components/group-goals/GroupGoalHeader';
 import { GroupGoalHero } from '@/components/group-goals/GroupGoalHero';
 import { TodayProgressClient } from '@/components/group-goals/TodayProgressClient';
 import { ProgressTable } from '@/components/group-goals/ProgressTable';
-import { ParticipantsList } from '@/components/group-goals/ParticipantsList';
 import { GroupChat } from '@/components/group-goals/GroupChat';
 import { GroupGoalStats as GroupGoalStatsComponent } from '@/components/group-goals/GroupGoalStats';
 import { ActivityFeed } from '@/components/group-goals/ActivityFeed';
-import { TopContributors } from '@/components/group-goals/TopContributors';
-import { MotivationSection } from '@/components/group-goals/MotivationSection';
 import { GroupSettings } from '@/components/group-goals/GroupSettings';
 import { GroupActions } from '@/components/group-goals/GroupActions';
 import { getGroupGoal, getGroupGoalStats } from '@/lib/api/goal';
 import { formatDate } from '@/lib/utils';
 import type { CheckIn, GroupGoal } from '@/types';
-import { IMAGE_URL } from '@/constants';
 import {
   buildCheckInMap,
   getDisplayDates,
@@ -29,13 +25,10 @@ import {
   formatDateKey,
   countParticipantsByStatus,
   transformParticipantsToViews,
-  transformTopContributors,
   transformActivityFeed,
-  resolveImageUrl,
   clampProgress,
   getGoalLabels,
   findOwnerName,
-  HERO_FALLBACK_IMAGE,
   type EnhancedParticipant,
 } from '@/lib/group-goal';
 
@@ -138,7 +131,6 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
   const pendingInvitations = stats?.pendingInvitations ?? pendingCount;
 
   // Прогресс и визуальные данные
-  const heroImage = resolveImageUrl(goal.image, IMAGE_URL) ?? HERO_FALLBACK_IMAGE;
   const progressValue = clampProgress(goal.progress);
 
   // Прогресс за сегодня
@@ -146,11 +138,6 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
   const currentUserTodayStatus = getUserTodayStatus(todaysCheckIns, currentUserId);
 
   // Трансформация данных для компонентов
-  const topContributors = transformTopContributors({
-    stats,
-    participantViews,
-    t: t as unknown as (key: string, params?: Record<string, unknown>) => string,
-  });
   const activityFeed = transformActivityFeed({
     allCheckIns: allCheckIns,
     participantViews,
@@ -183,7 +170,7 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
         <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
           <div className="space-y-6 xl:col-span-2">
             <GroupGoalHero
-              heroImage={heroImage}
+              goalImage={goal.image}
               goalName={goal.goalName}
               totalParticipants={totalParticipants}
               progressValue={progressValue}
@@ -242,7 +229,7 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
               goalValue={goal.value ?? '—'}
             />
 
-            <GroupActions />
+            {/* <GroupActions /> */}
           </div>
         </section>
       </div>

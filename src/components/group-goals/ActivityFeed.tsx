@@ -33,12 +33,12 @@ export function ActivityFeed({ activityItems }: ActivityFeedProps) {
           ))
         )}
       </div>
-      <button
+      {/* <button
         type="button"
         className="mt-4 w-full rounded-xl border border-transparent py-2 text-sm font-medium text-primary-600 transition-colors hover:border-primary-200 hover:bg-primary-50"
       >
         {showAllText}
-      </button>
+      </button> */}
     </section>
   );
 }

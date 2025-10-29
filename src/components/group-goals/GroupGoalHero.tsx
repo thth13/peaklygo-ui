@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { IMAGE_URL } from '@/constants';
 
 interface GroupGoalHeroProps {
-  heroImage: string;
+  goalImage?: string;
   goalName: string;
   totalParticipants: number;
   progressValue: number;
@@ -13,7 +14,7 @@ interface GroupGoalHeroProps {
 }
 
 export function GroupGoalHero({
-  heroImage,
+  goalImage,
   goalName,
   totalParticipants,
   progressValue,
@@ -31,27 +32,29 @@ export function GroupGoalHero({
   const privacyTitle = t('privacy');
   return (
     <article className="overflow-hidden rounded-2xl bg-white shadow-sm transition-colors dark:bg-gray-900">
-      <div className="relative h-64">
-        <Image
-          src={heroImage}
-          alt={goalName}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 66vw, 720px"
-          priority
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        <div className="absolute bottom-4 left-4 text-white">
-          <div className="mb-1 text-2xl font-bold">
-            {totalParticipants > 0
-              ? `${totalParticipants} участник${totalParticipants === 1 ? '' : totalParticipants < 5 ? 'а' : 'ов'}`
-              : 'Без участников'}
-          </div>
-          <div className="text-sm opacity-90">
-            {progressText}: {progressValue}%
+      {goalImage && (
+        <div className="relative h-64">
+          <Image
+            src={`${IMAGE_URL}/${goalImage}`}
+            alt={goalName}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 66vw, 720px"
+            priority
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+          <div className="absolute bottom-4 left-4 text-white">
+            <div className="mb-1 text-2xl font-bold">
+              {totalParticipants > 0
+                ? `${totalParticipants} участник${totalParticipants === 1 ? '' : totalParticipants < 5 ? 'а' : 'ов'}`
+                : 'Без участников'}
+            </div>
+            <div className="text-sm opacity-90">
+              {progressText}: {progressValue}%
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <div className="space-y-6 p-6">
         <div>
