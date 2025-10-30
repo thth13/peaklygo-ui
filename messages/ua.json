@@ -813,7 +813,14 @@
     "logout": "Вийти",
     "howItWorks": "Як це працює?",
     "community": "Спільнота",
-    "login": "Увійти"
+    "login": "Увійти",
+    "notifications": {
+      "title": "Сповіщення",
+      "ariaLabel": "Відкрити панель сповіщень",
+      "iconAlt": "Сповіщення",
+      "accept": "Прийняти",
+      "decline": "Відхилити"
+    }
   },
   "rating": {
     "title": "Рейтинг",
@@ -1174,9 +1181,12 @@
         "active": "Активна"
       },
       "progress": "Прогрес",
-      "participants": "учасника",
+      "participants": "{count} учасник",
+      "participantsPlural": "{count} учасника",
+      "participantsManyPlural": "{count} учасників",
       "viewGoal": "Перейти →"
-    }
+    },
+    "inviteMore": "Запросити ще"
   },
   "groupGoalEdit": {
     "meta": {

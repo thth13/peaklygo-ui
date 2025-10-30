@@ -2,9 +2,11 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+import { useLocale, useTranslations } from 'next-intl';
+import { format } from 'date-fns';
+import { GOALS_PER_PAGE, IMAGE_URL } from '@/constants';
 import { getMyGroupGoals } from '@/lib/api/goal';
-import { GOALS_PER_PAGE } from '@/constants';
 import type { GroupGoal, PaginatedGroupGoalsResponse } from '@/types';
 
 interface PaginationState {
@@ -19,8 +21,89 @@ const isPaginatedGoalsResponse = (
   return data && typeof data === 'object' && 'goals' in data;
 };
 
+const FALLBACK_GRADIENTS = [
+  'from-rose-500 via-orange-400 to-amber-300',
+  'from-sky-500 via-cyan-400 to-teal-300',
+  'from-fuchsia-500 via-violet-400 to-purple-300',
+  'from-emerald-500 via-green-400 to-lime-300',
+  'from-indigo-500 via-blue-400 to-sky-300',
+  'from-amber-500 via-yellow-400 to-lime-200',
+  'from-pink-500 via-rose-400 to-orange-300',
+  'from-slate-600 via-indigo-500 to-slate-400',
+  'from-cyan-500 via-teal-400 to-blue-300',
+  'from-stone-500 via-stone-400 to-stone-300',
+];
+
+const getFallbackGradient = (goal: GroupGoal, fallbackIndex: number): string => {
+  const seedParts: string[] = [];
+
+  if (goal._id) {
+    seedParts.push(goal._id);
+  }
+  if (goal.goalName) {
+    seedParts.push(goal.goalName);
+  }
+  if (goal.category) {
+    seedParts.push(goal.category);
+  }
+  if (goal.createdAt) {
+    seedParts.push(new Date(goal.createdAt).toISOString());
+  }
+
+  if (!seedParts.length) {
+    return FALLBACK_GRADIENTS[fallbackIndex % FALLBACK_GRADIENTS.length];
+  }
+
+  const seed = seedParts.join('|');
+  let hash = 0;
+  for (let i = 0; i < seed.length; i += 1) {
+    hash = (hash * 31 + seed.charCodeAt(i)) | 0;
+  }
+
+  const gradientIndex = Math.abs(hash + fallbackIndex * 7) % FALLBACK_GRADIENTS.length;
+  return FALLBACK_GRADIENTS[gradientIndex];
+};
+
+const clampProgress = (value?: number): number => {
+  return Math.max(0, Math.min(100, Math.round(value ?? 0)));
+};
+
+const tryFormatDate = (value?: Date | string): string | null => {
+  if (!value) {
+    return null;
+  }
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+  return format(date, 'dd MMM yyyy');
+};
+
+const formatParticipantsLabel = (count: number, locale?: string): string => {
+  if (locale?.startsWith('ru') || locale?.startsWith('ua')) {
+    const mod10 = count % 10;
+    const mod100 = count % 100;
+    if (mod100 < 11 || mod100 > 14) {
+      if (mod10 === 1) {
+        return `${count} участник`;
+      }
+      if (mod10 >= 2 && mod10 <= 4) {
+        return `${count} участника`;
+      }
+    }
+    return `${count} участников`;
+  }
+
+  if (locale?.startsWith('hi')) {
+    return `${count} प्रतिभागी`;
+  }
+
+  return `${count} ${count === 1 ? 'participant' : 'participants'}`;
+};
+
 export const GroupGoalsList: React.FC = () => {
   const t = useTranslations('groupGoal.list');
+  const locale = useLocale();
   const [goals, setGoals] = useState<GroupGoal[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -112,37 +195,32 @@ export const GroupGoalsList: React.FC = () => {
   };
 
   const renderGoalStatus = (goal: GroupGoal) => {
+    const baseClasses =
+      'inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm';
+
     if (goal.isCompleted) {
-      return (
-        <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700 dark:bg-green-900 dark:text-green-300">
-          {t('status.completed')}
-        </span>
-      );
+      return <span className={`${baseClasses} bg-emerald-500/90`}>{t('status.completed')}</span>;
     }
+
     if (goal.isArchived) {
-      return (
-        <span className="rounded-full bg-gray-200 px-3 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-          {t('status.archived')}
-        </span>
-      );
+      return <span className={`${baseClasses} bg-gray-500/80`}>{t('status.archived')}</span>;
     }
-    return (
-      <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-        {t('status.active')}
-      </span>
-    );
+
+    return <span className={`${baseClasses} bg-primary-500/90`}>{t('status.active')}</span>;
   };
 
-  const renderGoalProgress = (goal: GroupGoal) => {
-    const progressValue = Math.max(0, Math.min(100, Math.round(goal.progress ?? 0)));
+  const renderGoalProgress = (progressValue: number) => {
     return (
-      <div className="mb-4">
-        <div className="mb-1 flex justify-between text-sm">
-          <span className="text-gray-600 dark:text-gray-400">{t('progress')}</span>
-          <span className="font-medium dark:text-gray-200">{progressValue}%</span>
+      <div>
+        <div className="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+          <span>{t('progress')}</span>
+          <span className="text-gray-900 dark:text-gray-100">{progressValue}%</span>
         </div>
-        <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700">
-          <div className="h-2 rounded-full bg-primary-500" style={{ width: `${progressValue}%` }}></div>
+        <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-primary-500 via-primary-400 to-primary-600 transition-all duration-500"
+            style={{ width: `${progressValue}%` }}
+          ></div>
         </div>
       </div>
     );
@@ -192,35 +270,95 @@ export const GroupGoalsList: React.FC = () => {
       )}
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {goals.map((goal) => (
-          <Link
-            key={goal._id}
-            href={`/group-goals/${goal._id}`}
-            className="block rounded-lg bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:bg-gray-800"
-          >
-            <div className="mb-4 flex items-start justify-between">
-              <div className="flex-1">
-                <h3 className="mb-2 text-xl font-bold text-gray-800 dark:text-white">{goal.goalName}</h3>
-                {goal.description && (
-                  <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">{goal.description}</p>
-                )}
-              </div>
-              <div>{renderGoalStatus(goal)}</div>
-            </div>
+        {goals.map((goal, index) => {
+          const participantsCount = goal.participants?.length ?? 1;
+          const participantsLabel = formatParticipantsLabel(participantsCount, locale);
+          const gradientClass = getFallbackGradient(goal, index);
+          const progressValue = clampProgress(goal.progress);
+          const startDateLabel = tryFormatDate(goal.startDate);
+          const endDateLabel = tryFormatDate(goal.endDate);
+          const timelineLabel = [startDateLabel, endDateLabel].filter(Boolean).join(' • ');
 
-            {renderGoalProgress(goal)}
+          return (
+            <Link key={goal._id} href={`/group-goals/${goal._id}`} className="group block h-full">
+              <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-gray-100 bg-white/80 shadow-md backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-primary-200 hover:shadow-xl dark:border-gray-800 dark:bg-gray-900/80">
+                <div className="relative aspect-[16/9] w-full overflow-hidden">
+                  {goal.image ? (
+                    <Image
+                      src={`${IMAGE_URL}/${goal.image}`}
+                      alt={goal.goalName}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 360px"
+                      className="object-cover transition duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div
+                      className={`flex h-full w-full items-center justify-center bg-gradient-to-br ${gradientClass} text-white`}
+                    >
+                      <i className="fa-solid fa-mountain-sun text-4xl opacity-70"></i>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent"></div>
+                  <div className="absolute top-3 left-3 flex flex-wrap items-center gap-2">
+                    {goal.category && (
+                      <span className="rounded-full bg-black/45 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
+                        {goal.category}
+                      </span>
+                    )}
+                    {renderGoalStatus(goal)}
+                  </div>
+                  <div className="absolute bottom-3 left-3 flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center gap-2 rounded-full bg-black/40 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                      <i className="fa-solid fa-users text-sm"></i>
+                      {participantsLabel}
+                    </span>
+                  </div>
+                </div>
 
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center text-gray-600 dark:text-gray-400">
-                <i className="fa-solid fa-users mr-2"></i>
-                <span>
-                  {goal.participants?.length ?? 1} {t('participants')}
-                </span>
-              </div>
-              <div className="text-primary-600 dark:text-primary-400">{t('viewGoal')}</div>
-            </div>
-          </Link>
-        ))}
+                <div className="flex flex-1 flex-col gap-5 p-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 transition-colors duration-200 group-hover:text-primary-600 dark:text-white">
+                      {goal.goalName}
+                    </h3>
+                    {goal.description && (
+                      <p
+                        className="mt-2 text-sm text-gray-600 dark:text-gray-300"
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {goal.description}
+                      </p>
+                    )}
+                  </div>
+
+                  {renderGoalProgress(progressValue)}
+
+                  <div className="mt-auto flex flex-wrap items-center justify-between gap-3 text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    {timelineLabel ? (
+                      <span className="flex items-center gap-2">
+                        <i className="fa-regular fa-calendar"></i>
+                        {timelineLabel}
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <i className="fa-solid fa-gauge-high"></i>
+                        {progressValue}% {t('progress')}
+                      </span>
+                    )}
+                    <span className="flex items-center gap-2 text-primary-600 transition-all duration-200 group-hover:gap-3 group-hover:text-primary-500 dark:text-primary-400">
+                      {t('viewGoal')}
+                      <i className="fa-solid fa-arrow-right"></i>
+                    </span>
+                  </div>
+                </div>
+              </article>
+            </Link>
+          );
+        })}
       </div>
 
       {pagination.hasNextPage && (

@@ -805,7 +805,14 @@
     "logout": "लॉग आउट",
     "howItWorks": "यह कैसे काम करता है",
     "community": "समुदाय",
-    "login": "लॉग इन"
+    "login": "लॉग इन",
+    "notifications": {
+      "title": "सूचनाएँ",
+      "ariaLabel": "सूचना पैनल खोलें",
+      "iconAlt": "सूचनाएँ",
+      "accept": "स्वीकार करें",
+      "decline": "अस्वीकार करें"
+    }
   },
   "rating": {
     "title": "रेटिंग",
@@ -1138,9 +1145,10 @@
         "active": "सक्रिय"
       },
       "progress": "प्रगति",
-      "participants": "प्रतिभागी",
+      "participants": "{count} प्रतिभागी",
       "viewGoal": "देखें →"
-    }
+    },
+    "inviteMore": "और टीममेट्स आमंत्रित करें"
   },
   "groupGoalEdit": {
     "meta": {

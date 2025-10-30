@@ -809,7 +809,14 @@
     "logout": "Выйти",
     "howItWorks": "Как это работает",
     "community": "Сообщество",
-    "login": "Войти"
+    "login": "Войти",
+    "notifications": {
+      "title": "Уведомления",
+      "ariaLabel": "Открыть панель уведомлений",
+      "iconAlt": "Уведомления",
+      "accept": "Принять",
+      "decline": "Отклонить"
+    }
   },
   "rating": {
     "title": "Рейтинг",
@@ -1244,9 +1251,12 @@
         "active": "Активна"
       },
       "progress": "Прогресс",
-      "participants": "участника",
+      "participants": "{count} участник",
+      "participantsPlural": "{count} участника",
+      "participantsManyPlural": "{count} участников",
       "viewGoal": "Перейти →"
-    }
+    },
+    "inviteMore": "Пригласить ещё"
   },
   "groupGoalEdit": {
     "meta": {

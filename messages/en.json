@@ -827,7 +827,14 @@
     "logout": "Logout",
     "howItWorks": "How it works",
     "community": "Community",
-    "login": "Login"
+    "login": "Login",
+    "notifications": {
+      "title": "Notifications",
+      "ariaLabel": "Toggle notifications panel",
+      "iconAlt": "Notifications",
+      "accept": "Accept",
+      "decline": "Decline"
+    }
   },
   "rating": {
     "title": "Rating",
@@ -1191,9 +1198,11 @@
         "active": "Active"
       },
       "progress": "Progress",
-      "participants": "participant",
+      "participants": "{count} participant",
+      "participantsPlural": "{count} participants",
       "viewGoal": "View →"
-    }
+    },
+    "inviteMore": "Invite more teammates"
   },
   "groupGoalEdit": {
     "meta": {
