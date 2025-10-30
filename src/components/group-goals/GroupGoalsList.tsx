@@ -273,7 +273,10 @@ export const GroupGoalsList: React.FC = () => {
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {goals.map((goal, index) => {
-          const participantsCount = goal.participants?.length ?? 1;
+          const acceptedParticipants = goal.participants?.filter(
+            (p) => typeof p.invitationStatus === 'string' && p.invitationStatus.toLowerCase() === 'accepted',
+          );
+          const participantsCount = acceptedParticipants?.length ?? 0;
           const participantsLabel = formatParticipantsLabel(participantsCount, locale);
           const gradientClass = getFallbackGradient(goal, index);
           const progressValue = clampProgress(goal.progress);

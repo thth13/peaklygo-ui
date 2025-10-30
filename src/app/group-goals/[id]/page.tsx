@@ -126,7 +126,7 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
 
   // Статистика участников
   const { accepted: acceptedCount, pending: pendingCount } = countParticipantsByStatus(participants);
-  const totalParticipants = stats?.totalParticipants ?? participants.length;
+  const totalParticipants = acceptedCount; // Показываем только принявших приглашение
   const activeParticipants = stats?.activeParticipants ?? acceptedCount;
   const pendingInvitations = stats?.pendingInvitations ?? pendingCount;
 

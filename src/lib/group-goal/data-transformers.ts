@@ -30,7 +30,12 @@ export const transformParticipantsToViews = ({
   t,
   locale,
 }: TransformParticipantsParams): ParticipantView[] => {
-  return participants.map((participant, index) => {
+  // Фильтруем только принявших приглашение
+  const acceptedParticipants = participants.filter(
+    (p) => typeof p.invitationStatus === 'string' && p.invitationStatus.toLowerCase() === 'accepted',
+  );
+
+  return acceptedParticipants.map((participant, index) => {
     const participantId = extractParticipantId(participant, index);
     const statusesByDate = displayedDates.map((dateKey) => checkInByDate.get(dateKey)?.get(participantId) ?? null);
     const todaysStatus = checkInByDate.get(todayKey)?.get(participantId) ?? null;

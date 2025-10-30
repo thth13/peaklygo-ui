@@ -7,6 +7,7 @@ import { LeftSidebar } from '@/components/layout/sidebar';
 import type { DayOfWeek, GroupGoal } from '@/types';
 import { getGroupGoal } from '@/lib/api/goal';
 import { GroupGoalUpdateForm, type GroupGoalUpdateFormValues } from '@/components/group-goals';
+import { IMAGE_URL } from '@/constants';
 
 interface EditGroupGoalPageProps {
   params: Promise<{ id: string }>;
@@ -28,7 +29,7 @@ const convertGoalToFormState = (goal: GroupGoal): GroupGoalUpdateFormValues => {
     habitDaysOfWeek: (goal.habitDaysOfWeek ?? []) as DayOfWeek[],
     reward: goal.reward ?? '',
     consequence: goal.consequence ?? '',
-    imageUrl: goal.image ?? '',
+    imageUrl: goal.image ? (goal.image.startsWith('http') ? goal.image : `${IMAGE_URL}/${goal.image}`) : '',
     allowMembersToInvite: goal.groupSettings?.allowMembersToInvite ?? false,
     requireApproval: goal.groupSettings?.requireApproval ?? true,
     maxParticipants: goal.groupSettings?.maxParticipants ?? undefined,
