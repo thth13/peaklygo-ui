@@ -833,7 +833,14 @@
       "ariaLabel": "Toggle notifications panel",
       "iconAlt": "Notifications",
       "accept": "Accept",
-      "decline": "Decline"
+      "decline": "Decline",
+      "loading": "Loading notifications...",
+      "empty": "You're all caught up!",
+      "error": "Couldn't load notifications.",
+      "retry": "Try again",
+      "markAll": "Mark all as read",
+      "markingAll": "Marking...",
+      "actionError": "Couldn't update notifications. Please try again."
     }
   },
   "rating": {

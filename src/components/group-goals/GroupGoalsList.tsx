@@ -22,17 +22,19 @@ const isPaginatedGoalsResponse = (
 };
 
 const FALLBACK_GRADIENTS = [
-  'from-rose-500 via-orange-400 to-amber-300',
-  'from-sky-500 via-cyan-400 to-teal-300',
-  'from-fuchsia-500 via-violet-400 to-purple-300',
-  'from-emerald-500 via-green-400 to-lime-300',
-  'from-indigo-500 via-blue-400 to-sky-300',
-  'from-amber-500 via-yellow-400 to-lime-200',
-  'from-pink-500 via-rose-400 to-orange-300',
-  'from-slate-600 via-indigo-500 to-slate-400',
-  'from-cyan-500 via-teal-400 to-blue-300',
-  'from-stone-500 via-stone-400 to-stone-300',
+  'from-fuchsia-500 via-purple-500 to-indigo-500',
+  'from-orange-500 via-amber-400 to-yellow-300',
+  'from-sky-500 via-blue-500 to-indigo-500',
+  'from-emerald-500 via-green-500 to-lime-400',
+  'from-violet-500 via-fuchsia-500 to-pink-400',
+  'from-teal-500 via-cyan-500 to-sky-400',
+  'from-rose-500 via-pink-500 to-orange-400',
+  'from-indigo-500 via-sky-500 to-cyan-400',
+  'from-lime-500 via-green-500 to-emerald-400',
+  'from-purple-500 via-indigo-500 to-blue-400',
 ];
+
+// const FALLBACK_GRADIENTS = ['from-zinc-700 via-zinc-600 to-zinc-500'];
 
 const getFallbackGradient = (goal: GroupGoal, fallbackIndex: number): string => {
   const seedParts: string[] = [];

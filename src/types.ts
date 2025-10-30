@@ -392,3 +392,49 @@ export interface ChallengeMessage {
   message: string;
   createdAt: Date;
 }
+
+export enum NotificationType {
+  GroupInvite = 'group_invite',
+  Subscription = 'subscription',
+  Message = 'message',
+}
+
+export interface NotificationMetadata {
+  goalId?: string;
+  inviterId?: string;
+  subscriptionType?: string;
+  messageId?: string;
+  avatarUrl?: string;
+  senderAvatar?: string;
+  inviterAvatar?: string;
+  senderName?: string;
+  [key: string]: any;
+}
+
+export interface UserNotification {
+  _id: string;
+  user: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  metadata?: NotificationMetadata;
+  read: boolean;
+  readAt?: string | Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+}
+
+export interface NotificationsResponse {
+  items: UserNotification[];
+  total: number;
+  page: number;
+  limit: number;
+  hasNextPage: boolean;
+}
+
+export interface GetNotificationsQuery {
+  page?: number;
+  limit?: number;
+  unreadOnly?: boolean;
+  type?: NotificationType;
+}
