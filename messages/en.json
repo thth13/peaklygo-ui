@@ -1045,6 +1045,11 @@
     "breadcrumbs": {
       "back": "Back to groups"
     },
+    "header": {
+      "backButton": "Back",
+      "inviteButton": "Invite",
+      "settingsButton": "Settings"
+    },
     "status": {
       "completed": "Completed",
       "archived": "Archived",
@@ -1136,12 +1141,58 @@
       "teamLimit": "Team limit",
       "teamLimitValue": "{count} people",
       "teamLimitUnset": "Not specified",
-      "goalValue": "Goal importance"
+      "goalValue": "Goal importance",
+      "editButton": "Edit settings"
     },
     "motivation": {
       "title": "Motivation",
       "reward": "Reward",
       "consequence": "Consequence"
+    },
+    "todayProgress": {
+      "today": "Today, {date}",
+      "outOf": "{completed} out of {total}",
+      "completion": "completion",
+      "alreadyMarked": "You already checked in today",
+      "processing": "Processing...",
+      "cancelMark": "Cancel check-in",
+      "markParticipation": "Mark participation",
+      "groupReward": "Group reward",
+      "missedPenalty": "Penalty for missing",
+      "errorMark": "Failed to mark participation. Try again."
+    },
+    "progressTable": {
+      "title": "Participant progress table",
+      "lastDays": "Last {count} days",
+      "participant": "Participant",
+      "total": "Total",
+      "completed": "Completed",
+      "missed": "Missed",
+      "pending": "Pending",
+      "showAll": "Show all days",
+      "errorMark": "Failed to mark participation. Try again."
+    },
+    "activity": {
+      "title": "Current activity",
+      "empty": "No check-ins for today yet.",
+      "showAll": "Show all activity"
+    },
+    "list": {
+      "loading": "Loading group goals...",
+      "loadMore": "Show more",
+      "loadingMore": "Loading...",
+      "error": "Failed to load group goals. Please try again.",
+      "retry": "Retry",
+      "empty": "No group goals",
+      "emptyDescription": "Create your first group goal and invite like-minded people.",
+      "status": {
+        "completed": "Completed",
+        "archived": "Archived",
+        "active": "Active"
+      },
+      "progress": "Progress",
+      "participants": "participant",
+      "viewGoal": "View →"
     }
   },
   "groupGoalEdit": {

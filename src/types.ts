@@ -297,6 +297,16 @@ export interface PaginatedGoalsResponse {
   hasPrevPage: boolean;
 }
 
+export interface PaginatedGroupGoalsResponse {
+  goals: GroupGoal[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
 export interface GroupGoalStats {
   totalParticipants: number;
   activeParticipants: number;

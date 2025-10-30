@@ -20,14 +20,17 @@ interface ProgressTableProps {
 }
 
 export function ProgressTable({ displayedDates, todayKey, participantViews, challengeStartDate }: ProgressTableProps) {
-  const t = useTranslations('groupGoal.participants');
-  const emptyText = t('empty');
-  const title = 'Таблица прогресса участников';
-  const subtitle = `Последние ${displayedDates.length} дней`;
-  const completedText = 'Выполнено';
-  const missedText = 'Пропуск';
-  const pendingText = 'Ожидание';
-  const showAllText = 'Показать все дни';
+  const t = useTranslations('groupGoal.progressTable');
+  const tParticipants = useTranslations('groupGoal.participants');
+  const emptyText = tParticipants('empty');
+  const title = t('title');
+  const subtitle = t('lastDays', { count: displayedDates.length });
+  const completedText = t('completed');
+  const missedText = t('missed');
+  const pendingText = t('pending');
+  const showAllText = t('showAll');
+  const participantLabel = t('participant');
+  const totalLabel = t('total');
   return (
     <article className="rounded-2xl bg-white p-6 shadow-sm transition-colors dark:bg-gray-900">
       <div className="mb-6 flex items-center justify-between">
@@ -39,7 +42,7 @@ export function ProgressTable({ displayedDates, todayKey, participantViews, chal
         <table className="w-full min-w-[520px]">
           <thead>
             <tr className="border-b border-gray-200 text-xs uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:text-gray-400">
-              <th className="px-2 py-3 text-left font-medium">Участник</th>
+              <th className="px-2 py-3 text-left font-medium">{participantLabel}</th>
               {displayedDates.map((dateKey) => {
                 const date = new Date(dateKey);
                 const dayNumber = date.getDate();
@@ -55,7 +58,7 @@ export function ProgressTable({ displayedDates, todayKey, participantViews, chal
                   </th>
                 );
               })}
-              <th className="px-2 py-3 text-center font-medium">Всего</th>
+              <th className="px-2 py-3 text-center font-medium">{totalLabel}</th>
             </tr>
           </thead>
           <tbody>

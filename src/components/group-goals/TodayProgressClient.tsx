@@ -7,7 +7,7 @@ import { useRouter } from '@/lib/navigation';
 import { markGroupCheckIn } from '@/lib/api/goal';
 import type { CheckInStatus } from '@/types';
 import { formatDate } from '@/lib/utils';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface TodayProgressClientProps {
   todaysCompleted: number;
@@ -30,11 +30,12 @@ export function TodayProgressClient({
 }: TodayProgressClientProps) {
   const router = useRouter();
   const locale = useLocale();
+  const t = useTranslations('groupGoal.todayProgress');
   const [isLoading, setIsLoading] = useState(false);
   const isCompleted = currentUserStatus === 'completed';
 
   const today = new Date();
-  const todayLabel = `Сегодня, ${formatDate(today, locale)}`;
+  const todayLabel = t('today', { date: formatDate(today, locale) });
 
   const handleMarkParticipation = async () => {
     if (isLoading) return;
@@ -46,7 +47,7 @@ export function TodayProgressClient({
       router.refresh();
     } catch (error) {
       console.error('Ошибка при отметке участия:', error);
-      alert('Не удалось отметить участие. Попробуйте снова.');
+      alert(t('errorMark'));
     } finally {
       setIsLoading(false);
     }
@@ -59,12 +60,12 @@ export function TodayProgressClient({
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{todayLabel}</h3>
             <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-              {todaysCompleted} из {todaysTotal}
+              {t('outOf', { completed: todaysCompleted, total: todaysTotal })}
             </p>
           </div>
           <div className="text-right">
             <div className="text-3xl font-bold text-primary-600">{todaysCompletion}%</div>
-            <div className="text-sm text-gray-500 dark:text-gray-400">выполнение</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">{t('completion')}</div>
           </div>
         </div>
 
@@ -78,7 +79,7 @@ export function TodayProgressClient({
         {isCompleted && (
           <div className="mb-3 flex items-center justify-center gap-2 rounded-lg bg-green-100 py-2 text-sm font-medium text-green-700 dark:bg-green-900/30 dark:text-green-300">
             <FontAwesomeIcon icon={faCheckCircle} />
-            Вы уже отметились сегодня
+            {t('alreadyMarked')}
           </div>
         )}
 
@@ -96,7 +97,7 @@ export function TodayProgressClient({
             icon={isLoading ? faSpinner : faCheckCircle}
             className={`text-xl ${isLoading ? 'animate-spin' : ''}`}
           />
-          {isLoading ? 'Обработка...' : isCompleted ? 'Отменить отметку' : 'Отметить участие'}
+          {isLoading ? t('processing') : isCompleted ? t('cancelMark') : t('markParticipation')}
         </button>
       </div>
 
@@ -104,13 +105,13 @@ export function TodayProgressClient({
         <div className="grid gap-4 sm:grid-cols-2">
           {reward?.trim() && (
             <div className="rounded-xl bg-green-50 p-4 dark:bg-emerald-900/20">
-              <div className="text-sm text-gray-500 dark:text-gray-300">Групповая награда</div>
+              <div className="text-sm text-gray-500 dark:text-gray-300">{t('groupReward')}</div>
               <div className="mt-2 font-medium text-green-700 dark:text-green-300">{reward}</div>
             </div>
           )}
           {consequence?.trim() && (
             <div className="rounded-xl bg-red-50 p-4 dark:bg-red-900/20">
-              <div className="text-sm text-gray-500 dark:text-gray-300">Штраф за пропуск</div>
+              <div className="text-sm text-gray-500 dark:text-gray-300">{t('missedPenalty')}</div>
               <div className="mt-2 font-medium text-red-600 dark:text-red-300">{consequence}</div>
             </div>
           )}

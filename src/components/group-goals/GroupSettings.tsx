@@ -1,6 +1,8 @@
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 interface GroupSettingsProps {
+  goalId: string;
   ownerName: string;
   allowMembersToInvite: boolean;
   requireApproval: boolean;
@@ -9,6 +11,7 @@ interface GroupSettingsProps {
 }
 
 export function GroupSettings({
+  goalId,
   ownerName,
   allowMembersToInvite,
   requireApproval,
@@ -22,7 +25,7 @@ export function GroupSettings({
   const approvalLabel = t('approval');
   const teamLimitLabel = t('teamLimit');
   const goalValueLabel = t('goalValue');
-  const editButtonText = 'Изменить настройки';
+  const editButtonText = t('editButton');
 
   const memberInvitesValue = allowMembersToInvite ? t('memberInvitesAllowed') : t('memberInvitesRestricted');
   const approvalValue = requireApproval ? t('approvalRequired') : t('approvalNotRequired');
@@ -52,12 +55,12 @@ export function GroupSettings({
           <span className="font-semibold text-gray-900 dark:text-white">{goalValue}</span>
         </div>
       </div>
-      <button
-        type="button"
-        className="mt-4 w-full rounded-xl border border-gray-200 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
+      <Link
+        href={`/group-goals/${goalId}/edit`}
+        className="mt-4 block w-full rounded-xl border border-gray-200 py-2 text-center text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800"
       >
         {editButtonText}
-      </button>
+      </Link>
     </section>
   );
 }

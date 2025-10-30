@@ -1029,6 +1029,11 @@
     "breadcrumbs": {
       "back": "Назад до груп"
     },
+    "header": {
+      "backButton": "Назад",
+      "inviteButton": "Запросити",
+      "settingsButton": "Налаштування"
+    },
     "status": {
       "completed": "Завершена",
       "archived": "Архів",
@@ -1070,6 +1075,33 @@
       "joinedAt": "З {date}",
       "noDate": "Дату не вказано"
     },
+    "invite": {
+      "title": "Запросити учасників",
+      "subtitle": "Знайдіть людей за іменем, ніком або email. Уже додані користувачі сховані автоматично.",
+      "inputLabel": "Знайти учасників",
+      "searchPlaceholder": "Введіть ім'я, нік або email",
+      "searchHint": "Лайфхак: оберіть усіх потрібних і надішліть запрошення одним кліком.",
+      "searchError": "Не вдалося завантажити підказки. Спробуйте ще раз.",
+      "searchEmpty": "Збігів поки немає",
+      "searchPlaceholderHint": "Почніть вводити, щоб побачити підказки",
+      "resultsTitle": "Підказки",
+      "resultsCount": "{count} варіант{count, plural, one {} few {и} many {ів} other {ів}}",
+      "resultsIdle": "Чекаємо на введення",
+      "addAction": "Додати",
+      "removeAction": "Прибрати",
+      "roleLabel": "Роль",
+      "roleMember": "Учасник",
+      "roleAdmin": "Адмін",
+      "selectedTitle": "Обрано",
+      "selectionCount": "{count} обрано",
+      "emptySelected": "Ще нікого не обрано",
+      "selectionEmpty": "Оберіть хоча б одну людину",
+      "submit": "Надіслати запрошення",
+      "submitting": "Надсилаємо...",
+      "success": "{count, plural, one {Надіслали {count} запрошення} few {Надіслали {count} запрошення} many {Надіслали {count} запрошень} other {Надіслали {count} запрошення}}",
+      "error": "Не вдалося надіслати запрошення",
+      "alreadyAdded": "Вже додано"
+    },
     "contributors": {
       "title": "Лідери внеску"
     },
@@ -1092,12 +1124,58 @@
       "teamLimit": "Ліміт команди",
       "teamLimitValue": "{count} осіб",
       "teamLimitUnset": "Не вказано",
-      "goalValue": "Важливість цілі"
+      "goalValue": "Важливість цілі",
+      "editButton": "Змінити налаштування"
     },
     "motivation": {
       "title": "Мотивація",
       "reward": "Нагорода",
       "consequence": "Наслідок"
+    },
+    "todayProgress": {
+      "today": "Сьогодні, {date}",
+      "outOf": "{completed} з {total}",
+      "completion": "виконання",
+      "alreadyMarked": "Ви вже відмітилися сьогодні",
+      "processing": "Обробка...",
+      "cancelMark": "Скасувати відмітку",
+      "markParticipation": "Відмітити участь",
+      "groupReward": "Групова нагорода",
+      "missedPenalty": "Штраф за пропуск",
+      "errorMark": "Не вдалося відмітити участь. Спробуйте знову."
+    },
+    "progressTable": {
+      "title": "Таблиця прогресу учасників",
+      "lastDays": "Останні {count} днів",
+      "participant": "Учасник",
+      "total": "Всього",
+      "completed": "Виконано",
+      "missed": "Пропуск",
+      "pending": "Очікування",
+      "showAll": "Показати всі дні",
+      "errorMark": "Не вдалося відмітити участь. Спробуйте знову."
+    },
+    "activity": {
+      "title": "Поточна активність",
+      "empty": "Поки немає відміток за сьогодні.",
+      "showAll": "Показати всю активність"
+    },
+    "list": {
+      "loading": "Завантаження групових цілей...",
+      "loadMore": "Показати ще",
+      "loadingMore": "Завантаження...",
+      "error": "Не вдалося завантажити групові цілі. Спробуйте ще раз.",
+      "retry": "Повторити спробу",
+      "empty": "Немає групових цілей",
+      "emptyDescription": "Створіть першу групову ціль і запросіть однодумців.",
+      "status": {
+        "completed": "Завершена",
+        "archived": "Архів",
+        "active": "Активна"
+      },
+      "progress": "Прогрес",
+      "participants": "учасника",
+      "viewGoal": "Перейти →"
     }
   },
   "groupGoalEdit": {

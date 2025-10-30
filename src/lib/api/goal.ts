@@ -6,6 +6,7 @@ import {
   GroupGoal,
   GetGoalsPaginationDto,
   PaginatedGoalsResponse,
+  PaginatedGroupGoalsResponse,
   LandingGoal,
   GoalFilterType,
   MarkHabitDayDto,
@@ -279,7 +280,7 @@ export const searchGroupGoalUsers = async ({
 export const getMyGroupGoals = async (
   pagination?: GetGoalsPaginationDto,
   apiInstance?: AxiosInstance,
-): Promise<Goal[] | PaginatedGoalsResponse> => {
+): Promise<GroupGoal[] | PaginatedGroupGoalsResponse> => {
   try {
     const params = new URLSearchParams();
     if (pagination?.page) {

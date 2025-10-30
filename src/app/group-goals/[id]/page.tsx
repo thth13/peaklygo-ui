@@ -222,6 +222,7 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
             {/* <MotivationSection reward={goal.reward} consequence={goal.consequence} /> */}
 
             <GroupSettings
+              goalId={goal._id}
               ownerName={ownerName}
               allowMembersToInvite={goal.groupSettings?.allowMembersToInvite ?? false}
               requireApproval={goal.groupSettings?.requireApproval ?? false}

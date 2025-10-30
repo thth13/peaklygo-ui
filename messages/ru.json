@@ -1098,6 +1098,11 @@
     "breadcrumbs": {
       "back": "Назад к группам"
     },
+    "header": {
+      "backButton": "Назад",
+      "inviteButton": "Пригласить",
+      "settingsButton": "Настройки"
+    },
     "status": {
       "completed": "Завершена",
       "archived": "Архив",
@@ -1189,12 +1194,58 @@
       "teamLimit": "Лимит команды",
       "teamLimitValue": "{count} человек",
       "teamLimitUnset": "Не указан",
-      "goalValue": "Важность цели"
+      "goalValue": "Важность цели",
+      "editButton": "Изменить настройки"
     },
     "motivation": {
       "title": "Мотивация",
       "reward": "Награда",
       "consequence": "Последствие"
+    },
+    "todayProgress": {
+      "today": "Сегодня, {date}",
+      "outOf": "{completed} из {total}",
+      "completion": "выполнение",
+      "alreadyMarked": "Вы уже отметились сегодня",
+      "processing": "Обработка...",
+      "cancelMark": "Отменить отметку",
+      "markParticipation": "Отметить участие",
+      "groupReward": "Групповая награда",
+      "missedPenalty": "Штраф за пропуск",
+      "errorMark": "Не удалось отметить участие. Попробуйте снова."
+    },
+    "progressTable": {
+      "title": "Таблица прогресса участников",
+      "lastDays": "Последние {count} дней",
+      "participant": "Участник",
+      "total": "Всего",
+      "completed": "Выполнено",
+      "missed": "Пропуск",
+      "pending": "Ожидание",
+      "showAll": "Показать все дни",
+      "errorMark": "Не удалось отметить участие. Попробуйте снова."
+    },
+    "activity": {
+      "title": "Текущая активность",
+      "empty": "Пока нет отметок за сегодня.",
+      "showAll": "Показать всю активность"
+    },
+    "list": {
+      "loading": "Загрузка групповых целей...",
+      "loadMore": "Показать еще",
+      "loadingMore": "Загрузка...",
+      "error": "Не удалось загрузить групповые цели. Попробуйте снова.",
+      "retry": "Повторить попытку",
+      "empty": "Нет групповых целей",
+      "emptyDescription": "Создайте первую групповую цель и пригласите единомышленников.",
+      "status": {
+        "completed": "Завершена",
+        "archived": "Архив",
+        "active": "Активна"
+      },
+      "progress": "Прогресс",
+      "participants": "участника",
+      "viewGoal": "Перейти →"
     }
   },
   "groupGoalEdit": {

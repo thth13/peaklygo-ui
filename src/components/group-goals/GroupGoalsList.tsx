@@ -2,9 +2,10 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { getMyGroupGoals } from '@/lib/api/goal';
 import { GOALS_PER_PAGE } from '@/constants';
-import type { Goal, PaginatedGoalsResponse } from '@/types';
+import type { GroupGoal, PaginatedGroupGoalsResponse } from '@/types';
 
 interface PaginationState {
   page: number;
@@ -13,13 +14,14 @@ interface PaginationState {
 }
 
 const isPaginatedGoalsResponse = (
-  data: Goal[] | PaginatedGoalsResponse,
-): data is PaginatedGoalsResponse => {
-  return Boolean(data) && !Array.isArray(data) && Array.isArray(data.goals);
+  data: GroupGoal[] | PaginatedGroupGoalsResponse,
+): data is PaginatedGroupGoalsResponse => {
+  return data && typeof data === 'object' && 'goals' in data;
 };
 
 export const GroupGoalsList: React.FC = () => {
-  const [goals, setGoals] = useState<Goal[]>([]);
+  const t = useTranslations('groupGoal.list');
+  const [goals, setGoals] = useState<GroupGoal[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,15 +40,12 @@ export const GroupGoalsList: React.FC = () => {
     };
   }, []);
 
-  const updateStateSafely = useCallback(
-    (updater: () => void) => {
-      if (!isMountedRef.current) {
-        return;
-      }
-      updater();
-    },
-    [],
-  );
+  const updateStateSafely = useCallback((updater: () => void) => {
+    if (!isMountedRef.current) {
+      return;
+    }
+    updater();
+  }, []);
 
   const fetchGoals = useCallback(
     async (pageToLoad: number, append = false) => {
@@ -85,7 +84,7 @@ export const GroupGoalsList: React.FC = () => {
       } catch (err) {
         console.error('Failed to load group goals', err);
         updateStateSafely(() => {
-          setError('Не удалось загрузить групповые цели. Попробуйте снова.');
+          setError(t('error'));
         });
       } finally {
         updateStateSafely(() => {
@@ -109,46 +108,41 @@ export const GroupGoalsList: React.FC = () => {
   };
 
   const handleLoadMore = () => {
-    fetchGoals(pagination.page + 1, true).catch((err) =>
-      console.error('Load more group goals failed', err),
-    );
+    fetchGoals(pagination.page + 1, true).catch((err) => console.error('Load more group goals failed', err));
   };
 
-  const renderGoalStatus = (goal: Goal) => {
+  const renderGoalStatus = (goal: GroupGoal) => {
     if (goal.isCompleted) {
       return (
         <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700 dark:bg-green-900 dark:text-green-300">
-          Завершена
+          {t('status.completed')}
         </span>
       );
     }
     if (goal.isArchived) {
       return (
         <span className="rounded-full bg-gray-200 px-3 py-1 text-xs font-medium text-gray-700 dark:bg-gray-700 dark:text-gray-300">
-          Архив
+          {t('status.archived')}
         </span>
       );
     }
     return (
       <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-        Активна
+        {t('status.active')}
       </span>
     );
   };
 
-  const renderGoalProgress = (goal: Goal) => {
+  const renderGoalProgress = (goal: GroupGoal) => {
     const progressValue = Math.max(0, Math.min(100, Math.round(goal.progress ?? 0)));
     return (
       <div className="mb-4">
         <div className="mb-1 flex justify-between text-sm">
-          <span className="text-gray-600 dark:text-gray-400">Прогресс</span>
+          <span className="text-gray-600 dark:text-gray-400">{t('progress')}</span>
           <span className="font-medium dark:text-gray-200">{progressValue}%</span>
         </div>
         <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700">
-          <div
-            className="h-2 rounded-full bg-primary-500"
-            style={{ width: `${progressValue}%` }}
-          ></div>
+          <div className="h-2 rounded-full bg-primary-500" style={{ width: `${progressValue}%` }}></div>
         </div>
       </div>
     );
@@ -157,7 +151,7 @@ export const GroupGoalsList: React.FC = () => {
   if (isInitialLoading && goals.length === 0) {
     return (
       <div className="flex items-center justify-center py-16">
-        <span className="text-gray-600 dark:text-gray-300">Загрузка групповых целей...</span>
+        <span className="text-gray-600 dark:text-gray-300">{t('loading')}</span>
       </div>
     );
   }
@@ -171,7 +165,7 @@ export const GroupGoalsList: React.FC = () => {
           onClick={handleRetry}
           className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
         >
-          Повторить попытку
+          {t('retry')}
         </button>
       </div>
     );
@@ -183,10 +177,8 @@ export const GroupGoalsList: React.FC = () => {
         <div className="mb-4 text-6xl text-gray-300">
           <i className="fa-solid fa-people-group"></i>
         </div>
-        <h3 className="mb-2 text-xl font-bold text-gray-800 dark:text-white">Нет групповых целей</h3>
-        <p className="text-gray-600 dark:text-gray-400">
-          Создайте первую групповую цель и пригласите единомышленников.
-        </p>
+        <h3 className="mb-2 text-xl font-bold text-gray-800 dark:text-white">{t('empty')}</h3>
+        <p className="text-gray-600 dark:text-gray-400">{t('emptyDescription')}</p>
       </div>
     );
   }
@@ -221,9 +213,11 @@ export const GroupGoalsList: React.FC = () => {
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center text-gray-600 dark:text-gray-400">
                 <i className="fa-solid fa-users mr-2"></i>
-                <span>{goal.participantIds?.length ?? 1} участника</span>
+                <span>
+                  {goal.participants?.length ?? 1} {t('participants')}
+                </span>
               </div>
-              <div className="text-primary-600 dark:text-primary-400">Перейти →</div>
+              <div className="text-primary-600 dark:text-primary-400">{t('viewGoal')}</div>
             </div>
           </Link>
         ))}
@@ -237,7 +231,7 @@ export const GroupGoalsList: React.FC = () => {
             disabled={isLoadingMore}
             className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:cursor-not-allowed disabled:bg-primary-400"
           >
-            {isLoadingMore ? 'Загрузка...' : 'Показать еще'}
+            {isLoadingMore ? t('loadingMore') : t('loadMore')}
           </button>
         </div>
       )}

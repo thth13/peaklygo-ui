@@ -1020,6 +1020,11 @@
     "breadcrumbs": {
       "back": "समूहों पर वापस"
     },
+    "header": {
+      "backButton": "वापस",
+      "inviteButton": "आमंत्रित करें",
+      "settingsButton": "सेटिंग्स"
+    },
     "status": {
       "completed": "पूर्ण",
       "archived": "आर्काइव",
@@ -1083,12 +1088,58 @@
       "teamLimit": "टीम सीमा",
       "teamLimitValue": "{count} लोग",
       "teamLimitUnset": "निर्दिष्ट नहीं",
-      "goalValue": "लक्ष्य का महत्व"
+      "goalValue": "लक्ष्य का महत्व",
+      "editButton": "सेटिंग्स बदलें"
     },
     "motivation": {
       "title": "प्रेरणा",
       "reward": "पुरस्कार",
       "consequence": "परिणाम"
+    },
+    "todayProgress": {
+      "today": "आज, {date}",
+      "outOf": "{total} में से {completed}",
+      "completion": "पूर्णता",
+      "alreadyMarked": "आप आज पहले ही चेक-इन कर चुके हैं",
+      "processing": "प्रक्रिया हो रही है...",
+      "cancelMark": "चेक-इन रद्द करें",
+      "markParticipation": "भागीदारी चिह्नित करें",
+      "groupReward": "समूह पुरस्कार",
+      "missedPenalty": "छूटने का दंड",
+      "errorMark": "भागीदारी चिह्नित करने में विफल। पुनः प्रयास करें।"
+    },
+    "progressTable": {
+      "title": "प्रतिभागी प्रगति तालिका",
+      "lastDays": "पिछले {count} दिन",
+      "participant": "प्रतिभागी",
+      "total": "कुल",
+      "completed": "पूर्ण",
+      "missed": "छूटा",
+      "pending": "प्रतीक्षारत",
+      "showAll": "सभी दिन दिखाएं",
+      "errorMark": "भागीदारी चिह्नित करने में विफल। पुनः प्रयास करें।"
+    },
+    "activity": {
+      "title": "वर्तमान गतिविधि",
+      "empty": "आज के लिए अभी तक कोई चेक-इन नहीं।",
+      "showAll": "सभी गतिविधि दिखाएं"
+    },
+    "list": {
+      "loading": "समूह लक्ष्य लोड हो रहे हैं...",
+      "loadMore": "और दिखाएं",
+      "loadingMore": "लोड हो रहा है...",
+      "error": "समूह लक्ष्य लोड करने में विफल। कृपया पुनः प्रयास करें।",
+      "retry": "पुनः प्रयास करें",
+      "empty": "कोई समूह लक्ष्य नहीं",
+      "emptyDescription": "अपना पहला समूह लक्ष्य बनाएं और समान विचारधारा वाले लोगों को आमंत्रित करें।",
+      "status": {
+        "completed": "पूर्ण",
+        "archived": "संग्रहित",
+        "active": "सक्रिय"
+      },
+      "progress": "प्रगति",
+      "participants": "प्रतिभागी",
+      "viewGoal": "देखें →"
     }
   },
   "groupGoalEdit": {

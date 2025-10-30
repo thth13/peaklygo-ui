@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl';
+
 interface ActivityItem {
   id: string;
   text: string;
@@ -9,9 +11,10 @@ interface ActivityFeedProps {
 }
 
 export function ActivityFeed({ activityItems }: ActivityFeedProps) {
-  const title = 'Текущая активность';
-  const emptyText = 'Пока нет отметок за сегодня.';
-  const showAllText = 'Показать всю активность';
+  const t = useTranslations('groupGoal.activity');
+  const title = t('title');
+  const emptyText = t('empty');
+  const showAllText = t('showAll');
 
   return (
     <section className="rounded-2xl bg-white p-6 shadow-sm transition-colors dark:bg-gray-900">
