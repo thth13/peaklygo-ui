@@ -159,7 +159,7 @@ export const LeftSidebar = ({ userId }: LeftSidebarProps) => {
     return () => {
       isCancelled = true;
     };
-  }, [actualUserId, isMyProfile, defaultErrorMessage]);
+  }, [actualUserId, isMyProfile, defaultErrorMessage, notFoundProfileMessage]);
 
   return (
     <div id="left-sidebar" className="w-1/4 pr-6 hidden md:block">

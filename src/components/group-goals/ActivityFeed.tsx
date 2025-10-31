@@ -14,7 +14,6 @@ export function ActivityFeed({ activityItems }: ActivityFeedProps) {
   const t = useTranslations('groupGoal.activity');
   const title = t('title');
   const emptyText = t('empty');
-  const showAllText = t('showAll');
 
   return (
     <section className="rounded-2xl bg-white p-6 shadow-sm transition-colors dark:bg-gray-900">

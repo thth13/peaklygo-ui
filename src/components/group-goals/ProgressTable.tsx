@@ -75,8 +75,6 @@ export function ProgressTable({ displayedDates, todayKey, participantViews, chal
               participantViews.map((participant) => {
                 // Подсчет статусов с учетом пропущенных дней
                 let totalCompleted = 0;
-                let totalMissed = 0;
-                let totalPending = 0;
 
                 // Вычисляем количество дней с момента старта челленджа до сегодня
                 const challengeStart = new Date(challengeStartDate);
@@ -97,8 +95,6 @@ export function ProgressTable({ displayedDates, todayKey, participantViews, chal
                   const displayStatus = isPastDay && !status ? 'missed' : status;
 
                   if (displayStatus === 'completed') totalCompleted++;
-                  else if (displayStatus === 'missed') totalMissed++;
-                  else if (displayStatus === 'pending') totalPending++;
                 });
 
                 const successRate = totalTracked > 0 ? Math.round((totalCompleted / totalTracked) * 100) : 0;

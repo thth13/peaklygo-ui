@@ -254,6 +254,7 @@ const GroupGoalSettings: React.FC<GroupGoalSettingsProps> = ({
       if (!(participantId in prev)) {
         return prev;
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [participantId]: _removed, ...rest } = prev;
       return rest;
     });
@@ -296,7 +297,9 @@ const GroupGoalSettings: React.FC<GroupGoalSettingsProps> = ({
               >
                 {MAX_PARTICIPANT_OPTIONS.map((option) => (
                   <option key={option} value={option}>
-                    {option === 'unlimited' ? t('maxParticipantsUnlimited') : t('maxParticipantsOption', { count: option })}
+                    {option === 'unlimited'
+                      ? t('maxParticipantsUnlimited')
+                      : t('maxParticipantsOption', { count: option })}
                   </option>
                 ))}
               </select>
@@ -360,7 +363,9 @@ const GroupGoalSettings: React.FC<GroupGoalSettingsProps> = ({
             <p className="text-sm text-gray-500 dark:text-gray-400">
               {t.rich('participantsSubtitle', {
                 count: participantIds.length,
-                highlight: (chunks) => <span className="font-semibold text-primary-600 dark:text-primary-300">{chunks}</span>,
+                highlight: (chunks) => (
+                  <span className="font-semibold text-primary-600 dark:text-primary-300">{chunks}</span>
+                ),
               })}
             </p>
           </div>
@@ -385,11 +390,15 @@ const GroupGoalSettings: React.FC<GroupGoalSettingsProps> = ({
               className="w-full rounded-xl border-2 border-gray-200 bg-white pl-11 pr-4 py-3 text-gray-900 transition-colors focus:border-primary-500 focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               aria-expanded={isDropdownOpen}
               aria-autocomplete="list"
+              aria-controls="participant-dropdown"
               role="combobox"
             />
 
             {isDropdownOpen && (
-              <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+              <div
+                id="participant-dropdown"
+                className="absolute z-20 mt-2 w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800"
+              >
                 <ul className="max-h-60 overflow-y-auto py-2">
                   {isSearchLoading ? (
                     <li className="px-4 py-2 text-sm text-gray-500 dark:text-gray-300">
@@ -427,7 +436,11 @@ const GroupGoalSettings: React.FC<GroupGoalSettingsProps> = ({
                           >
                             {avatarUrl ? (
                               // eslint-disable-next-line @next/next/no-img-element
-                              <img src={avatarUrl} alt={displayPrimary} className="h-8 w-8 flex-shrink-0 rounded-full object-cover" />
+                              <img
+                                src={avatarUrl}
+                                alt={displayPrimary}
+                                className="h-8 w-8 flex-shrink-0 rounded-full object-cover"
+                              />
                             ) : (
                               <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary-500/15 text-xs font-semibold text-primary-600 dark:text-primary-300">
                                 {initials}
@@ -435,7 +448,9 @@ const GroupGoalSettings: React.FC<GroupGoalSettingsProps> = ({
                             )}
                             <div className="min-w-0 flex-1">
                               <div className="truncate text-sm font-semibold leading-tight">{displayPrimary}</div>
-                              <div className="truncate text-xs text-gray-500 dark:text-gray-400">{displaySecondary}</div>
+                              <div className="truncate text-xs text-gray-500 dark:text-gray-400">
+                                {displaySecondary}
+                              </div>
                             </div>
                             <span className="text-xs font-medium text-primary-500 dark:text-primary-300">
                               {t('participantInviteAction')}
@@ -457,7 +472,8 @@ const GroupGoalSettings: React.FC<GroupGoalSettingsProps> = ({
             {participantIds.map((participantId) => {
               const details = participantsDetails[participantId];
               const displayName = details?.name?.trim() || details?.username || participantId;
-              const secondary = details?.username && details.username !== displayName ? details.username : participantId;
+              const secondary =
+                details?.username && details.username !== displayName ? details.username : participantId;
               const avatarUrl = resolveAvatarUrl(details?.avatar);
               const initials = displayName ? displayName.charAt(0).toUpperCase() : '?';
 

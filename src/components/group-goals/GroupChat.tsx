@@ -11,18 +11,11 @@ import { IMAGE_URL } from '@/constants';
 import { useTranslations } from 'next-intl';
 import { useUserProfile } from '@/context/UserProfileContext';
 
-interface ParticipantView {
-  id: string;
-  name: string;
-  avatarUrl: string | null;
-}
-
 interface GroupChatProps {
-  participantViews: ParticipantView[];
   goalId: string;
 }
 
-export function GroupChat({ participantViews, goalId }: GroupChatProps) {
+export function GroupChat({ goalId }: GroupChatProps) {
   const [messages, setMessages] = useState<ProgressEntry[]>([]);
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);

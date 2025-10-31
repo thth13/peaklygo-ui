@@ -123,7 +123,7 @@ export const GoalProgress = ({ goal, goalId, currentUserId }: GoalProgressProps)
         console.error('Failed to update habit day:', error);
       }
     },
-    [goalId, handleMarkComplete],
+    [goalId],
   );
 
   useEffect(() => {

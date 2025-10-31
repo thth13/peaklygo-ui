@@ -1,6 +1,6 @@
 import { API_URL } from '@/constants';
 import api from '../clientAxios';
-import { ProgressEntry, CreateProgressEntryDto, Comment, CreateCommentDto } from '@/types';
+import { ProgressEntry, Comment, CreateCommentDto } from '@/types';
 
 export const getGroupProgressEntries = async (
   goalId: string,

@@ -181,7 +181,7 @@ export const GroupGoalsList: React.FC = () => {
         });
       }
     },
-    [updateStateSafely],
+    [updateStateSafely, t],
   );
 
   useEffect(() => {

@@ -12,7 +12,6 @@ import { GroupChat } from '@/components/group-goals/GroupChat';
 import { GroupGoalStats as GroupGoalStatsComponent } from '@/components/group-goals/GroupGoalStats';
 import { ActivityFeed } from '@/components/group-goals/ActivityFeed';
 import { GroupSettings } from '@/components/group-goals/GroupSettings';
-import { GroupActions } from '@/components/group-goals/GroupActions';
 import { getGroupGoal, getGroupGoalStats } from '@/lib/api/goal';
 import { formatDate } from '@/lib/utils';
 import type { CheckIn, GroupGoal } from '@/types';
@@ -204,7 +203,7 @@ export default async function GroupGoalPage({ params }: GroupGoalPageProps) {
               goalId={id}
             /> */}
 
-            <GroupChat participantViews={participantViews} goalId={id} />
+            <GroupChat goalId={id} />
           </div>
 
           <div className="space-y-6">

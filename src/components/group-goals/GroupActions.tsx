@@ -1,6 +1,4 @@
-interface GroupActionsProps {}
-
-export function GroupActions({}: GroupActionsProps) {
+export function GroupActions() {
   const title = 'Действия';
   const createPostText = 'Создать пост';
   const shareText = 'Поделиться группой';

@@ -150,6 +150,7 @@ export interface Participant {
 }
 
 export interface Goal extends Document {
+  _id: string;
   goalName: string;
   category: string;
   description?: string;
