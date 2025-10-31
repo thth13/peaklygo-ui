@@ -420,6 +420,7 @@ export interface UserNotification {
   metadata?: NotificationMetadata;
   read: boolean;
   readAt?: string | Date;
+  isResponded?: 'accepted' | 'declined';
   createdAt: string | Date;
   updatedAt: string | Date;
 }

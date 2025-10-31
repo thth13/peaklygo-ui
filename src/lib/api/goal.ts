@@ -328,3 +328,16 @@ export const addGroupParticipants = async (goalId: string, payload: AddGroupPart
     throw err;
   }
 };
+
+export interface RespondToInvitationPayload {
+  status: 'accepted' | 'declined';
+}
+
+export const respondToGroupInvitation = async (goalId: string, payload: RespondToInvitationPayload): Promise<any> => {
+  try {
+    const res = await api.put(`${API_URL}/goals/${goalId}/invitations/respond`, payload);
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};

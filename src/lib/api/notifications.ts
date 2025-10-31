@@ -15,10 +15,7 @@ export const getNotifications = async (
   return response.data as NotificationsResponse;
 };
 
-export const markNotificationAsRead = async (
-  notificationId: string,
-  apiInstance?: AxiosInstance,
-): Promise<void> => {
+export const markNotificationAsRead = async (notificationId: string, apiInstance?: AxiosInstance): Promise<void> => {
   const client = apiInstance ?? api;
   await client.patch(`${API_URL}/notifications/${notificationId}/read`);
 };
@@ -39,4 +36,15 @@ export const markNotificationsAsRead = async (
 export const markAllNotificationsAsRead = async (apiInstance?: AxiosInstance): Promise<void> => {
   const client = apiInstance ?? api;
   await client.patch(`${API_URL}/notifications/mark-all-read`);
+};
+
+export const markNotificationResponse = async (
+  notificationId: string,
+  response: 'accepted' | 'declined',
+  apiInstance?: AxiosInstance,
+): Promise<void> => {
+  const client = apiInstance ?? api;
+  await client.patch(`${API_URL}/notifications/${notificationId}/respond`, {
+    response,
+  });
 };
