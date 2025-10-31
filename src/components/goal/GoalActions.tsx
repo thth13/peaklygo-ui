@@ -110,6 +110,14 @@ export const GoalActions: React.FC<GoalActionsProps> = ({ goal, currentUserId })
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 transition-colors">
       <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">{t('actions')}</h3>
       <div className="space-y-3">
+        {isOwner && goal.isCompleted && (
+          <button
+            onClick={() => router.push(`/goal/${goal._id}/certificate`)}
+            className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white py-2 px-4 rounded-lg text-sm font-semibold transition-all shadow-md hover:shadow-lg"
+          >
+            🏆 {t('getCertificate')}
+          </button>
+        )}
         {isOwner && (
           <button
             onClick={() => setIsModalOpen(true)}

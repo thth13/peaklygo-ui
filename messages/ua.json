@@ -496,6 +496,43 @@
         "linkToExisting": "Зв'яжіть нову звичку з уже існуючою",
         "trackDaily": "Відстежуйте прогрес щодня"
       }
+    },
+    "certificate": {
+      "title": "Сертифікат досягнення",
+      "subtitle": "Офіційне підтвердження вашого успіху",
+      "header": "Сертифікат досягнення",
+      "subheader": "Офіційне підтвердження",
+      "confirmsText": "Цей документ підтверджує, що",
+      "successfullyCompleted": "успішно завершив(ла) ціль",
+      "daysCompleted": "Днів завершено",
+      "percentCompleted": "Виконано",
+      "ratingPoints": "Балів рейтингу",
+      "completionDate": "Дата завершення:",
+      "categoryLabel": "Категорія:",
+      "officialStamp": "Офіційна печатка",
+      "systemSignature": "Цифровий підпис системи",
+      "issueDate": "Видано:",
+      "platform": "Платформа PeaklyGo",
+      "certificateNumber": "№ сертифіката:",
+      "actions": {
+        "downloadPDF": "Завантажити PDF",
+        "share": "Поділитися",
+        "print": "Роздрукувати"
+      },
+      "shareAchievement": "Поділіться своїм досягненням",
+      "about": {
+        "title": "Про сертифікат",
+        "type": "Тип сертифіката",
+        "typeValue": "Досягнення цілі",
+        "format": "Формат",
+        "formatValue": "Цифровий / PDF",
+        "size": "Розмір",
+        "sizeValue": "A4 (210×297 мм)",
+        "status": "Статус",
+        "statusValue": "Верифіковано",
+        "issuer": "Видавець",
+        "issuerValue": "PeaklyGo Platform"
+      }
     }
   },
   "habits": {
