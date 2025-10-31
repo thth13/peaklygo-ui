@@ -52,11 +52,19 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --background-gradient: radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.94), transparent 58%),
+    radial-gradient(circle at 75% 20%, rgba(255, 255, 255, 0.9), transparent 55%),
+    radial-gradient(circle at 35% 80%, rgba(248, 250, 252, 0.85), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(248, 250, 252, 0.96) 45%, rgba(241, 245, 249, 0.94) 100%);
 }
 
 .dark {
   --background: #0a0a0a;
   --foreground: #ededed;
+  --background-gradient: radial-gradient(circle at 20% 18%, rgba(241, 245, 249, 0.12), transparent 55%),
+    radial-gradient(circle at 78% 16%, rgba(226, 232, 240, 0.1), transparent 54%),
+    radial-gradient(circle at 30% 78%, rgba(248, 250, 252, 0.08), transparent 62%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 41, 59, 0.9) 38%, rgba(17, 24, 39, 0.92) 100%);
 }
 
 html, body {
@@ -64,6 +72,10 @@ html, body {
   scrollbar-width: none;
   font-family: 'Inter', sans-serif !important;
   background-color: var(--background);
+  background-image: var(--background-gradient);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
   color: var(--foreground);
   transition: background-color 0.3s ease, color 0.3s ease;
 }

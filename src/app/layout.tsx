@@ -83,7 +83,7 @@ export default async function RootLayout({
           `}
         </Script>
       </head>
-      <body className="bg-gray-50 dark:bg-gray-900 font-sans transition-colors">
+      <body className="font-sans transition-colors min-h-screen">
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <UserProfileProvider>
