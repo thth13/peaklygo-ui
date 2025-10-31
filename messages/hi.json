@@ -122,36 +122,48 @@
     },
     "wizard": {
       "steps": {
+        "goalType": "प्रकार",
         "basics": "बुनियादी बातें",
         "steps": "चरण",
         "habit": "आदत",
+        "group": "टीम",
+        "habitGroup": "आदत और टीम",
         "motivation": "प्रेरणा",
         "design": "डिज़ाइन",
         "finish": "समाप्त",
         "account": "खाता"
       },
       "stepDescriptions": {
+        "goalTypeSelection": "लक्ष्य प्रकार चयन",
         "basicInfo": "बुनियादी जानकारी",
         "planningSteps": "चरणों की योजना बनाना",
         "habitSetup": "आदत पैरामीटर सेटअप",
+        "groupSetup": "टीम सेटअप",
+        "habitGroupSetup": "आदत और टीम सेटअप",
         "motivationRewards": "प्रेरणा और इनाम",
         "photoCategory": "फ़ोटो और श्रेणी",
         "privacyComplexity": "गोपनीयता और जटिलता",
         "accountCreation": "खाता बनाएँ"
       },
       "titles": {
+        "selectGoalType": "लक्ष्य प्रकार चुनें",
         "createNewGoal": "नया लक्ष्य बनाना",
         "breakIntoSteps": "लक्ष्य को चरणों में तोड़ें",
         "habitFormation": "आदत निर्माण",
+        "groupSetup": "टीम बनाएँ",
+        "groupHabitSetup": "आदत और टीम को सेट करें",
         "setDeadlines": "डेडलाइन निर्धारित करें",
         "giveGoalImage": "लक्ष्य को छवि दें",
         "finalSettings": "अंतिम सेटिंग्स",
         "createAccount": "खाता बनाएँ"
       },
       "descriptions": {
+        "selectGoalType": "निर्धारित करें कि आप लक्ष्य को किस प्रारूप में प्राप्त करना चाहते हैं। हर प्रकार की अपनी विशेषताएँ होती हैं और अलग-अलग कार्यों के लिए उपयुक्त होता है।",
         "createStart": "यहाँ आपकी यात्रा शुरू होती है। अपने लक्ष्य को स्पष्ट और विशिष्ट रूप से बताएं। जब लक्ष्य शब्दों में ढलता है, तो वह केवल एक विचार नहीं रह जाता बल्कि वास्तविक कार्य की दिशा में पहला कदम बन जाता है।",
         "breakIntoSteps": "बड़े लक्ष्य छोटे कदमों से हासिल होते हैं। अपने लक्ष्य को ऐसे कार्यों में बांटें जो आपको सफलता तक ले जाएंगे। हर कदम बड़े सपने की राह में एक छोटी जीत है।",
         "habitFormation": "आवृत्ति और प्रगति ट्रैकिंग सेट करें। छोटी दैनिक क्रियाएं जीवन में बड़े बदलाव लाती हैं।",
+        "groupSetup": "टीम के सदस्यों को आमंत्रित करें, नियम तय करें और सुनिश्चित करें कि सभी एक ही दिशा में आगे बढ़ रहे हैं।",
+        "groupHabitSetup": "आदत की लय तय करें और टीम के साथ मिलकर लक्ष्य तक पहुँचने के तरीके पर सहमति बनाएं।",
         "setTiming": "समय सीमा और प्रेरणा निर्धारित करें। स्पष्ट डेडलाइन लक्ष्य को वास्तविक बनाती है, जबकि इनाम और परिणाम कार्य के लिए प्रेरित करते हैं।",
         "giveImage": "आप छवि जोड़ सकते हैं और श्रेणी चुन सकते हैं। दृश्यीकरण एक शक्तिशाली उपकरण है: यह परिणाम को स्पर्शनीय और करीब बनाता है। जब लक्ष्य की छवि होती है, तो इसकी कल्पना करना और इसके लिए प्रतिदिन प्रयास करना आसान हो जाता है।",
         "finalStep": "अंतिम चरण! अपने लक्ष्य के अतिरिक्त पैरामीटर कॉन्फ़िगर करें। आप चुनौती बना सकते हैं, दोस्तों को आमंत्रित कर सकते हैं या बस निर्माण पूरा कर सकते हैं। आपका लक्ष्य शुरू होने के लिए लगभग तैयार है!",
@@ -205,6 +217,26 @@
         "stepsShouldBring": "हर चरण आपको लक्ष्य के करीब लाना चाहिए",
         "dontFearDetails": "विवरण जोड़ने से न डरें"
       },
+      "groupTips": {
+        "title": "टीमवर्क से प्रगति तेज होती है",
+        "subtitle": "विश्वसनीय लोगों को आमंत्रित करें और सहयोग के नियम तय करें।",
+        "benefits": {
+          "motivation": {
+            "title": "आपसी प्रेरणा",
+            "description": "एक-दूसरे को प्रेरित करें और ऊर्जा बनाए रखें।"
+          },
+          "progress": {
+            "title": "साझा प्रगति",
+            "description": "पूरी टीम की उपलब्धियों को ट्रैक करें और माइलस्टोन का जश्न मनाएँ।"
+          },
+          "experience": {
+            "title": "अनुभव साझा करना",
+            "description": "टीम के भीतर सुझाव, तरकीबें और सर्वोत्तम अभ्यास साझा करें।"
+          }
+        },
+        "quote": "\"यदि आप तेज चलना चाहते हैं — अकेले चलें। यदि आप दूर तक जाना चाहते हैं — साथ चलें।\"",
+        "quoteAuthor": "अफ्रीकी कहावत"
+      },
       "quotes": {
         "thousandMilesJourney": "\"हजार मील की यात्रा एक कदम से शुरू होती है\"",
         "bigJourneyStep": "\"बड़ी यात्रा छोटे कदम से शुरू होती है\"",
@@ -224,6 +256,28 @@
           "firstStep": "पहला चरण जोड़ें...",
           "stepWithIndex": "चरण {index}..."
         }
+      },
+      "groupSettings": {
+        "title": "टीम सेटिंग्स",
+        "subtitle": "भागीदारी और सहयोग के नियम तय करें।",
+        "maxParticipants": "अधिकतम प्रतिभागी",
+        "maxParticipantsOption": "{count} प्रतिभागी",
+        "maxParticipantsUnlimited": "असीमित",
+        "maxParticipantsHint": "छोटी टीम से शुरुआत करें — संवाद आसान रहेगा।",
+        "requireApproval": "अनुमोदन आवश्यक",
+        "requireApprovalDescription": "नए प्रतिभागी आपके अनुमोदन के बाद ही जुड़ सकेंगे।",
+        "allowInvites": "सदस्य अन्य लोगों को आमंत्रित कर सकते हैं",
+        "allowInvitesDescription": "मौजूदा सदस्य सीधे नए लोगों को टीम में जोड़ सकें।",
+        "participantsTitle": "प्रतिभागियों को आमंत्रित करें",
+        "participantsSubtitle": "पहले से आमंत्रित: <highlight>{count}</highlight>",
+        "participantInputPlaceholder": "ईमेल या उपयोगकर्ता नाम",
+        "participantInputHint": "स्वतः खोज के लिए कम से कम दो अक्षर टाइप करें या मैन्युअल रूप से जोड़ने के लिए Enter दबाएँ।",
+        "participantSearchLoading": "खोज जारी है...",
+        "participantSearchNoResults": "कोई उपयोगकर्ता नहीं मिला। कोई अन्य क्वेरी आज़माएँ।",
+        "participantSearchError": "अभी सुझाव लोड नहीं हो सके।",
+        "participantInviteAction": "आमंत्रित करें",
+        "removeParticipant": "प्रतिभागी हटाएँ",
+        "emptyParticipants": "अभी तक कोई प्रतिभागी नहीं — तैयार होने पर अपनी टीम को आमंत्रित करें।"
       },
       "authors": {
         "laoTzu": "लाओ त्ज़ू",
@@ -252,8 +306,13 @@
       },
       "stepIndicator": "चरण {step} का {totalSteps}",
       "goalTypes": {
+        "title": "लक्ष्य प्रकार चुनें",
+        "deadlineGoal": "डेडलाइन लक्ष्य",
+        "deadlineGoalDescription": "एक निश्चित समय सीमा वाला पारंपरिक लक्ष्य। परियोजनाओं, सीखने और स्पष्ट समयसीमा वाले परिणामों के लिए उपयुक्त।",
         "habitGoal": "आदत लक्ष्य",
-        "habitGoalDescription": "निर्दिष्ट दिनों की संख्या के लिए लक्ष्य। आदतों के निर्माण और दैनिक निरंतर अभ्यास के लिए एकदम सही।"
+        "habitGoalDescription": "निश्चित दिनों की संख्या के लिए लक्ष्य। आदत बनाने और लगातार अभ्यास के लिए आदर्श।",
+        "groupChallenge": "टीम लक्ष्य",
+        "groupChallengeDescription": "ऐसा लक्ष्य जिसमें अन्य लोग शामिल हों। समुदाय, सामूहिक जिम्मेदारी और मित्रों के साथ स्वस्थ प्रतिस्पर्धा से प्रेरणा लें।"
       },
       "notifications": {
         "goalCreated": "लक्ष्य बनाया गया!",
@@ -746,7 +805,26 @@
     "logout": "लॉग आउट",
     "howItWorks": "यह कैसे काम करता है",
     "community": "समुदाय",
-    "login": "लॉग इन"
+    "login": "लॉग इन",
+    "notifications": {
+      "title": "सूचनाएँ",
+      "ariaLabel": "सूचना पैनल खोलें",
+      "iconAlt": "सूचनाएँ",
+      "accept": "स्वीकार करें",
+      "accepting": "स्वीकार किया जा रहा है...",
+      "decline": "अस्वीकार करें",
+      "declining": "अस्वीकार किया जा रहा है...",
+      "invitationAccepted": "निमंत्रण स्वीकार किया गया",
+      "invitationDeclined": "निमंत्रण अस्वीकार किया गया",
+      "processing": "प्रोसेस हो रहा है...",
+      "loading": "सूचनाएँ लोड हो रही हैं...",
+      "empty": "आपने सभी सूचनाएँ देख ली हैं।",
+      "error": "सूचनाएँ लोड नहीं हो सकीं।",
+      "retry": "फिर से प्रयास करें",
+      "markAll": "सभी को पढ़ा हुआ चिन्हित करें",
+      "markingAll": "चिन्हित किया जा रहा है...",
+      "actionError": "सूचनाओं को अपडेट नहीं किया जा सका। कृपया पुनः प्रयास करें।"
+    }
   },
   "rating": {
     "title": "रेटिंग",
@@ -776,6 +854,7 @@
     "user": "उपयोगकर्ता",
     "retry": "पुनः प्रयास करें",
     "addGoal": "लक्ष्य जोड़ें",
+    "groupGoals": "समूह लक्ष्य",
     "error": {
       "dataLoadingError": "डेटा लोड करने में त्रुटि",
       "profileLoadingError": "प्रोफ़ाइल लोड करने में त्रुटि",
@@ -934,6 +1013,200 @@
       "timeLeftDays": "{count} दिन शेष",
       "timeLeftHours": "{count} घंटे शेष",
       "expiresLabel": "प्रीमियम समाप्त होगा: {date}"
+    }
+  },
+  "groupGoals": {
+    "metaTitle": "समूह लक्ष्य — PeaklyGo",
+    "metaDescription": "PeaklyGo में समूह लक्ष्यों को प्रबंधित करें और अपनी टीम की प्रगति पर नज़र रखें।",
+    "heading": "समूह लक्ष्य",
+    "subtitle": "साझा लक्ष्यों पर नज़र रखें, प्रगति साझा करें और टीम को शामिल होने के लिए आमंत्रित करें।",
+    "actions": {
+      "create": "समूह लक्ष्य बनाएँ"
+    }
+  },
+  "groupGoal": {
+    "meta": {
+      "title": "{name} — PeaklyGo",
+      "defaultDescription": "समूह लक्ष्य के विवरण देखें और PeaklyGo पर टीम की प्रगति पर नज़र रखें।",
+      "notFoundTitle": "समूह लक्ष्य नहीं मिला — PeaklyGo",
+      "notFoundDescription": "यह समूह लक्ष्य उपलब्ध नहीं है या हटाया जा चुका है।"
+    },
+    "notFound": {
+      "title": "समूह लक्ष्य नहीं मिला",
+      "description": "यह समूह लक्ष्य मौजूद नहीं है या हटा दिया गया है।",
+      "backToGoals": "समूह लक्ष्यों पर वापस जाएँ"
+    },
+    "breadcrumbs": {
+      "back": "समूहों पर वापस"
+    },
+    "header": {
+      "backButton": "वापस",
+      "inviteButton": "आमंत्रित करें",
+      "settingsButton": "सेटिंग्स"
+    },
+    "status": {
+      "completed": "पूर्ण",
+      "archived": "आर्काइव",
+      "active": "सक्रिय"
+    },
+    "privacy": {
+      "private": "निजी",
+      "friends": "केवल मित्रों के लिए",
+      "public": "सार्वजनिक"
+    },
+    "details": {
+      "createdAt": "{date} को बनाया गया",
+      "descriptionTitle": "लक्ष्य का विवरण",
+      "descriptionFallback": "लक्ष्य का विवरण अभी तक नहीं जोड़ा गया है।",
+      "teamProgress": "टीम की प्रगति",
+      "startDate": "प्रारंभ तिथि",
+      "endDate": "समाप्ति तिथि",
+      "privacy": "गोपनीयता",
+      "noDeadline": "कोई समय सीमा नहीं"
+    },
+    "participants": {
+      "fallbackName": "प्रतिभागी {suffix}",
+      "unknown": "अज्ञात प्रतिभागी",
+      "anonymous": "प्रतिभागी",
+      "title": "प्रतिभागी",
+      "count": "टीम में {accepted} / {total}",
+      "empty": "अभी तक कोई प्रतिभागी नहीं। सहयोग शुरू करने के लिए टीम के सदस्यों को आमंत्रित करें।",
+      "roles": {
+        "owner": "मालिक",
+        "admin": "प्रशासक",
+        "member": "प्रतिभागी"
+      },
+      "status": {
+        "accepted": "टीम में",
+        "pending": "निमंत्रण प्रतीक्षारत",
+        "declined": "अस्वीकार किया गया",
+        "other": "अज्ञात स्थिति"
+      },
+      "joinedAt": "{date} से",
+      "noDate": "तारीख उपलब्ध नहीं"
+    },
+    "contributors": {
+      "title": "शीर्ष योगदानकर्ता"
+    },
+    "stats": {
+      "title": "त्वरित आँकड़े",
+      "progress": "प्रगति",
+      "participants": "प्रतिभागी",
+      "active": "सक्रिय",
+      "pending": "प्रतीक्षारत"
+    },
+    "settings": {
+      "title": "समूह सेटिंग्स",
+      "owner": "मालिक",
+      "memberInvites": "सदस्य निमंत्रण",
+      "memberInvitesAllowed": "अनुमति है",
+      "memberInvitesRestricted": "केवल प्रशासक",
+      "approval": "अनुरोध स्वीकृति",
+      "approvalRequired": "आवश्यक",
+      "approvalNotRequired": "आवश्यक नहीं",
+      "teamLimit": "टीम सीमा",
+      "teamLimitValue": "{count} लोग",
+      "teamLimitUnset": "निर्दिष्ट नहीं",
+      "goalValue": "लक्ष्य का महत्व",
+      "editButton": "सेटिंग्स बदलें"
+    },
+    "motivation": {
+      "title": "प्रेरणा",
+      "reward": "पुरस्कार",
+      "consequence": "परिणाम"
+    },
+    "todayProgress": {
+      "today": "आज, {date}",
+      "outOf": "{total} में से {completed}",
+      "completion": "पूर्णता",
+      "alreadyMarked": "आप आज पहले ही चेक-इन कर चुके हैं",
+      "processing": "प्रक्रिया हो रही है...",
+      "cancelMark": "चेक-इन रद्द करें",
+      "markParticipation": "भागीदारी चिह्नित करें",
+      "groupReward": "समूह पुरस्कार",
+      "missedPenalty": "छूटने का दंड",
+      "errorMark": "भागीदारी चिह्नित करने में विफल। पुनः प्रयास करें।"
+    },
+    "progressTable": {
+      "title": "प्रतिभागी प्रगति तालिका",
+      "lastDays": "पिछले {count} दिन",
+      "participant": "प्रतिभागी",
+      "total": "कुल",
+      "completed": "पूर्ण",
+      "missed": "छूटा",
+      "pending": "प्रतीक्षारत",
+      "showAll": "सभी दिन दिखाएं",
+      "errorMark": "भागीदारी चिह्नित करने में विफल। पुनः प्रयास करें।"
+    },
+    "activity": {
+      "title": "वर्तमान गतिविधि",
+      "empty": "आज के लिए अभी तक कोई चेक-इन नहीं।",
+      "showAll": "सभी गतिविधि दिखाएं"
+    },
+    "list": {
+      "loading": "समूह लक्ष्य लोड हो रहे हैं...",
+      "loadMore": "और दिखाएं",
+      "loadingMore": "लोड हो रहा है...",
+      "error": "समूह लक्ष्य लोड करने में विफल। कृपया पुनः प्रयास करें।",
+      "retry": "पुनः प्रयास करें",
+      "empty": "कोई समूह लक्ष्य नहीं",
+      "emptyDescription": "अपना पहला समूह लक्ष्य बनाएं और समान विचारधारा वाले लोगों को आमंत्रित करें।",
+      "status": {
+        "completed": "पूर्ण",
+        "archived": "संग्रहित",
+        "active": "सक्रिय"
+      },
+      "progress": "प्रगति",
+      "participants": "{count} प्रतिभागी",
+      "viewGoal": "देखें →"
+    },
+    "inviteMore": "और टीममेट्स आमंत्रित करें"
+  },
+  "groupGoalEdit": {
+    "meta": {
+      "title": "{name} को संपादित करें — PeaklyGo",
+      "defaultDescription": "समूह लक्ष्य के शेड्यूल, प्रेरणा और टीम नियमों को अपडेट करें।",
+      "notFoundTitle": "समूह लक्ष्य उपलब्ध नहीं",
+      "notFoundDescription": "हम इस समूह लक्ष्य को लोड नहीं कर सके।"
+    },
+    "title": "समूह लक्ष्य संपादित करें",
+    "subtitle": "चुनौती के नियम और गति को अद्यतन रखें।",
+    "form": {
+      "goalName": "लक्ष्य का नाम",
+      "description": "विवरण",
+      "category": "श्रेणी",
+      "categoryPlaceholder": "श्रेणी चुनें",
+      "startDate": "प्रारंभ तिथि",
+      "endDate": "समाप्ति तिथि",
+      "habitSectionTitle": "आदत ताल",
+      "habitSectionDescription": "टीम कितनी बार रिपोर्ट करेगी और प्रेरित रहेगी इसे समायोजित करें।",
+      "habitDuration": "आदत अवधि (दिन)",
+      "habitDurationHint": "कम से कम एक दिन। प्रतिभागी इसे अपने ट्रैकर्स में देखते हैं।",
+      "reward": "पुरस्कार",
+      "consequence": "परिणाम",
+      "habitDays": "सप्ताह के दिन",
+      "habitDaysHint": "वे दिन चुनें जब टीम प्रगति साझा करेगी।",
+      "groupSettingsTitle": "समूह सेटिंग्स",
+      "groupSettingsDescription": "निमंत्रण और प्रतिभागी सीमा नियंत्रित करें।",
+      "allowMembersToInvite": "सदस्यों को दूसरों को आमंत्रित करने दें",
+      "requireApproval": "नए सदस्यों के लिए स्वीकृति आवश्यक",
+      "maxParticipants": "अधिकतम प्रतिभागी",
+      "maxParticipantsPlaceholder": "असीमित",
+      "maxParticipantsHint": "कोई सीमा न रखने के लिए खाली छोड़ें।",
+      "actionsTitle": "परिवर्तन सहेजें",
+      "actionsDescription": "अद्यतन तुरंत सभी पर लागू होंगे।",
+      "saveChanges": "परिवर्तन सहेजें",
+      "saving": "सहेजा जा रहा है..."
+    },
+    "notifications": {
+      "updated": "समूह लक्ष्य अपडेट हुआ",
+      "noChanges": "सहेजने के लिए कोई परिवर्तन नहीं",
+      "failed": "समूह लक्ष्य अपडेट नहीं हो सका"
+    },
+    "errors": {
+      "goalNameRequired": "कृपया लक्ष्य का नाम दर्ज करें",
+      "habitDurationInvalid": "अवधि कम से कम 1 दिन होनी चाहिए",
+      "habitDaysRequired": "कम से कम एक दिन चुनें"
     }
   }
 }

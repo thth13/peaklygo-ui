@@ -150,7 +150,9 @@ export const ProgressBlogProvider = ({ children, goalId }: ProgressBlogProviderP
       }));
 
       setBlogEntries((prev) =>
-        prev.map((entry) => (entry._id === entryId ? { ...entry, commentCount: entry.commentCount + 1 } : entry)),
+        prev.map((entry) =>
+          entry._id === entryId ? { ...entry, commentCount: (entry.commentCount || 0) + 1 } : entry,
+        ),
       );
 
       setCommentTexts((prev) => ({ ...prev, [entryId]: '' }));

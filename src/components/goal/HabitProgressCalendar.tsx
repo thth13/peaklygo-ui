@@ -150,7 +150,7 @@ export function HabitProgressCalendar({
       weeks: weeksArray,
       dayLabels: (t.raw('habits.dayLabels') as string[]) ?? ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
     };
-  }, [startDate, completedDates, optimisticMap]);
+  }, [startDate, completedDates, optimisticMap, t]);
 
   // Cleanup optimistic overrides when server data catches up
   useEffect(() => {

@@ -3,17 +3,43 @@ import api from '../clientAxios';
 import nProgress from 'nprogress';
 import {
   Goal,
+  GroupGoal,
   GetGoalsPaginationDto,
   PaginatedGoalsResponse,
+  PaginatedGroupGoalsResponse,
   LandingGoal,
   GoalFilterType,
   MarkHabitDayDto,
+  GroupGoalStats,
+  ParticipantRole,
 } from '@/types';
 import { AxiosInstance } from 'axios';
 
 export const createGoal = async (goal: FormData) => {
   try {
     const res = await api.post(`${API_URL}/goals`, goal);
+
+    nProgress.start();
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const createGroupGoal = async (goal: FormData) => {
+  try {
+    const res = await api.post(`${API_URL}/goals/group`, goal);
+
+    nProgress.start();
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const updateGroupGoal = async (goalId: string, goal: FormData) => {
+  try {
+    const res = await api.put(`${API_URL}/goals/group/${goalId}`, goal);
 
     nProgress.start();
     return res.data;
@@ -63,9 +89,31 @@ export const getGoal = async (id: string, apiInstance?: AxiosInstance): Promise<
   }
 };
 
+export const getGroupGoal = async (id: string, apiInstance?: AxiosInstance): Promise<GroupGoal> => {
+  try {
+    const client = apiInstance ?? api;
+    const res = await client.get(`${API_URL}/goals/group/${id}`);
+
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
 export const updateStepStatus = async (goalId: string, stepId: string, isCompleted: boolean): Promise<void> => {
   try {
     await api.put(`${API_URL}/goals/${goalId}/steps/${stepId}/complete`, {
+      isCompleted,
+    });
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const markGroupCheckIn = async (goalId: string, date: Date, isCompleted: boolean): Promise<void> => {
+  try {
+    await api.patch(`${API_URL}/goals/group/${goalId}/check-in`, {
+      date,
       isCompleted,
     });
   } catch (err: any) {
@@ -184,6 +232,110 @@ export const markHabitDay = async (goalId: string, date: Date, isCompleted: bool
 
     const res = await api.put(`/goals/${goalId}/markHabitDay`, markHabitDayDto);
 
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export interface GroupGoalUserSearchResult {
+  userId: string;
+  username: string;
+  name: string;
+  avatar?: string;
+}
+
+interface GroupGoalUserSearchParams {
+  query: string;
+  limit?: number;
+  goalId?: string;
+  excludeUserIds?: string[];
+}
+
+export const searchGroupGoalUsers = async ({
+  query,
+  limit = 10,
+  goalId,
+  excludeUserIds = [],
+}: GroupGoalUserSearchParams): Promise<GroupGoalUserSearchResult[]> => {
+  try {
+    const params = new URLSearchParams({ query });
+    if (limit) {
+      params.append('limit', Math.min(limit, 50).toString());
+    }
+    if (goalId) {
+      params.append('goalId', goalId);
+    }
+    if (excludeUserIds.length > 0) {
+      params.append('excludeUserIds', excludeUserIds.join(','));
+    }
+
+    const res = await api.get(`${API_URL}/goals/group/users/search?${params.toString()}`);
+    return res.data as GroupGoalUserSearchResult[];
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const getMyGroupGoals = async (
+  pagination?: GetGoalsPaginationDto,
+  apiInstance?: AxiosInstance,
+): Promise<GroupGoal[] | PaginatedGroupGoalsResponse> => {
+  try {
+    const params = new URLSearchParams();
+    if (pagination?.page) {
+      params.append('page', pagination.page.toString());
+    }
+    if (pagination?.limit) {
+      params.append('limit', pagination.limit.toString());
+    }
+    if (pagination?.filter) {
+      params.append('filter', pagination.filter);
+    }
+
+    const query = params.toString();
+    const url = `${API_URL}/goals/group/my${query ? `?${query}` : ''}`;
+    const client = apiInstance ?? api;
+    const res = await client.get(url);
+
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export const getGroupGoalStats = async (goalId: string, apiInstance?: AxiosInstance): Promise<GroupGoalStats> => {
+  try {
+    const client = apiInstance ?? api;
+    const res = await client.get(`${API_URL}/goals/${goalId}/group/stats`);
+
+    return res.data as GroupGoalStats;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export interface AddGroupParticipantsPayload {
+  userIds: string[];
+  role?: ParticipantRole | 'owner' | 'admin' | 'member';
+}
+
+export const addGroupParticipants = async (goalId: string, payload: AddGroupParticipantsPayload): Promise<any> => {
+  try {
+    const res = await api.post(`${API_URL}/goals/${goalId}/participants`, payload);
+    return res.data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+export interface RespondToInvitationPayload {
+  status: 'accepted' | 'declined';
+}
+
+export const respondToGroupInvitation = async (goalId: string, payload: RespondToInvitationPayload): Promise<any> => {
+  try {
+    const res = await api.put(`${API_URL}/goals/${goalId}/invitations/respond`, payload);
     return res.data;
   } catch (err: any) {
     throw err;

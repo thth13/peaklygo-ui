@@ -13,6 +13,7 @@ import { faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { LanguageSwitcher } from '../LanguageSwitcher';
 import { useTranslations } from 'next-intl';
 import { AuthContext } from '@/context/AuthContext';
+import { NotificationsDropdown } from './NotificationsDropdown';
 
 export const Header = () => {
   const pathname = usePathname();
@@ -69,6 +70,7 @@ export const Header = () => {
             </LinkWithProgress>
           </div>
           <div className="flex items-center space-x-4">
+            <NotificationsDropdown />
             <ThemeToggle />
             {/* <button className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
               <FontAwesomeIcon icon={faBell} />

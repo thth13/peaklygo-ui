@@ -129,6 +129,8 @@
         "basics": "Basics",
         "steps": "Steps",
         "habit": "Habit",
+        "group": "Team",
+        "habitGroup": "Habit & team",
         "motivation": "Motivation",
         "design": "Design",
         "finish": "Finish",
@@ -139,6 +141,8 @@
         "basicInfo": "Basic information",
         "planningSteps": "Planning steps",
         "habitSetup": "Habit parameters setup",
+        "groupSetup": "Team setup",
+        "habitGroupSetup": "Habit and team setup",
         "motivationRewards": "Motivation and rewards",
         "photoCategory": "Photo and category",
         "privacyComplexity": "Privacy and complexity",
@@ -149,6 +153,8 @@
         "createNewGoal": "Creating new goal",
         "breakIntoSteps": "Break goal into steps",
         "habitFormation": "Habit formation",
+        "groupSetup": "Build your team",
+        "groupHabitSetup": "Align habit & team",
         "setDeadlines": "Set deadlines",
         "giveGoalImage": "Give goal an image",
         "finalSettings": "Final settings",
@@ -159,6 +165,8 @@
         "createStart": "This is where your journey begins. Formulate what you want to achieve — clearly and specifically. When a goal takes on words, it stops being just a thought and becomes the first step toward real action.",
         "breakIntoSteps": "Big goals are achieved with small steps. Divide your goal into concrete actions that will lead you to success. Each step is a small victory on the path to a big dream.",
         "habitFormation": "Set up frequency and progress tracking. Small daily actions lead to big life changes.",
+        "groupSetup": "Bring your teammates together, agree on rules, and set expectations so everyone moves in sync toward the goal.",
+        "groupHabitSetup": "Set the rhythm for the habit and sync the team on how you'll achieve it together.",
         "setTiming": "Define motivation and rewards. Clear motivation makes the goal meaningful, while rewards drive action.",
         "giveImage": "You can add an image and choose a category. Visualization is a powerful tool: it makes the result tangible and closer. When a goal has an image, it's easier to imagine and strive for daily.",
         "finalStep": "Last step! Configure additional parameters of your goal. You can create a challenge, invite friends, or just complete creation. Your goal is almost ready to launch!",
@@ -212,6 +220,26 @@
         "stepsShouldBring": "Each step should bring you closer to the goal",
         "dontFearDetails": "Don't be afraid to add details"
       },
+      "groupTips": {
+        "title": "Teamwork boosts progress",
+        "subtitle": "Invite people you trust and agree on how you'll collaborate.",
+        "benefits": {
+          "motivation": {
+            "title": "Mutual motivation",
+            "description": "Encourage and support one another to keep momentum high."
+          },
+          "progress": {
+            "title": "Shared progress",
+            "description": "Track the achievements of the whole team and celebrate milestones together."
+          },
+          "experience": {
+            "title": "Knowledge exchange",
+            "description": "Share insights, tips, and best practices directly inside the team."
+          }
+        },
+        "quote": "\"If you want to go fast — go alone. If you want to go far — go together.\"",
+        "quoteAuthor": "African proverb"
+      },
       "quotes": {
         "goalWithoutPlan": "\"A goal without a plan is just a wish\"",
         "thousandMilesJourney": "\"A journey of a thousand miles begins with a single step\"",
@@ -232,6 +260,28 @@
           "firstStep": "Add the first step...",
           "stepWithIndex": "Step {index}..."
         }
+      },
+      "groupSettings": {
+        "title": "Team settings",
+        "subtitle": "Define how participants join and interact.",
+        "maxParticipants": "Maximum number of participants",
+        "maxParticipantsOption": "{count} participants",
+        "maxParticipantsUnlimited": "Unlimited participants",
+        "maxParticipantsHint": "Start with a compact group to keep communication easy.",
+        "requireApproval": "Approval required to join",
+        "requireApprovalDescription": "New participants must receive your approval before joining the team.",
+        "allowInvites": "Members can invite others",
+        "allowInvitesDescription": "Allow current participants to invite new people directly.",
+        "participantsTitle": "Invite participants",
+        "participantsSubtitle": "Already invited: <highlight>{count}</highlight>",
+        "participantInputPlaceholder": "Email or username",
+        "participantInputHint": "Type at least two characters to search automatically or press Enter to add manually.",
+        "participantSearchLoading": "Searching...",
+        "participantSearchNoResults": "No users found. Try another query.",
+        "participantSearchError": "Unable to load suggestions right now.",
+        "participantInviteAction": "Invite",
+        "removeParticipant": "Remove participant",
+        "emptyParticipants": "No participants added yet — invite teammates when you're ready."
       },
       "authors": {
         "laoTzu": "Lao Tzu",
@@ -777,7 +827,26 @@
     "logout": "Logout",
     "howItWorks": "How it works",
     "community": "Community",
-    "login": "Login"
+    "login": "Login",
+    "notifications": {
+      "title": "Notifications",
+      "ariaLabel": "Toggle notifications panel",
+      "iconAlt": "Notifications",
+      "accept": "Accept",
+      "accepting": "Accepting...",
+      "decline": "Decline",
+      "declining": "Declining...",
+      "invitationAccepted": "Invitation accepted",
+      "invitationDeclined": "Invitation declined",
+      "processing": "Processing...",
+      "loading": "Loading notifications...",
+      "empty": "You're all caught up!",
+      "error": "Couldn't load notifications.",
+      "retry": "Try again",
+      "markAll": "Mark all as read",
+      "markingAll": "Marking...",
+      "actionError": "Couldn't update notifications. Please try again."
+    }
   },
   "rating": {
     "title": "Rating",
@@ -807,6 +876,7 @@
     "user": "User",
     "retry": "Try again",
     "addGoal": "Add goal",
+    "groupGoals": "Group goals",
     "closeSidebar": "Close sidebar",
     "error": {
       "dataLoadingError": "Data loading error",
@@ -814,7 +884,7 @@
       "tryAgain": "Try again",
       "profileNotFound": "Profile not found"
     },
-  "pricing": "PeaklyGo Pro"
+    "pricing": "PeaklyGo Pro"
   },
   "rightSidebar": {
     "title": "Statistics",
@@ -968,6 +1038,229 @@
       "timeLeftDays": "{count} days left",
       "timeLeftHours": "{count} hours left",
       "expiresLabel": "Premium expires: {date}"
+    }
+  },
+  "groupGoals": {
+    "metaTitle": "Group Goals — PeaklyGo",
+    "metaDescription": "Manage collaborative goals and track your team's progress in PeaklyGo.",
+    "heading": "Group Goals",
+    "subtitle": "Monitor shared goals, share progress, and invite your team to participate.",
+    "actions": {
+      "create": "Create group goal"
+    }
+  },
+  "groupGoal": {
+    "meta": {
+      "title": "{name} — PeaklyGo",
+      "defaultDescription": "Review group goal details and follow your team's progress on PeaklyGo.",
+      "notFoundTitle": "Group goal not found — PeaklyGo",
+      "notFoundDescription": "This group goal is unavailable or may have been removed."
+    },
+    "notFound": {
+      "title": "Group goal not found",
+      "description": "This group goal doesn't exist or was removed.",
+      "backToGoals": "Back to group goals"
+    },
+    "breadcrumbs": {
+      "back": "Back to groups"
+    },
+    "header": {
+      "backButton": "Back",
+      "inviteButton": "Invite",
+      "settingsButton": "Settings"
+    },
+    "status": {
+      "completed": "Completed",
+      "archived": "Archived",
+      "active": "Active"
+    },
+    "privacy": {
+      "private": "Private",
+      "friends": "Friends only",
+      "public": "Public"
+    },
+    "details": {
+      "createdAt": "Created {date}",
+      "descriptionTitle": "Goal description",
+      "descriptionFallback": "Goal description has not been provided yet.",
+      "teamProgress": "Team progress",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "privacy": "Privacy",
+      "noDeadline": "No deadline"
+    },
+    "participants": {
+      "fallbackName": "Participant {suffix}",
+      "unknown": "Unknown participant",
+      "anonymous": "Participant",
+      "title": "Participants",
+      "count": "{accepted} / {total} in the team",
+      "empty": "No participants yet. Invite teammates to start collaborating.",
+      "inviteMore": "Invite more teammates",
+      "roles": {
+        "owner": "Owner",
+        "admin": "Administrator",
+        "member": "Participant"
+      },
+      "status": {
+        "accepted": "In the team",
+        "pending": "Pending invitation",
+        "declined": "Declined",
+        "other": "Status unknown"
+      },
+      "joinedAt": "Since {date}",
+      "noDate": "Date not provided"
+    },
+    "invite": {
+      "title": "Invite teammates",
+      "subtitle": "Search by name, username, or email. People already in the goal are hidden automatically.",
+      "inputLabel": "Find participants",
+      "searchPlaceholder": "Type a name, username, or email",
+      "searchHint": "Tip: select everyone you need and send invites in one go.",
+      "searchError": "We could not load suggestions. Try again.",
+      "searchEmpty": "No matching people yet",
+      "searchPlaceholderHint": "Start typing to see suggestions",
+      "resultsTitle": "Suggestions",
+      "resultsCount": "{count} results",
+      "resultsIdle": "Waiting for input",
+      "addAction": "Add",
+      "removeAction": "Remove",
+      "roleLabel": "Role",
+      "roleMember": "Member",
+      "roleAdmin": "Admin",
+      "selectedTitle": "Selected",
+      "selectionCount": "{count} selected",
+      "emptySelected": "Nobody selected yet",
+      "selectionEmpty": "Pick at least one person",
+      "submit": "Send invites",
+      "submitting": "Sending...",
+      "success": "Sent {count} invite{count, plural, one {} other {s}}",
+      "error": "Could not send invitations",
+      "alreadyAdded": "Already selected"
+    },
+    "contributors": {
+      "title": "Top contributors"
+    },
+    "stats": {
+      "title": "Quick stats",
+      "progress": "Progress",
+      "participants": "Participants",
+      "active": "Active",
+      "pending": "Pending"
+    },
+    "settings": {
+      "title": "Group settings",
+      "owner": "Owner",
+      "memberInvites": "Member invitations",
+      "memberInvitesAllowed": "Allowed",
+      "memberInvitesRestricted": "Admins only",
+      "approval": "Join requests",
+      "approvalRequired": "Required",
+      "approvalNotRequired": "Not required",
+      "teamLimit": "Team limit",
+      "teamLimitValue": "{count} people",
+      "teamLimitUnset": "Not specified",
+      "goalValue": "Goal importance",
+      "editButton": "Edit settings"
+    },
+    "motivation": {
+      "title": "Motivation",
+      "reward": "Reward",
+      "consequence": "Consequence"
+    },
+    "todayProgress": {
+      "today": "Today, {date}",
+      "outOf": "{completed} out of {total}",
+      "completion": "completion",
+      "alreadyMarked": "You already checked in today",
+      "processing": "Processing...",
+      "cancelMark": "Cancel check-in",
+      "markParticipation": "Mark participation",
+      "groupReward": "Group reward",
+      "missedPenalty": "Penalty for missing",
+      "errorMark": "Failed to mark participation. Try again."
+    },
+    "progressTable": {
+      "title": "Participant progress table",
+      "lastDays": "Last {count} days",
+      "participant": "Participant",
+      "total": "Total",
+      "completed": "Completed",
+      "missed": "Missed",
+      "pending": "Pending",
+      "showAll": "Show all days",
+      "errorMark": "Failed to mark participation. Try again."
+    },
+    "activity": {
+      "title": "Current activity",
+      "empty": "No check-ins for today yet.",
+      "showAll": "Show all activity"
+    },
+    "list": {
+      "loading": "Loading group goals...",
+      "loadMore": "Show more",
+      "loadingMore": "Loading...",
+      "error": "Failed to load group goals. Please try again.",
+      "retry": "Retry",
+      "empty": "No group goals",
+      "emptyDescription": "Create your first group goal and invite like-minded people.",
+      "status": {
+        "completed": "Completed",
+        "archived": "Archived",
+        "active": "Active"
+      },
+      "progress": "Progress",
+      "participants": "{count} participant",
+      "participantsPlural": "{count} participants",
+      "viewGoal": "View →"
+    },
+    "inviteMore": "Invite more teammates"
+  },
+  "groupGoalEdit": {
+    "meta": {
+      "title": "Edit {name} — PeaklyGo",
+      "defaultDescription": "Adjust schedule, motivation, and team settings for your group goal.",
+      "notFoundTitle": "Group goal not available",
+      "notFoundDescription": "We could not load this group goal."
+    },
+    "title": "Edit group goal",
+    "subtitle": "Keep the challenge fresh by refining its details and rules.",
+    "form": {
+      "goalName": "Goal name",
+      "description": "Description",
+      "category": "Category",
+      "categoryPlaceholder": "Select category",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "habitSectionTitle": "Habit cadence",
+      "habitSectionDescription": "Configure how often the team checks in and what keeps everyone motivated.",
+      "habitDuration": "Habit duration (days)",
+      "habitDurationHint": "Set at least one day. Participants see this in their trackers.",
+      "reward": "Reward",
+      "consequence": "Consequence",
+      "habitDays": "Days of the week",
+      "habitDaysHint": "Pick the days when the group reports progress.",
+      "groupSettingsTitle": "Group settings",
+      "groupSettingsDescription": "Control invitations and participation limits.",
+      "allowMembersToInvite": "Allow members to invite others",
+      "requireApproval": "Require approval for new members",
+      "maxParticipants": "Maximum participants",
+      "maxParticipantsPlaceholder": "Unlimited",
+      "maxParticipantsHint": "Leave empty for no limit.",
+      "actionsTitle": "Save changes",
+      "actionsDescription": "Apply updates instantly for everyone.",
+      "saveChanges": "Save changes",
+      "saving": "Saving..."
+    },
+    "notifications": {
+      "updated": "Group goal updated",
+      "noChanges": "No changes to save",
+      "failed": "Failed to update group goal"
+    },
+    "errors": {
+      "goalNameRequired": "Enter the goal name",
+      "habitDurationInvalid": "Duration must be at least 1 day",
+      "habitDaysRequired": "Select at least one day"
     }
   }
 }

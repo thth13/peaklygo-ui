@@ -114,6 +114,41 @@ export interface HabitDay {
   isCompleted: boolean;
 }
 
+export enum ParticipantRole {
+  Owner = 'owner',
+  Admin = 'admin',
+  Member = 'member',
+}
+
+export enum InvitationStatus {
+  Pending = 'pending',
+  Accepted = 'accepted',
+  Declined = 'declined',
+}
+
+export interface GroupSettings {
+  allowMembersToInvite: boolean;
+  requireApproval: boolean;
+  maxParticipants?: number | null;
+}
+
+export type CheckInStatus = 'completed' | 'missed' | 'pending';
+
+export interface CheckIn {
+  userId: string;
+  date: Date;
+  status: CheckInStatus;
+  createdAt: Date;
+}
+
+export interface Participant {
+  userId: string | { _id: string; username?: string };
+  role?: ParticipantRole | string;
+  invitationStatus?: InvitationStatus | string;
+  joinedAt?: Date;
+  contributionScore?: number;
+}
+
 export interface Goal extends Document {
   _id: string;
   goalName: string;
@@ -142,6 +177,33 @@ export interface Goal extends Document {
   updatedAt: Date;
 }
 
+export type GoalParticipant = Participant;
+
+export interface GroupGoal {
+  _id: string;
+  goalName: string;
+  category: string;
+  description?: string;
+  startDate: Date;
+  endDate?: Date;
+  habitDuration?: number;
+  habitDaysOfWeek?: DayOfWeek[];
+  image?: string;
+  isCompleted: boolean;
+  isArchived: boolean;
+  userId: string;
+  participants: Participant[];
+  checkIns: CheckIn[];
+  groupSettings: GroupSettings;
+  reward?: string;
+  consequence?: string;
+  value?: number;
+  progress?: number;
+  privacy?: PrivacyStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export enum ReadCategory {
   READING = 'reading',
   FINISHED = 'finished',
@@ -151,16 +213,28 @@ export enum ReadCategory {
 
 export interface ProgressEntry {
   _id: string;
-  goalId: string;
-  userId: string;
+  goalId?: string;
+  groupGoalId?: string;
+  userId?: {
+    _id: string;
+    username: string;
+    avatar?: string;
+    user: string;
+  };
+  profile?: {
+    _id: string;
+    name: string;
+    avatar?: string;
+    user: string;
+  };
   content: string;
   day: number;
   likes: { _id: string }[];
-  comments: number;
+  comments?: number;
   isEdited: boolean;
   createdAt: Date;
   updatedAt: Date;
-  commentCount: number;
+  commentCount?: number;
 }
 
 export interface CreateProgressEntryDto {
@@ -224,6 +298,26 @@ export interface PaginatedGoalsResponse {
   hasPrevPage: boolean;
 }
 
+export interface PaginatedGroupGoalsResponse {
+  goals: GroupGoal[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+export interface GroupGoalStats {
+  totalParticipants: number;
+  activeParticipants: number;
+  pendingInvitations: number;
+  topContributors: Array<{
+    userId: string | { _id: string; username?: string };
+    contributionScore: number;
+  }>;
+}
+
 export interface LandingGoal {
   _id: string;
   goalName: string;
@@ -256,4 +350,93 @@ export interface LandingGoal {
       avatar?: string;
     };
   };
+}
+
+export interface Challenge {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  status: 'active' | 'completed' | 'upcoming';
+  currentDay: number;
+  totalDays: number;
+  participantsCount: number;
+  activeParticipantsCount: number;
+  overallSuccessRate: number;
+  createdAt: Date;
+}
+
+export interface ChallengeParticipant {
+  id: string;
+  name: string;
+  avatar: string;
+  completedDays: number;
+  totalDays: number;
+  successRate: number;
+  currentStreak: number;
+  isCurrentUser?: boolean;
+}
+
+export interface ChallengeDayProgress {
+  date: Date;
+  dayNumber: number;
+  isCompleted: boolean;
+  isPending: boolean;
+  isFailed: boolean;
+}
+
+export interface ChallengeMessage {
+  id: string;
+  userId: string;
+  userName: string;
+  userAvatar: string;
+  message: string;
+  createdAt: Date;
+}
+
+export enum NotificationType {
+  GroupInvite = 'group_invite',
+  Subscription = 'subscription',
+  Message = 'message',
+}
+
+export interface NotificationMetadata {
+  goalId?: string;
+  inviterId?: string;
+  subscriptionType?: string;
+  messageId?: string;
+  avatarUrl?: string;
+  senderAvatar?: string;
+  inviterAvatar?: string;
+  senderName?: string;
+  [key: string]: any;
+}
+
+export interface UserNotification {
+  _id: string;
+  user: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  metadata?: NotificationMetadata;
+  read: boolean;
+  readAt?: string | Date;
+  isResponded?: 'accepted' | 'declined';
+  createdAt: string | Date;
+  updatedAt: string | Date;
+}
+
+export interface NotificationsResponse {
+  items: UserNotification[];
+  total: number;
+  page: number;
+  limit: number;
+  hasNextPage: boolean;
+}
+
+export interface GetNotificationsQuery {
+  page?: number;
+  limit?: number;
+  unreadOnly?: boolean;
+  type?: NotificationType;
 }
