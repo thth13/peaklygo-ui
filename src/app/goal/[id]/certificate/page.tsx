@@ -192,7 +192,7 @@ export default async function CertificatePage({ params }: CertificatePageProps) 
                   <CertificateSeal />
                 </div>
                 <p className="text-xs text-gray-600 dark:text-gray-400">{t('certificate.officialStamp')}</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">{t('certificate.systemSignature')}</p>
+                {/* <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">{t('certificate.systemSignature')}</p> */}
                 <p className="text-xs text-gray-600 dark:text-gray-400">
                   {t('certificate.issueDate')} {issueDate}
                 </p>
@@ -210,22 +210,36 @@ export default async function CertificatePage({ params }: CertificatePageProps) 
 
         {/* Кнопки действий */}
         <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 transition-colors">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div className="mb-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-gradient-to-r from-green-50 via-white to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 p-6 text-center flex flex-col items-center gap-4 transition-colors">
+            <div className="flex items-center gap-3 text-green-600 dark:text-green-400">
+              <FontAwesomeIcon icon={faTrophy} className="w-5 h-5" />
+              <span className="text-sm font-semibold uppercase tracking-wide">{t('certificate.title')}</span>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md">{t('certificate.subtitle')}</p>
+            <CertificateDownloadButton
+              targetSelector="#certificate-canvas"
+              filename={`PeaklyGo-Certificate-${certificateNumber}.pdf`}
+              label={t('certificate.actions.downloadPDF')}
+              className="w-full sm:w-auto shadow-lg shadow-green-100/60 hover:shadow-green-200/80 dark:shadow-green-900/30"
+            />
+          </div>
+
+          {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             <CertificateDownloadButton
               targetSelector="#certificate-canvas"
               filename={`PeaklyGo-Certificate-${certificateNumber}.pdf`}
               label={t('certificate.actions.downloadPDF')}
               className="w-full"
             />
-            {/* <button className="flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg transition-colors">
+            <button className="flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg transition-colors">
               <FontAwesomeIcon icon={faShare} className="w-4 h-4" />
               <span>{t('certificate.actions.share')}</span>
             </button>
             <button className="flex items-center justify-center space-x-2 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 py-3 px-4 rounded-lg transition-colors">
               <FontAwesomeIcon icon={faPrint} className="w-4 h-4" />
               <span>{t('certificate.actions.print')}</span>
-            </button> */}
-          </div>
+            </button>
+          </div> */}
 
           {/* Социальные кнопки */}
           {/* <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
