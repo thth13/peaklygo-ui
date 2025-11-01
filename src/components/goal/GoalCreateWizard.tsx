@@ -51,6 +51,7 @@ import { useContext } from 'react';
 import GoogleLoginButton from '@/components/GoogleLoginButton';
 import { AuthResponse } from '@/lib/api/auth';
 import type { GroupSettingsState } from './wizard/GroupGoalSettings';
+import generateStepId from '@/utils/generateStepId';
 
 export interface GoalCreateWizardData {
   // Шаг 1: Тип цели
@@ -431,11 +432,10 @@ export const GoalCreateWizard: React.FC = () => {
       if (groupGoalSelected) {
         formDataToSend.append('participantIds', JSON.stringify(data.participantIds ?? []));
 
-        const groupSettingsState: GroupSettingsState =
-          data.groupSettings ?? {
-            allowMembersToInvite: false,
-            requireApproval: true,
-          };
+        const groupSettingsState: GroupSettingsState = data.groupSettings ?? {
+          allowMembersToInvite: false,
+          requireApproval: true,
+        };
         const { allowMembersToInvite, requireApproval, maxParticipants } = groupSettingsState;
         const groupSettingsPayload: Partial<GroupSettingsState> = {
           allowMembersToInvite,
@@ -472,7 +472,9 @@ export const GoalCreateWizard: React.FC = () => {
       if (!habitLikeGoalSelected) {
         const validSteps = data.steps.filter((step) => step.trim().length > 0);
         const formattedSteps = validSteps.map((step) => ({
+          id: generateStepId(),
           text: step.trim(),
+          isCompleted: false,
         }));
         formDataToSend.append('steps', JSON.stringify(formattedSteps));
       } else {
@@ -486,9 +488,7 @@ export const GoalCreateWizard: React.FC = () => {
       }
 
       console.log('Creating goal for user:', currentUserId);
-      const createdGoal = groupGoalSelected
-        ? await createGroupGoal(formDataToSend)
-        : await createGoal(formDataToSend);
+      const createdGoal = groupGoalSelected ? await createGroupGoal(formDataToSend) : await createGoal(formDataToSend);
       console.log('Goal created successfully:', createdGoal._id);
 
       toast.success(t('notifications.goalCreated'));
@@ -573,10 +573,8 @@ export const GoalCreateWizard: React.FC = () => {
               { icon: faListCheck, label: t('steps.goalType') },
               { icon: faBullseye, label: t('steps.basics') },
               {
-                icon:
-                  isGroupGoal ? faUsers : isHabitGoal ? faFire : faListCheck,
-                label:
-                  isGroupGoal ? t('steps.group') : isHabitGoal ? t('steps.habit') : t('steps.steps'),
+                icon: isGroupGoal ? faUsers : isHabitGoal ? faFire : faListCheck,
+                label: isGroupGoal ? t('steps.group') : isHabitGoal ? t('steps.habit') : t('steps.steps'),
               },
               { icon: faCalendarAlt, label: t('steps.motivation') },
               { icon: faImage, label: t('steps.design') },
@@ -620,15 +618,15 @@ export const GoalCreateWizard: React.FC = () => {
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-300">
             {t('stepIndicator', { step, totalSteps })}:{' '}
-                {
-                  [
-                    t('stepDescriptions.goalTypeSelection'),
-                    t('stepDescriptions.basicInfo'),
-                    isGroupGoal
-                      ? t('stepDescriptions.groupSetup')
-                      : isHabitGoal
-                      ? t('stepDescriptions.habitSetup')
-                      : t('stepDescriptions.planningSteps'),
+            {
+              [
+                t('stepDescriptions.goalTypeSelection'),
+                t('stepDescriptions.basicInfo'),
+                isGroupGoal
+                  ? t('stepDescriptions.groupSetup')
+                  : isHabitGoal
+                  ? t('stepDescriptions.habitSetup')
+                  : t('stepDescriptions.planningSteps'),
                 t('stepDescriptions.motivationRewards'),
                 t('stepDescriptions.photoCategory'),
                 t('stepDescriptions.privacyComplexity'),

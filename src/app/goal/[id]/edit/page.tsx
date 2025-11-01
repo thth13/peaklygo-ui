@@ -8,6 +8,7 @@ import { useUserProfile } from '@/context/UserProfileContext';
 import { useRouter, useParams } from 'next/navigation';
 import { IMAGE_URL } from '@/constants';
 import { GoalType } from '@/types';
+import generateStepId from '@/utils/generateStepId';
 
 interface Step {
   id: string;
@@ -72,7 +73,7 @@ const GoalEditPage: React.FC = () => {
 
           setInitialSteps(
             goal.steps.map((step) => ({
-              id: step.id,
+              id: step.id ?? generateStepId(),
               text: step.text,
               isCompleted: step.isCompleted,
             })),
