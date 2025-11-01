@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { IMAGE_URL } from '@/constants';
+import { AuthContext } from '@/context/AuthContext';
 import {
   getNotifications,
   markNotificationAsRead,
@@ -21,6 +22,9 @@ export const NotificationsDropdown = () => {
   const pathname = usePathname();
   const t = useTranslations('header');
   const notificationsRef = useRef<HTMLDivElement | null>(null);
+
+  const { userId } = useContext(AuthContext);
+  const isAuthenticated = Boolean(userId);
 
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notifications, setNotifications] = useState<UserNotification[]>([]);
@@ -94,6 +98,14 @@ export const NotificationsDropdown = () => {
       return;
     }
 
+    if (!userId) {
+      setIsLoadingNotifications(false);
+      setIsFetchingNotifications(false);
+      setNotifications([]);
+      setNotificationsMeta(null);
+      return;
+    }
+
     notificationsRequestInFlight.current = true;
     setNotificationsError(null);
     setNotificationsActionError(null);
@@ -126,7 +138,7 @@ export const NotificationsDropdown = () => {
       setIsLoadingNotifications(false);
       setIsFetchingNotifications(false);
     }
-  }, [t]);
+  }, [t, userId]);
 
   const markAllUnreadAsRead = useCallback(async () => {
     setNotifications((prevNotifications) => {
@@ -270,10 +282,21 @@ export const NotificationsDropdown = () => {
   }, [pathname]);
 
   useEffect(() => {
+    if (!userId) {
+      setNotifications([]);
+      setNotificationsMeta(null);
+      setNotificationsError(null);
+      setNotificationsActionError(null);
+      hasLoadedNotifications.current = false;
+      return;
+    }
     void loadNotifications();
-  }, [loadNotifications]);
+  }, [loadNotifications, userId]);
 
   useEffect(() => {
+    if (!userId) {
+      return;
+    }
     if (notificationsOpen) {
       hasMarkedAsReadOnOpen.current = false;
       // Загружаем уведомления
@@ -285,9 +308,12 @@ export const NotificationsDropdown = () => {
         }
       });
     }
-  }, [notificationsOpen, loadNotifications, markAllUnreadAsRead]);
+  }, [notificationsOpen, loadNotifications, markAllUnreadAsRead, userId]);
 
-  console.log(notifications);
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
     <div ref={notificationsRef} className="relative">
       <button
