@@ -132,6 +132,7 @@ const defaultState: GoalCreateWizardData = {
 export const GoalCreateWizard: React.FC = () => {
   const [data, setData] = useState<GoalCreateWizardData>(defaultState);
   const [step, setStep] = useState<number>(1);
+  const [maxVisitedStep, setMaxVisitedStep] = useState<number>(1);
   const [direction, setDirection] = useState<1 | -1>(1);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [noDeadline, setNoDeadline] = useState<boolean>(false);
@@ -165,6 +166,10 @@ export const GoalCreateWizard: React.FC = () => {
       setAuthErrors({});
     }
   }, [step, userId]);
+
+  useEffect(() => {
+    setMaxVisitedStep((prev) => (step > prev ? step : prev));
+  }, [step]);
 
   // Translations
   const t = useTranslations('goals.wizard');
@@ -513,6 +518,23 @@ export const GoalCreateWizard: React.FC = () => {
     }
   };
 
+  const handleStepSelect = (targetStep: number) => {
+    if (targetStep === step || targetStep < 1 || targetStep > totalSteps) {
+      return;
+    }
+
+    const goingForward = targetStep > step;
+    const canNavigate =
+      targetStep <= maxVisitedStep || (goingForward && targetStep === step + 1 && canContinue());
+
+    if (!canNavigate) {
+      return;
+    }
+
+    setDirection(goingForward ? 1 : -1);
+    setStep(targetStep);
+  };
+
   const handleSubmit = async () => {
     if (!userId || !canContinue()) return;
 
@@ -580,41 +602,58 @@ export const GoalCreateWizard: React.FC = () => {
               { icon: faImage, label: t('steps.design') },
               { icon: faCheck, label: t('steps.finish') },
               ...(userId ? [] : [{ icon: faUserPlus, label: t('steps.account') }]),
-            ].map((stepItem, index) => (
-              <React.Fragment key={index}>
-                <div className="flex flex-col items-center">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold mb-2 ${
-                      index + 1 === step
-                        ? 'bg-primary-500 text-white dark:bg-primary-600'
-                        : index + 1 < step
-                        ? 'bg-green-600 text-white dark:bg-green-700'
-                        : 'bg-gray-200 text-gray-400 dark:bg-gray-700 dark:text-gray-500'
-                    }`}
+            ].map((stepItem, index) => {
+              const targetStep = index + 1;
+              const isActive = targetStep === step;
+              const isCompleted = targetStep < step;
+              const canNavigate =
+                targetStep !== step &&
+                (targetStep <= maxVisitedStep || (targetStep === step + 1 && canContinue()));
+
+              return (
+                <React.Fragment key={index}>
+                  <button
+                    type="button"
+                    onClick={() => handleStepSelect(targetStep)}
+                    disabled={!canNavigate}
+                    className={`flex flex-col items-center focus:outline-none ${
+                      canNavigate ? 'cursor-pointer' : 'cursor-default'
+                    } p-0 bg-transparent border-0`}
+                    aria-current={isActive ? 'step' : undefined}
                   >
-                    <FontAwesomeIcon icon={stepItem.icon} className="text-sm" />
-                  </div>
-                  <span
-                    className={`text-xs font-medium ${
-                      index + 1 <= step
-                        ? index + 1 === step
-                          ? 'text-primary-700 dark:text-primary-300'
-                          : 'text-green-700 dark:text-green-300'
-                        : 'text-gray-500 dark:text-gray-400'
-                    }`}
-                  >
-                    {stepItem.label}
-                  </span>
-                </div>
-                {index < totalSteps - 1 && (
-                  <div
-                    className={`w-8 h-1 rounded mt-3 ${
-                      index + 1 < step ? 'bg-green-500 dark:bg-green-600' : 'bg-gray-200 dark:bg-gray-700'
-                    }`}
-                  ></div>
-                )}
-              </React.Fragment>
-            ))}
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold mb-2 ${
+                        isActive
+                          ? 'bg-primary-500 text-white dark:bg-primary-600'
+                          : isCompleted
+                          ? 'bg-green-600 text-white dark:bg-green-700'
+                          : 'bg-gray-200 text-gray-400 dark:bg-gray-700 dark:text-gray-500'
+                      }`}
+                    >
+                      <FontAwesomeIcon icon={stepItem.icon} className="text-sm" />
+                    </div>
+                    <span
+                      className={`text-xs font-medium ${
+                        targetStep <= step
+                          ? isActive
+                            ? 'text-primary-700 dark:text-primary-300'
+                            : 'text-green-700 dark:text-green-300'
+                          : 'text-gray-500 dark:text-gray-400'
+                      }`}
+                    >
+                      {stepItem.label}
+                    </span>
+                  </button>
+                  {index < totalSteps - 1 && (
+                    <div
+                      className={`w-8 h-1 rounded mt-3 ${
+                        isCompleted ? 'bg-green-500 dark:bg-green-600' : 'bg-gray-200 dark:bg-gray-700'
+                      }`}
+                    ></div>
+                  )}
+                </React.Fragment>
+              );
+            })}
           </div>
           <p className="text-sm text-gray-600 dark:text-gray-300">
             {t('stepIndicator', { step, totalSteps })}:{' '}
