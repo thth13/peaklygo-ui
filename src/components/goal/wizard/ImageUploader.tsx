@@ -112,7 +112,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ image, onImageChan
 
   const processImageFile = (file: File): void => {
     const isImage = file.type.startsWith('image/');
-    const isUnderLimit = file.size <= 10 * 1024 * 1024; // 10MB
+    const isUnderLimit = file.size <= 20 * 1024 * 1024; // 20MB
 
     if (!isImage) {
       toast.error(tImage('errorWrongType'));

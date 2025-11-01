@@ -32,7 +32,7 @@ export const ImagePreviewer = ({ handleInputChange, image, existingImageUrl }: I
 
   const processFile = (file: File): void => {
     const isImage = file.type.startsWith('image/');
-    const isUnderLimit = file.size <= 10 * 1024 * 1024; // 10MB
+    const isUnderLimit = file.size <= 20 * 1024 * 1024; // 20MB
     if (!isImage || !isUnderLimit) return;
     handleInputChange('image', file);
     const objectUrl = URL.createObjectURL(file);
