@@ -639,7 +639,7 @@ export const GoalCreateWizard: React.FC = () => {
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* Left Section */}
-          <div className="space-y-6 relative">
+          <div className="space-y-0 md:space-y-6 relative">
             {/* Hero Visual */}
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
@@ -659,11 +659,11 @@ export const GoalCreateWizard: React.FC = () => {
                 }}
                 transition={{ duration: reduceMotion ? 0 : 0.32, ease: 'easeOut' }}
               >
-                <div className="relative inline-block mb-6">
+                <div className="relative hidden md:inline-block md:mb-6">
                   {step === 1 && (
                     <>
-                      <div className="w-24 h-24 bg-gradient-to-br from-purple-400 via-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                        <FontAwesomeIcon icon={faListCheck} className="text-3xl text-white" />
+                      <div className="w-16 h-16 md:w-24 md:h-24 bg-gradient-to-br from-purple-400 via-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <FontAwesomeIcon icon={faListCheck} className="text-xl md:text-3xl text-white" />
                       </div>
                       <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-pink-400 to-red-400 rounded-full flex items-center justify-center shadow-lg animate-pulse">
                         <FontAwesomeIcon icon={faBullseye} className="text-xs text-white" />
@@ -675,8 +675,8 @@ export const GoalCreateWizard: React.FC = () => {
                   )}
                   {step === 2 && (
                     <>
-                      <div className="w-24 h-24 bg-gradient-to-br from-primary-400 via-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                        <FontAwesomeIcon icon={faBullseye} className="text-3xl text-white" />
+                      <div className="w-16 h-16 md:w-24 md:h-24 bg-gradient-to-br from-primary-400 via-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <FontAwesomeIcon icon={faBullseye} className="text-xl md:text-3xl text-white" />
                       </div>
                       <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg animate-pulse">
                         <FontAwesomeIcon icon={faStar} className="text-xs text-white" />
@@ -689,7 +689,7 @@ export const GoalCreateWizard: React.FC = () => {
                   {step === 3 && (
                     <>
                       <div
-                        className={`w-24 h-24 ${
+                        className={`w-16 h-16 md:w-24 md:h-24 ${
                           isHabitGoal
                             ? 'bg-gradient-to-br from-purple-400 via-purple-500 to-indigo-500'
                             : isGroupGoal
@@ -699,7 +699,7 @@ export const GoalCreateWizard: React.FC = () => {
                       >
                         <FontAwesomeIcon
                           icon={isHabitGoal ? faFire : isGroupGoal ? faUsers : faListCheck}
-                          className="text-3xl text-white"
+                          className="text-xl md:text-3xl text-white"
                         />
                       </div>
                       <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full flex items-center justify-center shadow-lg animate-pulse">
@@ -718,8 +718,8 @@ export const GoalCreateWizard: React.FC = () => {
                   )}
                   {step === 4 && (
                     <>
-                      <div className="w-24 h-24 bg-gradient-to-br from-orange-400 via-orange-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                        <FontAwesomeIcon icon={faClock} className="text-3xl text-white" />
+                      <div className="w-16 h-16 md:w-24 md:h-24 bg-gradient-to-br from-orange-400 via-orange-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <FontAwesomeIcon icon={faClock} className="text-xl md:text-3xl text-white" />
                       </div>
                       <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center shadow-lg animate-pulse">
                         <FontAwesomeIcon icon={faCalendar} className="text-xs text-white" />
@@ -731,8 +731,8 @@ export const GoalCreateWizard: React.FC = () => {
                   )}
                   {step === 5 && (
                     <>
-                      <div className="w-24 h-24 bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                        <FontAwesomeIcon icon={faImage} className="text-3xl text-white" />
+                      <div className="w-16 h-16 md:w-24 md:h-24 bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <FontAwesomeIcon icon={faImage} className="text-xl md:text-3xl text-white" />
                       </div>
                       <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg animate-pulse">
                         <FontAwesomeIcon icon={faPalette} className="text-xs text-white" />
@@ -744,8 +744,8 @@ export const GoalCreateWizard: React.FC = () => {
                   )}
                   {step === 6 && (
                     <>
-                      <div className="w-24 h-24 bg-gradient-to-br from-green-400 via-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                        <FontAwesomeIcon icon={faFlagCheckered} className="text-3xl text-white" />
+                      <div className="w-16 h-16 md:w-24 md:h-24 bg-gradient-to-br from-green-400 via-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <FontAwesomeIcon icon={faFlagCheckered} className="text-xl md:text-3xl text-white" />
                       </div>
                       <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center shadow-lg animate-pulse">
                         <FontAwesomeIcon icon={faStar} className="text-xs text-white" />
@@ -757,8 +757,8 @@ export const GoalCreateWizard: React.FC = () => {
                   )}
                   {step === 7 && (
                     <>
-                      <div className="w-24 h-24 bg-gradient-to-br from-purple-400 via-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                        <FontAwesomeIcon icon={faUserPlus} className="text-3xl text-white" />
+                      <div className="w-16 h-16 md:w-24 md:h-24 bg-gradient-to-br from-purple-400 via-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                        <FontAwesomeIcon icon={faUserPlus} className="text-xl md:text-3xl text-white" />
                       </div>
                       <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full flex items-center justify-center shadow-lg animate-pulse">
                         <FontAwesomeIcon icon={faCheck} className="text-xs text-white" />
@@ -769,8 +769,12 @@ export const GoalCreateWizard: React.FC = () => {
                     </>
                   )}
                 </div>
-                <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">{resolveStepTitle()}</h1>
-                <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">{resolveStepDescription()}</p>
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-0 md:mb-4">
+                  {resolveStepTitle()}
+                </h1>
+                <p className="hidden md:block text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                  {resolveStepDescription()}
+                </p>
               </motion.div>
             </AnimatePresence>
 
@@ -778,7 +782,7 @@ export const GoalCreateWizard: React.FC = () => {
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
                 key={`tips-${step}`}
-                className="text-center"
+                className="hidden md:block text-center"
                 custom={direction}
                 initial={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 16 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -808,7 +812,10 @@ export const GoalCreateWizard: React.FC = () => {
                   </div>
                 ) : step === 3 && isHabitGoal ? (
                   <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-white/30 dark:border-gray-700/30 shadow-lg">
-                    <FontAwesomeIcon icon={faLightbulb} className="text-purple-400 dark:text-purple-300 text-xl mb-3" />
+                    <FontAwesomeIcon
+                      icon={faLightbulb}
+                      className="text-purple-400 dark:text-purple-300 text-xl mb-3"
+                    />
                     <p className="text-purple-700 dark:text-purple-300 italic text-lg font-medium mb-2">
                       {t('quotes.habitQuote')}
                     </p>
@@ -963,7 +970,7 @@ export const GoalCreateWizard: React.FC = () => {
           </div>
 
           {/* Right Section - Form */}
-          <div className="sticky top-24">
+          <div className="max-w-xl w-full mx-auto lg:mx-0 lg:sticky lg:top-24">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700">
               <form className="space-y-6">
                 {/* Step Content */}
@@ -1000,8 +1007,8 @@ export const GoalCreateWizard: React.FC = () => {
                                 onChange={(e) => update('goalType', e.target.value)}
                                 className="sr-only"
                               />
-                              <div className="flex items-center">
-                                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-800 rounded-xl flex items-center justify-center mr-4 group-hover:bg-blue-200 dark:group-hover:bg-blue-700 transition-colors">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-center sm:text-left">
+                                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-800 rounded-xl flex items-center justify-center mx-auto sm:mx-0 group-hover:bg-blue-200 dark:group-hover:bg-blue-700 transition-colors">
                                   <FontAwesomeIcon
                                     icon={faCalendarCheck}
                                     className="text-blue-600 dark:text-blue-400 text-xl"
@@ -1033,8 +1040,8 @@ export const GoalCreateWizard: React.FC = () => {
                                 onChange={(e) => update('goalType', e.target.value)}
                                 className="sr-only"
                               />
-                              <div className="flex items-center">
-                                <div className="w-12 h-12 bg-orange-100 dark:bg-orange-800 rounded-xl flex items-center justify-center mr-4 group-hover:bg-orange-200 dark:group-hover:bg-orange-700 transition-colors">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-center sm:text-left">
+                                <div className="w-12 h-12 bg-orange-100 dark:bg-orange-800 rounded-xl flex items-center justify-center mx-auto sm:mx-0 group-hover:bg-orange-200 dark:group-hover:bg-orange-700 transition-colors">
                                   <FontAwesomeIcon
                                     icon={faFire}
                                     className="text-orange-600 dark:text-orange-400 text-xl"
@@ -1066,8 +1073,8 @@ export const GoalCreateWizard: React.FC = () => {
                                 onChange={(e) => update('goalType', e.target.value)}
                                 className="sr-only"
                               />
-                              <div className="flex items-center">
-                                <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-800 rounded-xl flex items-center justify-center mr-4 group-hover:bg-emerald-200 dark:group-hover:bg-emerald-700 transition-colors">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-center sm:text-left">
+                                <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-800 rounded-xl flex items-center justify-center mx-auto sm:mx-0 group-hover:bg-emerald-200 dark:group-hover:bg-emerald-700 transition-colors">
                                   <FontAwesomeIcon
                                     icon={faUsers}
                                     className="text-emerald-600 dark:text-emerald-400 text-xl"
