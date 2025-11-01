@@ -13,21 +13,15 @@ const ViewModeContext = createContext<ViewModeContextType | undefined>(undefined
 
 const STORAGE_KEY = 'view-mode';
 
-const getInitialViewMode = (): 'grid' | 'list' => {
-  if (typeof window !== 'undefined') {
-    const savedMode = localStorage.getItem(STORAGE_KEY);
-    if (savedMode === 'grid' || savedMode === 'list') {
-      return savedMode;
-    }
-  }
-  return 'list';
-};
-
 export function ViewModeProvider({ children }: { children: ReactNode }) {
-  const [viewMode, setViewModeState] = useState<'grid' | 'list'>(getInitialViewMode);
+  const [viewMode, setViewModeState] = useState<'grid' | 'list'>('list');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const savedMode = localStorage.getItem(STORAGE_KEY);
+    if (savedMode === 'grid' || savedMode === 'list') {
+      setViewModeState(savedMode);
+    }
     setIsLoading(false);
   }, []);
 
