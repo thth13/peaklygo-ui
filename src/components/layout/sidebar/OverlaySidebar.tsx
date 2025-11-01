@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { usePathname } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { useUserProfile } from '@/context/UserProfileContext';
@@ -10,9 +10,12 @@ import { LeftSidebarContent } from './LeftSidebarContent';
 import { LeftSidebarSkeleton } from './LeftSidebarSkeleton';
 import { LeftSidebarError } from './LeftSidebarError';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBullseye, faArchive, faCrown, faCircleCheck, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { faBullseye, faArchive, faCrown, faCircleCheck, faTrophy, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { useTranslations } from 'next-intl';
 import LinkWithProgress from '@/components/Link';
+import ThemeToggle from '@/components/ThemeToggle';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { AuthContext } from '@/context/AuthContext';
 
 interface OverlaySidebarProps {
   userId?: string;
@@ -21,6 +24,7 @@ interface OverlaySidebarProps {
 
 const OverlaySidebar = ({ userId, onClose }: OverlaySidebarProps) => {
   const t = useTranslations('sidebar');
+  const headerT = useTranslations('header');
   const { profile: currentUserProfile, isLoading: profileLoading, error: profileError } = useUserProfile();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [stats, setStats] = useState<ProfileStats | null>(null);
@@ -28,6 +32,7 @@ const OverlaySidebar = ({ userId, onClose }: OverlaySidebarProps) => {
   const [error, setError] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
   const pathname = usePathname();
+  const { logout } = useContext(AuthContext);
 
   const myUserId = Cookies.get('userId');
   const actualUserId = userId || myUserId;
@@ -85,6 +90,11 @@ const OverlaySidebar = ({ userId, onClose }: OverlaySidebarProps) => {
     setVisible(false);
     const timer = setTimeout(() => onClose && onClose(), 300);
     return () => clearTimeout(timer);
+  };
+
+  const handleLogout = () => {
+    startClose();
+    logout();
   };
 
   return (
@@ -202,6 +212,38 @@ const OverlaySidebar = ({ userId, onClose }: OverlaySidebarProps) => {
             </nav>
           </div>
         )}
+        <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4 space-y-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <ThemeToggle />
+            <LanguageSwitcher />
+          </div>
+          {myUserId ? (
+            <button
+              onClick={handleLogout}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-md bg-gray-100 dark:bg-gray-700 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            >
+              <FontAwesomeIcon icon={faSignOutAlt} className="w-4" />
+              <span>{headerT('logout')}</span>
+            </button>
+          ) : (
+            <div className="w-full space-y-2">
+              <LinkWithProgress
+                href="/auth/login"
+                onClick={() => startClose()}
+                className="w-full inline-flex items-center justify-center rounded-md border border-primary-600 px-4 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 transition-colors"
+              >
+                {headerT('login')}
+              </LinkWithProgress>
+              <LinkWithProgress
+                href="/auth/register"
+                onClick={() => startClose()}
+                className="w-full inline-flex items-center justify-center rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 transition-colors"
+              >
+                {headerT('register')}
+              </LinkWithProgress>
+            </div>
+          )}
+        </div>
       </aside>
     </div>
   );
